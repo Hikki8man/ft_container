@@ -1,5 +1,5 @@
 #ifndef VECTOR_HPP
-#define VECTOR_HPP
+# define VECTOR_HPP
 
 #include <iostream>
 
@@ -12,6 +12,10 @@ class Vector {
 		~Vector();
 
 		Vector<T>& operator=(const Vector<T>& rhs);
+	private:
+		T* _data;
+		size_t _size;
+		size_t _capacity;
 		
 }
 
