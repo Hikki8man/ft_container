@@ -3,11 +3,17 @@
 
 #include <iostream>
 
-template <typename T>
+template <class T>
 class Vector {
 	public:
-		Vector();
-		Vector(int size);
+		Vector() : _size(0), _capacity(0), _data(NULL) {};
+		Vector(size_t size, const T & value) {
+			_size = size;
+			_capacity = size;
+			_data = new T[size];
+			for (size_t i = 0; i < size; i++)
+				_data[i] = value;
+		};
 		Vector(const Vector<T>& src);
 		~Vector();
 
@@ -17,6 +23,6 @@ class Vector {
 		size_t _size;
 		size_t _capacity;
 		
-}
+};
 
 #endif
