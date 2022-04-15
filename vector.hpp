@@ -31,24 +31,13 @@ class vector {
 			return _data[i]; //no protection askip
 		}
 
+		/* --- Capacity --- */
 		size_type 	size() const {
 			return _size;
-		}
-		size_type	capacity() const {
-			return _capacity;
 		}
 
 		size_type	max_size() const {
 			return _alloc.max_size();
-		}
-
-		void reserve (size_type n) { //throw exception if neg
-			if (n > _capacity) {
-				value_type *newData;
-				newData = _alloc.allocate(n);//max size et tt
-				_capacity = n;
-				_copy_array(newData, _size);
-			}
 		}
 
 		void resize (size_type n, value_type val = value_type()) {
@@ -64,10 +53,32 @@ class vector {
 			}
 		}
 
+		size_type	capacity() const {
+			return _capacity;
+		}
+
 		bool empty() const {
 			return _size ? false : true;
 		}
 
+		void reserve (size_type n) {
+			if (n > _capacity) {
+				value_type *newData;
+				newData = _alloc.allocate(n);
+				_capacity = n;
+				_copy_array(newData, _size);
+			}
+		}
+
+		void shrink_to_fit() {
+			value_type *newData;
+
+			newData = _alloc.allocate(_size);
+			_copy_array(newData, _capacity);
+			_capacity = _size;
+		}
+
+		/* --- Modifiers --- */
 		void	push_back(const value_type& val) {
 			_adjust_capacity(_size + 1);
 			_data[_size] = val;
