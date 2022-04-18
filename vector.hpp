@@ -4,6 +4,14 @@
 #include <iostream>
 #include <cstring>
 
+template < class vector >
+class vector_iterator {
+	public:
+		vector_iterator();
+	private:
+
+};
+
 template < class T, class Alloc = std::allocator<T> >
 class vector {
 	typedef T value_type;
