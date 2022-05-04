@@ -5,6 +5,7 @@
 int main(void) {
 	{
 		std::vector<int> v;
+		std::vector<int>::iterator a;
 		v.reserve(10);
 		v.resize(7, 8);
 		v.push_back(2);
