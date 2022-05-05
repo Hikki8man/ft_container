@@ -34,7 +34,6 @@ namespace ft {
 		typedef const T* pointer;
 		typedef const T& reference;
 	};
-	
 }
 
 
