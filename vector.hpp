@@ -4,18 +4,38 @@
 #include <iostream>
 #include <cstring>
 
-template < class vector >
-class vector_iterator {
-	public:
-		vector_iterator();
-	private:
-
-};
-
 template < class T, class Alloc = std::allocator<T> >
 class vector {
 	typedef T value_type;
 	typedef size_t size_type;
+
+	private:
+		value_type *_data;
+		size_type _size;
+		size_type _capacity;
+		Alloc _alloc;
+		
+		void _copy_array(value_type *newData, const size_type & toDealloc) {
+			for (size_type i = 0; i < _size; ++i) {
+				newData[i] = _data[i];
+			}
+			if (toDealloc)
+				_alloc.deallocate(_data, toDealloc);
+			_data = newData;
+		}
+		
+		void _adjust_capacity(size_t newSize) {
+			if (newSize > _capacity) {
+				value_type *newData;
+		
+				if (_capacity)
+					newSize = _capacity * 2;
+				newData = _alloc.allocate(newSize);
+				_copy_array(newData, _capacity);
+				_capacity = newSize;
+			}
+		}
+
 	public:
 		vector() : _data(NULL), _size(0), _capacity(0) {};
 
@@ -93,32 +113,6 @@ class vector {
 			++_size;
 		}
 
-	private:
-		value_type *_data;
-		size_type _size;
-		size_type _capacity;
-		Alloc _alloc;
-		
-		void _copy_array(value_type *newData, const size_type & toDealloc) {
-			for (size_type i = 0; i < _size; ++i) {
-				newData[i] = _data[i];
-			}
-			if (toDealloc)
-				_alloc.deallocate(_data, toDealloc);
-			_data = newData;
-		}
-		
-		void _adjust_capacity(size_t newSize) {
-			if (newSize > _capacity) {
-				value_type *newData;
-		
-				if (_capacity)
-					newSize = _capacity * 2;
-				newData = _alloc.allocate(newSize);
-				_copy_array(newData, _capacity);
-				_capacity = newSize;
-			}
-		}
 };
 
 #endif
