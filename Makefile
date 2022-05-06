@@ -2,7 +2,9 @@ NAME	=	container
 
 SRC		=	main.cpp
 
-INC		=	vector.hpp
+INC		=	vector.hpp \
+			iterator_traits.hpp \
+			vector_iterator.hpp
 
 OBJ		=	$(SRC:.cpp=.o)
 
