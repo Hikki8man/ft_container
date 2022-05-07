@@ -14,53 +14,53 @@ namespace ft {
 		typedef typename ft::iterator_traits<T>::reference reference;
 
 		private:
-			T* _ptr;
+			T* _current;
 
 		public:
 			// Constructors / Destructor
-			vector_iterator() : _ptr(NULL) {}
-			vector_iterator(T* p) : _ptr(p) {}
+			vector_iterator() : _current(NULL) {}
+			vector_iterator(T* p) : _current(p) {}
 			~vector_iterator() {}
 
 			// Operators
-			reference operator*() const { return *_ptr; }
-			pointer operator->() const { return _ptr; }
+			reference operator*() const { return *_current; }
+			pointer operator->() const { return _current; }
 			vector_iterator& operator++() {
-				++_ptr;
+				++_current;
 				return *this;
 			}
 			vector_iterator operator++(int) {
-				return vector_iterator(_ptr++);
+				return vector_iterator(_current++);
 			}
 			vector_iterator& operator--() {
-				--_ptr;
+				--_current;
 				return *this;
 			}
 			vector_iterator operator--(int) {
-				return vector_iterator(_ptr--);
+				return vector_iterator(_current--);
 			}
 			reference operator[](difference_type n) {
-				return _ptr[n];
+				return _current[n];
 			}
 			vector_iterator& operator+=(difference_type n) {
-				_ptr += n;
+				_current += n;
 				return *this;
 			}
 			vector_iterator operator+(difference_type n) {
-				return vector_iterator(_ptr + n);
+				return vector_iterator(_current + n);
 			}
 			vector_iterator& operator-=(difference_type n) {
-				_ptr -= n;
+				_current -= n;
 				return *this;
 			}
 			vector_iterator operator-(difference_type n) {
-				return vector_iterator(_ptr - n);
+				return vector_iterator(_current - n);
 			}
 			const T& base() const {
 				return ptr;
 			}
 			bool operator==(const vector_iterator& rhs) {
-				return _ptr == rhs.base();
+				return _current == rhs.base();
 			}
 			
 

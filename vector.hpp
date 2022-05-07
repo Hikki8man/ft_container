@@ -12,11 +12,7 @@ namespace ft {
 		typedef T value_type;
 		typedef size_t size_type;
 
-		typedef typename ft::iterator_traits<T>::value_type value_type;
-		typedef typename ft::iterator_traits<T>::iterator_category iterator_category;
-		typedef typename ft::iterator_traits<T>::difference_type difference_type;
-		typedef typename ft::iterator_traits<T>::pointer pointer;
-		typedef typename ft::iterator_traits<T>::reference reference;
+		typedef vector_iterator<
 
 		private:
 			value_type *_data;
@@ -33,7 +29,7 @@ namespace ft {
 				_data = newData;
 			}
 			
-			void _adjust_capacity(size_t newSize) {
+			void _adjust_capacity(size_t newSize) {//if new size > *2 capacity, take exact size
 				if (newSize > _capacity) {
 					value_type *newData;
 			
