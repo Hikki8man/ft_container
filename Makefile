@@ -4,7 +4,8 @@ SRC		=	main.cpp
 
 INC		=	vector.hpp \
 			iterator_traits.hpp \
-			vector_iterator.hpp
+			vector_iterator.hpp \
+			stack.hpp
 
 OBJ		=	$(SRC:.cpp=.o)
 

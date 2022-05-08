@@ -10,7 +10,7 @@ namespace ft {
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
 		typedef T value_type;
-		typedef size_t size_type;
+		typedef std::size_t size_type;
 
 		typedef vector_iterator<
 
