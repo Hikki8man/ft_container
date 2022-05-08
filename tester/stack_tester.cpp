@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 
+#include "../stack.hpp" // include your stack header file
+
 #include <stack>
 #include <vector>
 #include <deque>
 #include <list>
-#include "../stack.hpp"
 
 #include "color.hpp"
 #include "Test.hpp"

@@ -1,17 +1,16 @@
-STACK	=	stack_tester
+STACK	=	stack
 
 STACK_SRC =	stack_tester.cpp
 
 STACK_OBJ =	$(STACK_SRC:.cpp=.o)
 
-VEC	=	vector_tester
+VEC	=	vector
 
 VEC_SRC =	vector_tester.cpp
 
-
 VEC_OBJ =	$(VEC_SRC:.cpp=.o)
 
-CFLAGS	= 	-std=c++98 #-Wall -Werror -Wextra
+CFLAGS	=  -Wall -Werror -Wextra
 
 CC		=	c++
 

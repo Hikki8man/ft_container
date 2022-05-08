@@ -1,5 +1,6 @@
+#include "../vector.hpp" // Include your vector header file
+
 #include "color.hpp"
-#include "../vector.hpp"
 #include "Test.hpp"
 #include <vector>
 
