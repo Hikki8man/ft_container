@@ -9,13 +9,22 @@ namespace ft {
 
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
-		typedef T value_type;
-		typedef std::size_t size_type;
 
-		typedef vector_iterator<
+		public:
+			typedef T value_type;
+			typedef std::size_t size_type;
+			typedef Alloc allocator_type;
+			typedef std::ptrdiff_t difference_type;
+			typedef typename allocator_type::reference reference;
+			typedef typename allocator_type::const_reference const_reference;
+			typedef typename allocator_type::pointer pointer;
+			typedef typename allocator_type::const_pointer const_pointer;
+			typedef vector_iterator<pointer> iterator;
+			typedef vector_iterator<const_pointer> const_iterator;
+
 
 		private:
-			value_type *_data;
+			pointer _data;
 			size_type _size;
 			size_type _capacity;
 			Alloc _alloc;
@@ -103,13 +112,13 @@ namespace ft {
 				}
 			}
 
-			void shrink_to_fit() {
-				value_type *newData;
+			// void shrink_to_fit() { haa not in c++98
+			// 	value_type *newData;
 
-				newData = _alloc.allocate(_size);
-				_copy_array(newData, _capacity);
-				_capacity = _size;
-			}
+			// 	newData = _alloc.allocate(_size);
+			// 	_copy_array(newData, _capacity);
+			// 	_capacity = _size;
+			// }
 
 			/* --- Modifiers --- */
 			void	push_back(const value_type& val) {
@@ -118,6 +127,13 @@ namespace ft {
 				++_size;
 			}
 
+			/* --- Iterator --- */
+			iterator begin() {
+				return iterator(_data);
+			}
+			iterator end() {
+				return iterator(_data + _size);
+			}
 	};
 }
 

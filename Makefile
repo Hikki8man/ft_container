@@ -9,7 +9,7 @@ INC		=	vector.hpp \
 
 OBJ		=	$(SRC:.cpp=.o)
 
-CFLAGS	= 	-Wall -Werror -Wextra -std=c++98
+CFLAGS	= 	-std=c++98 #-Wall -Werror -Wextra
 
 CC		=	c++
 
