@@ -7,20 +7,23 @@
 
 int main(void) {
 	{
-		std::vector<int> v;
+		std::vector<int *> v;
 
 
-		v.reserve(10);
-		v.push_back(17);
-		v.resize(7, 8);
-		v.push_back(2);
-		std::vector<int>::iterator it = v.begin();
-		std::cout << "it = " << *it << std::endl;
-		it++;
-		std::cout << "it = " << *it << std::endl;
+		for (int i = 0; i < 10; ++i)
+			v.push_back(new int(i));
+		v.pop_back();
+		//test leaks with assign
 
-		for (std::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
-			std::cout << *it << std::endl;
+		std::vector<int> v2;
+
+
+		// v2.assign(10, 33);
+
+		// v.assign(v2.begin() + 1, v2.end()); //throw error if v2 is empty
+
+		for (std::vector<int *>::iterator it = v.begin(); it != v.end(); it++) {
+			std::cout << **it << std::endl;
 		}
 		// v.shrink_to_fit();
 
@@ -39,14 +42,9 @@ int main(void) {
 
 	{
 		ft::vector<int> v;
-		v.reserve(10);
-		v.push_back(17);
-		v.resize(7, 8);
-		v.push_back(2);
-		ft::vector<int>::iterator it = v.begin();
-		std::cout << "it = " << *it << std::endl;
-		it++;
-		std::cout << "it = " << *it << std::endl;
+		for (int i = 0; i < 10; ++i)
+			v.push_back(i);
+		v.pop_back();
 		
 		for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
 			std::cout << *it << std::endl;

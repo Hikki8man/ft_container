@@ -23,7 +23,7 @@ namespace ft {
 			typedef vector_iterator<const_pointer> const_iterator;
 
 
-		private:
+		protected:
 			pointer _data;
 			size_type _size;
 			size_type _capacity;
@@ -38,7 +38,7 @@ namespace ft {
 				_data = newData;
 			}
 			
-			void _adjust_capacity(size_t newSize) {//if new size > *2 capacity, take exact size
+			void _adjust_capacity(size_t newSize) {//if new size > *2 capacity, take exact size | maybe destroy old data
 				if (newSize > _capacity) {
 					value_type *newData;
 			
@@ -67,13 +67,17 @@ namespace ft {
 					_alloc.deallocate(_data, _capacity);
 			};
 
-			vector<T>& operator=(const vector<T>& rhs);
-
-			value_type & operator[](const size_t & i) const {
-				return _data[i]; //no protection askip
-			}
+			vector<T>& operator=(const vector<T>& rhs) {
+				if (this != &rhs) {
+					_size = rhs._size;
+					_capacity = rhs._capacity;
+					_data = _alloc.allocate(_capacity);
+					_copy_array(_data, _capacity);
+				}
+			};
 
 			/* --- Capacity --- */
+
 			size_type 	size() const {
 				return _size;
 			}
@@ -120,11 +124,74 @@ namespace ft {
 			// 	_capacity = _size;
 			// }
 
+			/* --- Element access --- */
+
+			value_type & operator[](const size_t & i) const {
+				return _data[i];
+			}
+
+			reference at (size_type n) {
+				if (n >= _size)
+					throw std::out_of_range("ft::vector::at");
+				return _data[n];
+			}
+
+			const_reference at (size_type n) const {
+				if (n >= _size)
+					throw std::out_of_range("ft::vector::at");
+				return _data[n];
+			}
+
+			reference front() {
+				return _data[0];
+			}
+
+			const_reference front() const {
+				return _data[0];
+			}
+
+			reference back() {
+				return _data[_size - 1];
+			}
+
+			const_reference back() const {
+				return _data[_size - 1];
+			}
+
 			/* --- Modifiers --- */
-			void	push_back(const value_type& val) {
+
+			template<class InputIterator>
+				void assign(InputIterator first, InputIterator last) {//maybe destroy old data
+					size_type n = last - first;
+					if (n > _capacity)
+						_adjust_capacity(n);
+					_size = n;
+					for (size_type i = 0; i < n; ++i) {
+						_data[i] = *first;
+						++first;
+					}
+				}
+
+			void assign(size_type n, const value_type & val) {
+				if (n > _capacity) {
+					_adjust_capacity(n);
+				}
+				_size = n;
+				for (size_type i = 0; i < n; i++)//maybe destroy old data
+					_data[i] = val;
+			}
+
+			void push_back(const value_type& val) {
 				_adjust_capacity(_size + 1);
 				_data[_size] = val;
 				++_size;
+			}
+
+			void pop_back() {
+				if (empty())
+					return;
+				--_size;
+				_alloc.destroy(&_data[_size]);
 			}
 
 			/* --- Iterator --- */
