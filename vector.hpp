@@ -29,9 +29,10 @@ namespace ft {
 			size_type _capacity;
 			Alloc _alloc;
 			
-			void _copy_array(value_type *newData, const size_type & toDealloc) {
+			void _rebuild_array(value_type *newData, const size_type & toDealloc) {
 				for (size_type i = 0; i < _size; ++i) {
 					newData[i] = _data[i];
+					_alloc.destroy(&_data[i]);
 				}
 				if (toDealloc)
 					_alloc.deallocate(_data, toDealloc);
@@ -45,9 +46,14 @@ namespace ft {
 					if (_capacity)
 						newSize = _capacity * 2;
 					newData = _alloc.allocate(newSize);
-					_copy_array(newData, _capacity);
+					_rebuild_array(newData, _capacity);
 					_capacity = newSize;
 				}
+			}
+
+			void _destroy_array() {
+				for (size_type i = 0; i < _size; ++i)
+					_alloc.destroy(&_data[i]);
 			}
 
 		public:
@@ -60,19 +66,30 @@ namespace ft {
 				for (size_type i = 0; i < size; i++)
 					_data[i] = value;
 			};
-			vector(const vector<T>& src);
+			vector(const vector<T>& src) {
+				*this = src;
+			};
 
 			~vector() {
-				if (_data)
+				if (!empty()) {
+					_destroy_array();
+				}
+				if (_capacity)
 					_alloc.deallocate(_data, _capacity);
 			};
 
 			vector<T>& operator=(const vector<T>& rhs) {
 				if (this != &rhs) {
+					if (!empty())
+						_destroy_array();
+					if (_capacity)
+						_alloc.deallocate(_data, _capacity);
+					
 					_size = rhs._size;
 					_capacity = rhs._capacity;
 					_data = _alloc.allocate(_capacity);
-					_copy_array(_data, _capacity);
+					for (size_type i = 0; i < _size; i++)
+						_data[i] = rhs._data[i];
 				}
 			};
 
@@ -112,7 +129,7 @@ namespace ft {
 					value_type *newData;
 					newData = _alloc.allocate(n);
 					_capacity = n;
-					_copy_array(newData, _size);
+					_rebuild_array(newData, _size);
 				}
 			}
 
@@ -120,7 +137,7 @@ namespace ft {
 			// 	value_type *newData;
 
 			// 	newData = _alloc.allocate(_size);
-			// 	_copy_array(newData, _capacity);
+			// 	_rebuild_array(newData, _capacity);
 			// 	_capacity = _size;
 			// }
 
@@ -191,7 +208,7 @@ namespace ft {
 				if (empty())
 					return;
 				--_size;
-				_alloc.destroy(&_data[_size]);
+				// _alloc.destroy(&_data[_size]);
 			}
 
 			/* --- Iterator --- */

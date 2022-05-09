@@ -3,8 +3,33 @@
 #include "color.hpp"
 #include "Test.hpp"
 #include <vector>
+#include <sys/wait.h>
+#include <unistd.h>
 
 using namespace std;
+
+class leakstest {
+	public:
+		std::string *name;
+		leakstest() {
+			this->name = NULL;
+		}
+		leakstest(const leakstest& other) {
+			*this = other;
+		}
+		leakstest &operator=(const leakstest &other) {
+			this->name = new std::string(*other.name);
+			return *this;
+		}
+		leakstest(const std::string &name) {
+			this->name = new std::string(name);
+		}
+		~leakstest() {
+			if (this->name != NULL) {
+				delete this->name;
+			}
+		}
+};
 
 int main(void) {
 
@@ -37,6 +62,18 @@ int main(void) {
 	Test<size_t>(9, std_v.size(), ft_v.size());
 	// test 10
 	Test<int>(10, std_v[std_v.size() - 1], ft_v[ft_v.size() - 1]);
+	// Test leaks
+	cout << endl;
+	ft::vector<leakstest> v2;
+	vector<leakstest> v1;
+	for (int i = 0; i < 10; ++i) {
+		leakstest l("test");
+		v2.push_back(leakstest(l));
+		v1.push_back(leakstest(l));
+	}
+	v1.pop_back();
+	v2.pop_back();
+	Test<int>("vector").leaks();
 
 
 	cout << RESET_ALL << endl;

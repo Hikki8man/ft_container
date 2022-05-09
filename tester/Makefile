@@ -27,6 +27,7 @@ $(VEC) : $(VEC_OBJ)
 
 clean	:
 	rm -f $(VEC_OBJ) $(STACK_OBJ)
+	rm -f leaks_vector.txt leaks_stack.txt
 
 fclean	:	clean
 	rm -f $(STACK) $(VEC)
