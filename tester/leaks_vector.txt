@@ -1,4 +1,0 @@
-leaks Report Version: 4.0
-Process 49612: 188 nodes malloced for 19 KB
-Process 49612: 0 leaks for 0 total leaked bytes.
-

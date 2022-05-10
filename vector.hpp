@@ -147,13 +147,13 @@ namespace ft {
 				return _data[i];
 			}
 
-			reference at (size_type n) {
+			reference at(size_type n) {
 				if (n >= _size)
 					throw std::out_of_range("ft::vector::at");
 				return _data[n];
 			}
 
-			const_reference at (size_type n) const {
+			const_reference at(size_type n) const {
 				if (n >= _size)
 					throw std::out_of_range("ft::vector::at");
 				return _data[n];
@@ -208,7 +208,7 @@ namespace ft {
 				if (empty())
 					return;
 				--_size;
-				// _alloc.destroy(&_data[_size]);
+				_alloc.destroy(&_data[_size]);
 			}
 
 			/* --- Iterator --- */
