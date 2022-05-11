@@ -30,16 +30,29 @@ namespace ft {
 			Alloc _alloc;
 			
 			void _rebuild_array(value_type *newData, const size_type & toDealloc) {
-				for (size_type i = 0; i < _size; ++i) {
-					newData[i] = _data[i];
+				for (size_type i = 0; i < _size; ++i) { // copy the data
+					_alloc.construct(&newData[i], _data[i]);
 					_alloc.destroy(&_data[i]);
 				}
 				if (toDealloc)
 					_alloc.deallocate(_data, toDealloc);
 				_data = newData;
 			}
+
+			void _build_array(const vector<T> &other, const size_type & n ) {
+				for (size_t i = 0; i < n; ++i) {
+					_alloc.construct(&_data[i], other._data[i]);
+				}
+			}
+			template< class InputIt >
+			void _build_array(InputIt first, InputIt last) {
+				size_type n = last - first;
+				for (size_type i = 0; i < n; ++i) {
+					_alloc.construct(&_data[i], *(first + i));
+				}
+			}
 			
-			void _adjust_capacity(size_t newSize) {//if new size > *2 capacity, take exact size | maybe destroy old data
+			void _adjust_capacity(size_type newSize) {//if new size > *2 capacity, take exact size | maybe destroy old data
 				if (newSize > _capacity) {
 					value_type *newData;
 			
@@ -64,7 +77,7 @@ namespace ft {
 				_capacity = size;
 				_data = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < size; i++)
-					_data[i] = value;
+					_alloc.construct(&_data[i], value);
 			};
 			vector(const vector<T>& src) {
 				*this = src;
@@ -86,10 +99,10 @@ namespace ft {
 						_alloc.deallocate(_data, _capacity);
 					
 					_size = rhs._size;
+					_alloc = rhs._alloc;
 					_capacity = rhs._capacity;
 					_data = _alloc.allocate(_capacity);
-					for (size_type i = 0; i < _size; i++)
-						_data[i] = rhs._data[i];
+					_build_array(rhs, _size);
 				}
 			};
 
@@ -104,15 +117,22 @@ namespace ft {
 			}
 
 			void resize (size_type n, value_type val = value_type()) {
-				if (n < _size) {
+				if (n < _size) {//destroy old data
+					for (size_type i = n; i < _size; ++i)
+						_alloc.destroy(&_data[i]);
 					_size = n;
 				}
-				else if (n > _size) {
+				if (n > _capacity) {
 					_adjust_capacity(n);
-					while (_size < n) {
-						_data[_size] = val;
-						++_size;
+				}
+				while (_size < n) {
+						std::cerr << "wowowo" << std::endl;
+					try {
+						_alloc.construct(_data + _size, val);
+					} catch (...) {
+						exit(1);
 					}
+					++_size;
 				}
 			}
 
@@ -124,7 +144,7 @@ namespace ft {
 				return _size ? false : true;
 			}
 
-			void reserve (size_type n) {
+			void reserve (size_type n) {//nul
 				if (n > _capacity) {
 					value_type *newData;
 					newData = _alloc.allocate(n);
@@ -132,14 +152,6 @@ namespace ft {
 					_rebuild_array(newData, _size);
 				}
 			}
-
-			// void shrink_to_fit() { haa not in c++98
-			// 	value_type *newData;
-
-			// 	newData = _alloc.allocate(_size);
-			// 	_rebuild_array(newData, _capacity);
-			// 	_capacity = _size;
-			// }
 
 			/* --- Element access --- */
 
@@ -177,16 +189,21 @@ namespace ft {
 
 			/* --- Modifiers --- */
 
+
+			void clear() {
+				if (!empty()) {
+					_destroy_array();
+					_size = 0;
+				}
+			}
+
 			template<class InputIterator>
 				void assign(InputIterator first, InputIterator last) {//maybe destroy old data
 					size_type n = last - first;
 					if (n > _capacity)
 						_adjust_capacity(n);
 					_size = n;
-					for (size_type i = 0; i < n; ++i) {
-						_data[i] = *first;
-						++first;
-					}
+					_build_array(first, last);
 				}
 
 			void assign(size_type n, const value_type & val) {
@@ -194,13 +211,12 @@ namespace ft {
 					_adjust_capacity(n);
 				}
 				_size = n;
-				for (size_type i = 0; i < n; i++)//maybe destroy old data
-					_data[i] = val;
+				//huu
 			}
 
 			void push_back(const value_type& val) {
 				_adjust_capacity(_size + 1);
-				_data[_size] = val;
+				_alloc.construct(&_data[_size], val);
 				++_size;
 			}
 

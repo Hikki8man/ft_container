@@ -50,7 +50,7 @@ int main(void) {
 		// v2.pop_back();
 
 
-
+		v2.resize(10, leakstest("test"));
 		// v.assign(5, leakstest());
 
 		// v.assign(v2.begin() + 1, v2.end()); //throw error if v2 is empty

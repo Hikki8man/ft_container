@@ -6,6 +6,7 @@ yellow=`tput setaf 3`
 cyan=`tput setaf 6`
 reset=`tput sgr0`
 
+echo "${cyan}Compiling test...${reset}"
 make -s re
 make -s clean
 #testing stack
@@ -26,5 +27,5 @@ leaks -q -atExit -- ./ft_vector > /dev/null 2> /dev/null
 if [ $? -eq 0 ]; then
 	echo "${green}No leaks detected :)${reset}"
 else
-	echo "${red}Leaks detected !!${reset}"
+	echo "${red}Leaks detected /!\\${reset}"
 fi
