@@ -46,6 +46,7 @@ int main(void) {
 		// }
 
 		size_t size = sizeof(v2);
+		v.reserve(10);
 		std::cout << "size of: " << size << std::endl;
 		// v2.pop_back();
 

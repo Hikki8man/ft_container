@@ -122,18 +122,7 @@ namespace ft {
 						_alloc.destroy(&_data[i]);
 					_size = n;
 				}
-				if (n > _capacity) {
-					_adjust_capacity(n);
-				}
-				while (_size < n) {
-						std::cerr << "wowowo" << std::endl;
-					try {
-						_alloc.construct(_data + _size, val);
-					} catch (...) {
-						exit(1);
-					}
-					++_size;
-				}
+				
 			}
 
 			size_type	capacity() const {
@@ -144,14 +133,29 @@ namespace ft {
 				return _size ? false : true;
 			}
 
-			void reserve (size_type n) {//nul
+			void reserve(size_type n) {
+				if (n > max_size())
+					throw(std::length_error("vector::reserve: max_size exceeded"));
 				if (n > _capacity) {
-					value_type *newData;
-					newData = _alloc.allocate(n);
+					pointer newData = _alloc.allocate(n);
+					for (size_type i = 0; i < _size; ++i) {
+						_alloc.construct(&newData[i], _data[i]);
+						_alloc.destroy(&_data[i]);
+					}
+					_alloc.deallocate(_data, _capacity);
+					_data = newData;
 					_capacity = n;
-					_rebuild_array(newData, _size);
 				}
 			}
+
+			// void reserve (size_type n) {//nul
+			// 	if (n > _capacity) {
+			// 		value_type *newData;
+			// 		newData = _alloc.allocate(n);
+			// 		_capacity = n;
+			// 		_rebuild_array(newData, _size);
+			// 	}
+			// }
 
 			/* --- Element access --- */
 
