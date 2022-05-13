@@ -21,6 +21,7 @@ namespace ft {
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef vector_iterator<pointer> iterator;
 			typedef vector_iterator<const_pointer> const_iterator;
+			//todo typedef reverse_iterator<iterator> reverse_iterator;
 
 
 		protected:
@@ -51,20 +52,8 @@ namespace ft {
 					_alloc.construct(&_data[i], *(first + i));
 				}
 			}
-			
-			void _adjust_capacity(size_type newSize) {//if new size > *2 capacity, take exact size | maybe destroy old data
-				if (newSize > _capacity) {
-					value_type *newData;
-			
-					if (_capacity)
-						newSize = _capacity * 2;
-					newData = _alloc.allocate(newSize);
-					_rebuild_array(newData, _capacity);
-					_capacity = newSize;
-				}
-			}
 
-			size_type _new_capacity(size_type newCap) {
+			size_type _adjust_capacity(size_type newCap) {
 				if (newCap > _capacity * 2)
 					return newCap;
 				else
@@ -125,7 +114,7 @@ namespace ft {
 
 			void resize (size_type n, value_type val = value_type()) {
 				if (n > _capacity) {
-					reserve(n);
+					reserve(_adjust_capacity(n));
 				}
 				if (n < _size) {
 					for (size_type i = n; i < _size; ++i)
@@ -133,12 +122,12 @@ namespace ft {
 					_size = n;
 				}//what if n == _size | test with data null
 				else if (n > _size) {
+				// std::cout << "_data: " << _data << std::endl;
 					for (size_type i = _size; i < n; ++i) {
 						_alloc.construct(&_data[i], val);
 					}
 					_size = n;
 				}
-				
 			}
 
 			size_type	capacity() const {
@@ -158,20 +147,12 @@ namespace ft {
 						_alloc.construct(&newData[i], _data[i]);
 						_alloc.destroy(&_data[i]);
 					}
-					_alloc.deallocate(_data, _capacity);
+					if (_capacity)
+						_alloc.deallocate(_data, _capacity);
 					_data = newData;
 					_capacity = n;
 				}
 			}
-
-			// void reserve (size_type n) {//nul
-			// 	if (n > _capacity) {
-			// 		value_type *newData;
-			// 		newData = _alloc.allocate(n);
-			// 		_capacity = n;
-			// 		_rebuild_array(newData, _size);
-			// 	}
-			// }
 
 			/* --- Element access --- */
 
@@ -217,25 +198,32 @@ namespace ft {
 				}
 			}
 
-			template<class InputIterator>
-				void assign(InputIterator first, InputIterator last) {//test capacity *2 and *3
-					size_type n = last - first;
-					if (n > _capacity)
-						_adjust_capacity(n);
-					_size = n;
-					_build_array(first, last);
-				}
-
 			void assign(size_type n, const value_type & val) {
-				if (n > _capacity) {
-					_adjust_capacity(n);
-				}
+				clear();
 				_size = n;
-				//huu
+				if (n > _capacity)
+					reserve(n);
+				for (size_type i = 0; i < n; i++)
+					_alloc.construct(&_data[i], val);
 			}
 
+			template<class InputIterator>
+				void assign(InputIterator first, InputIterator last) {
+					clear();
+					_size = last - first;
+					std::cout << _size << std::endl;
+					if (_size > _capacity)
+						reserve(_size);
+					for (size_type i = 0; i < _size; i++) {
+						_alloc.construct(&_data[i], *first++);
+					}
+
+				}
+
+
 			void push_back(const value_type& val) {
-				_adjust_capacity(_size + 1);
+				if (_size == _capacity)
+					reserve(_adjust_capacity(_size + 1));
 				_alloc.construct(&_data[_size], val);
 				++_size;
 			}

@@ -24,7 +24,7 @@ TESTOUT = ./testOutput/
 
 TESTPATH = testerMains/
 
-CFLAGS	=  #-Wall -Werror -Wextra
+CFLAGS	=   #-Wall -Werror -Wextra
 
 CC		=	c++
 

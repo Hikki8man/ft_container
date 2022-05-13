@@ -5,38 +5,41 @@
 #include <string>
 #include <sys/types.h>
 #include <unistd.h>
+#include <csignal>
+#include <ctime>
+#include <chrono>
+#include <sys/time.h>
 
 #ifdef STD
 	#include <vector>
 	namespace ft = std;
 	std::ofstream ofs("testOutput/std_vector_out.txt");
-	std::string exec_name("-atExit -- std_vector");
 #else
 	#include "../../vector.hpp" // include your stack header file
 	std::ofstream ofs("testOutput/ft_vector_out.txt");
 
 #endif
 
-// template <typename T, typename toPrint>
-// 	void printVector(ft::vector<T> &v)
-// 	{
-// 		for (int i = 0; i < v.size(); i++)
-// 		{
-// 			Test<toPrint>(0, v)
-// 		}
-// 		std::cout << std::endl;
-// 	}
+int nb = 1;
+
 class leakstest {
 	public:
 		std::string *name;
 		leakstest() {
-			this->name = NULL;
+			this->name = new std::string("");
 		}
 		leakstest(const leakstest& other) {
 			*this = other;
 		}
 		leakstest &operator=(const leakstest &other) {
-			this->name = new std::string(*other.name);
+			if (this != &other) {
+				// if (this->name != NULL) {
+				// 	delete this->name;
+				// }
+				if (other.name != NULL && this->name != NULL) {
+					*this->name = *other.name;
+				}
+			}
 			return *this;
 		}
 		leakstest(const std::string &name) {
@@ -45,83 +48,91 @@ class leakstest {
 		~leakstest() {
 			if (this->name != NULL) {
 				delete this->name;
+				this->name = NULL;
 			}
 		}
 };
 
+void segfault_handler(int sig) {
+	Test<std::string>("SEGFAULT", false);
+	throw std::runtime_error("SEGFAULT");
+
+}
+
 int main(int ac, char **av, char **env) {
 
-	ofs << "VECTOR TEST" << std::endl;
+	std::signal(SIGSEGV, &segfault_handler);
+	ofs << "VECTOR TEST";
+	
 	ft::vector<int> v;
 
-	// // test 1
-	// Test<bool>(1, v.empty(), false);
-	// // test 2
-	// Test<size_t>(2, v.size(), false);
-	// // test 3
-	// Test<size_t>(3, v.capacity(), false);
-	// // test 4
-	// v.reserve(10);
-	// Test<size_t>(4, v.capacity(), false);
-	// // test 5
-	// v.push_back(17);
-	// Test<size_t>(5, v.size(), false);
-	// // test 6
-	// Test<int>(6, v[0], false );
-	// // test 7
-	// v.resize(7, 4);
-	// Test<size_t>(7, v.size(), false);
-	// // test 8
-	// v.push_back(2);
-	// Test<size_t>(8, v.capacity(), false);
-	// // test 9
-	// v.pop_back();
-	// Test<size_t>(9, v.size(), false);
-	// // test 10
-	// Test<int>(10, v[v.size() - 1], false);
-	// Test 11
-	ft::vector<leakstest> v2;
-	// for (int i = 0; i < 10; ++i) {
-	// 	leakstest l("test");
-	// 	v2.push_back(leakstest(l));
-	// }
-	// v2.pop_back();
-	// Test<std::string>(11, "Print tab", false);
-	// for (int i = 0; i < v2.size(); ++i) {
-	// 	Test<std::string>(11, *v2[i].name, true);
-	// }
+	// struct timeval time_now;
+	// gettimeofday(&time_now, NULL);
+	// time_t time_start = (time_now.tv_sec * 1000) + (time_now.tv_usec / 1000);
+
+
+	// test 1
+	try {
+		Test<bool>(v.empty(), false);
+	} catch (...) {}
+	// test 2
+	try {
+		Test<size_t>(v.size(), false);
+	} catch (...) {}
+	// test 3
+	try {
+		Test<size_t>(v.capacity(), false);
+	} catch (...) {}
+	// test 4
+	v.reserve(10);
+	try {
+		Test<size_t>(v.capacity(), false);
+	} catch (...) {}
+	// test 5
+	v.push_back(17);
+	try {
+		Test<size_t>(v.size(), false);
+	} catch (...) {}
+	// test 6
+	try {
+		Test<int>(v[0], false );
+	} catch (...) {}
+	// test 7
+	v.resize(7, 4);
+	try {
+		Test<size_t>(v.size(), false);
+	} catch (...) {}
+	// test 8
+	v.push_back(2);
+	try {
+		Test<size_t>(v.capacity(), false);
+	} catch (...) {}
+	// test 9
+	v.pop_back();
+	try {
+		Test<size_t>(v.size(), false);
+	} catch (...) {}
+	// test 10
+	try {
+		Test<int>(v[v.size() - 1], false);
+	} catch (...) {}
+	// test 11
+	try {
+		Test<int>(*v.begin(), false);
+	} catch (...) {}
 	// test 12
-	Test<std::string>(12, "Print tab", false);
-	// v2.reserve(30);
-	std::cout << "capacity: " << v2.capacity() << std::endl;
-	v2.resize(20);
-	for (int i = 0; i < v2.size(); ++i) {
-		if (v2[i].name != NULL) {
-			Test<std::string>(11, *v2[i].name, true);
-		}
-		else
-			Test<std::string>(11, "NULL", true);
-	}
-	// test 13
-	Test<std::string>(13, "Print tab", false);
-	v2.resize(2);
-	for (int i = 0; i < v2.size(); ++i) {
-		if (v2[i].name != NULL) {
-			Test<std::string>(11, *v2[i].name, true);
-		}
-		else
-			Test<std::string>(11, "NULL", true);
-	}
-	// test 13
-	v2.clear();
-	Test<bool>(13, v2.empty(), false);
-	// test 14
-	Test<size_t>(14, v2.size(), false);
-	// test 15
-	Test<size_t>(15, v2.capacity(), false);
-	// test 16
+	try {
+		ft::vector<leakstest> vl;
+		vl.push_back(leakstest("test"));
+
+	} catch(...) {}
 
 	ofs.close();
+
+	// gettimeofday(&time_now, NULL);
+	// time_t time_end = (time_now.tv_sec * 1000) + (time_now.tv_usec / 1000);
+	// std:: cout << "time: " << time_end - time_start << " ms" << std::endl;
+
 
 	return 0;
 }

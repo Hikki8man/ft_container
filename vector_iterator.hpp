@@ -96,6 +96,10 @@ namespace ft {
 	template< class IteratorL, class IteratorR >
 	bool operator>=(const vector_iterator<IteratorL>& lhs, const vector_iterator<IteratorR>& rhs) {
 		return lhs.base() >= rhs.base();
+	}
+	template< class Iterator>
+	typename vector_iterator<Iterator>::difference_type operator-(const vector_iterator<Iterator>& lhs, const vector_iterator<Iterator>& rhs) {
+		return lhs.base() - rhs.base();
 	}	
 
 }

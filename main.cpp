@@ -33,77 +33,36 @@ int main(void) {
 	{
 		std::vector<int> v;
 
+		for (int i = 0; i < 8; ++i) {
+			v.push_back(i);
+		}
 
-		// for (int i = 0; i < 10; ++i)
-		// 	v.push_back(int(i));
-		// v.pop_back();
-		//test leaks with assign
+		std::cout << "v.size() = " << v.size() << std::endl;
+		std::cout << "v.capacity() = " << v.capacity() << std::endl;
 
-		std::vector<leakstest> v2;
-		// for (int i = 0; i < 10; ++i) {
-		// 	leakstest l("test");
-		// 	v2.push_back(leakstest(l));
-		// }
+		v.insert(v.end(), 42);
 
-		size_t size = sizeof(v2);
-		v.reserve(10);
-		std::cout << "size of: " << size << std::endl;
-		// v2.pop_back();
+		std::cout << "v.size() = " << v.size() << std::endl;
+		std::cout << "v.capacity() = " << v.capacity() << std::endl;
 
-
-		v2.resize(10, leakstest("test"));
-		// v.assign(5, leakstest());
-
-		// v.assign(v2.begin() + 1, v2.end()); //throw error if v2 is empty
-
-		// for (std::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
-		// 	std::cout << *it << std::endl;
-		// }
-		// v.shrink_to_fit();
-
-
-		// std::cout << a-> << std::endl;
-
-		// std::cout << "v.size() = " << v.size() << std::endl;
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// std::cout << std::boolalpha << "v.empty() = " << v.empty() << std::endl;
-		// for (size_t i = 0; i < v.size(); ++i)
-		// 	std::cout << v[i] << std::endl;
+		for (int i = 0; i < v.size(); ++i) {
+			std::cout << v[i] << " ";
+		}
+		std::cout << std::endl;
+		
 	
 	}
 
 	std::cout << "---------------------------------------------" << std::endl;
 
 	{
-		// ft::vector<int> v;
-		// for (int i = 0; i < 10; ++i)
-		// 	v.push_back(i);
-		// v.pop_back();
+		ft::vector<int> v;
 
-		ft::vector<leakstest> v2;
-		for (int i = 0; i < 10; ++i) {
-			leakstest l("test");
-			v2.push_back(leakstest(l));
+		for (int i = 0; i < 11; ++i) {
+			v.push_back(i);
 		}
-		size_t size = sizeof(v2);
-		std::cout << "size of: " << size << std::endl;
 
-		v2.pop_back();
-
-
-		// v2.pop_back();
 		
-		// for (ft::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
-		// 	std::cout << *it << std::endl;
-		// }
-
-		// std::cout << a-> << std::endl;
-
-		// std::cout << "v.size() = " << v.size() << std::endl;
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// std::cout << std::boolalpha << "v.empty() = " << v.empty() << std::endl;
-		// for (size_t i = 0; i < v.size(); ++i)
-		// 	std::cout << v[i] << std::endl;
 
 	}
 	std::cout << "---------------------------------------------" << std::endl;

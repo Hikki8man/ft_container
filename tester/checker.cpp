@@ -17,16 +17,26 @@ int main (int ac, char **av) {
 		return (1);
 	}
 	std::string s1, s2;
-	int i = 1;
+	int i = 0;
 	std::cout << FG_YELLOW << av[1] << " test:" << std::endl;
 	while (getline(f1, s1)) {
 		getline(f2, s2);
+		if (i == 0) {
+			++i;
+			continue;
+		}
 		if (s1 != s2) {
-			std::cout << FG_RED << i << ": FAIL ";
+			if (s1.find("SEGFAULT") != std::string::npos)
+				std::cout << FG_RED << i << ": " << "SIGSEGV ";
+			else
+				std::cout << FG_RED << i << ": " << "FAIL ";
 			failed = true;
 		}
 		else {
-			std::cout << FG_GREEN << i << ": OK ";
+			if (s1.find("SEGFAULT") != std::string::npos)
+				std::cout << FG_GREEN << i << ": " << "SIGSEGV ";
+			else
+				std::cout << FG_GREEN << i << ": OK ";
 		}
 		++i;
 	}

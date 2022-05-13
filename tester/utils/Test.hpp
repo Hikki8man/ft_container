@@ -5,15 +5,18 @@
 #include <fstream>
 
 extern std::ofstream ofs;
+extern int nb;
 
 template <typename T>
 class Test {
 	public:
-		Test(int n, T a, bool sameTest) {
+		Test(T a, bool sameTest) {
+			ofs << std::endl;
 			if (sameTest == false)
-				ofs << "Test " << n << ": " << a << std::endl;
+				ofs << "Test " << nb << ": " << a;
 			else
-				ofs << " " << a << std::endl;
+				ofs << " " << a;
+			nb++;
 		}
 };
 
