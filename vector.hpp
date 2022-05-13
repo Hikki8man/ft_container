@@ -64,6 +64,13 @@ namespace ft {
 				}
 			}
 
+			size_type _new_capacity(size_type newCap) {
+				if (newCap > _capacity * 2)
+					return newCap;
+				else
+					return _capacity * 2;
+			}
+
 			void _destroy_array() {
 				for (size_type i = 0; i < _size; ++i)
 					_alloc.destroy(&_data[i]);
@@ -117,9 +124,18 @@ namespace ft {
 			}
 
 			void resize (size_type n, value_type val = value_type()) {
-				if (n < _size) {//destroy old data
+				if (n > _capacity) {
+					reserve(n);
+				}
+				if (n < _size) {
 					for (size_type i = n; i < _size; ++i)
 						_alloc.destroy(&_data[i]);
+					_size = n;
+				}//what if n == _size | test with data null
+				else if (n > _size) {
+					for (size_type i = _size; i < n; ++i) {
+						_alloc.construct(&_data[i], val);
+					}
 					_size = n;
 				}
 				
@@ -202,7 +218,7 @@ namespace ft {
 			}
 
 			template<class InputIterator>
-				void assign(InputIterator first, InputIterator last) {//maybe destroy old data
+				void assign(InputIterator first, InputIterator last) {//test capacity *2 and *3
 					size_type n = last - first;
 					if (n > _capacity)
 						_adjust_capacity(n);
