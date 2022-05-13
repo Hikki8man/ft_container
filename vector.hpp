@@ -80,17 +80,14 @@ namespace ft {
 			};
 
 			~vector() {
-				if (!empty()) {
-					_destroy_array();
-				}
+				clear();
 				if (_capacity)
 					_alloc.deallocate(_data, _capacity);
 			};
 
 			vector<T>& operator=(const vector<T>& rhs) {
 				if (this != &rhs) {
-					if (!empty())
-						_destroy_array();
+					clear();
 					if (_capacity)
 						_alloc.deallocate(_data, _capacity);
 					
