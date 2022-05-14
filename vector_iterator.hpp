@@ -71,6 +71,9 @@ namespace ft {
 			vector_iterator operator-(difference_type n) {
 				return vector_iterator(_current - n);
 			}
+			vector_iterator operator+(difference_type n) const {
+				return vector_iterator(_current + n);
+			}
 			
 	};
 	template< class IteratorL, class IteratorR >
@@ -101,7 +104,10 @@ namespace ft {
 	typename vector_iterator<Iterator>::difference_type operator-(const vector_iterator<Iterator>& lhs, const vector_iterator<Iterator>& rhs) {
 		return lhs.base() - rhs.base();
 	}	
-
+	template< class Iterator>
+	typename vector_iterator<Iterator>::difference_type operator+(const vector_iterator<Iterator>& lhs, const vector_iterator<Iterator>& rhs) {
+		return lhs.base() + rhs.base();
+	}
 }
 
 #endif

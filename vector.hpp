@@ -119,7 +119,6 @@ namespace ft {
 					_size = n;
 				}//what if n == _size | test with data null
 				else if (n > _size) {
-				// std::cout << "_data: " << _data << std::endl;
 					for (size_type i = _size; i < n; ++i) {
 						_alloc.construct(&_data[i], val);
 					}
@@ -136,6 +135,7 @@ namespace ft {
 			}
 
 			void reserve(size_type n) {
+				std::cout << "n: " << n << std::endl;
 				if (n > max_size())
 					throw(std::length_error("vector::reserve: max_size exceeded"));
 				if (n > _capacity) {
@@ -208,21 +208,25 @@ namespace ft {
 				void assign(InputIterator first, InputIterator last) {
 					clear();
 					_size = last - first;
-					std::cout << _size << std::endl;
+					// std::cout << _size << std::endl;
 					if (_size > _capacity)
 						reserve(_size);
 					for (size_type i = 0; i < _size; i++) {
-						_alloc.construct(&_data[i], *first++);
+						value_type val = *first;
+						_alloc.construct(&_data[i], val);
+						++first;
 					}
 
 				}
 
 
 			void push_back(const value_type& val) {
-				if (_size == _capacity)
-					reserve(_adjust_capacity(_size + 1));
-				_alloc.construct(&_data[_size], val);
-				++_size;
+				std::cout << "push_back" << std::endl;
+				// if (_size == _capacity)
+				// 	reserve(_adjust_capacity(_size + 1));
+				// _alloc.construct(_data + _size, val);
+				// ++_size;
+				insert(end(), 1, val);
 			}
 
 			void pop_back() {
@@ -231,6 +235,63 @@ namespace ft {
 				--_size;
 				_alloc.destroy(&_data[_size]);
 			}
+
+
+			iterator insert(iterator pos, const value_type& val) {
+				difference_type i = pos - begin();
+				insert(pos, val);
+				return iterator(_data + i);
+			}		
+
+			void insert(iterator pos, size_type count, const value_type& val) {
+				std::cout << "pos: "  << std::endl;
+				difference_type i = pos - begin();
+
+				if (_size + count > _capacity)
+					reserve(_adjust_capacity(_size + count));//pas opti du tout
+		
+				size_type newSize = _size + count;
+				iterator ite = end() - 1;
+
+				for (iterator it = iterator(begin() + newSize - 1); it != iterator(begin() + i + count - 1); --it) {
+					_alloc.construct(it.base(), *ite);
+					_alloc.destroy(ite.base());
+					--ite;
+				}
+
+				iterator endo(_data + i + count);
+	
+				for (ite = begin() + i; ite != endo; ++ite) {
+					_alloc.construct(ite.base(), val);
+				}
+				_size += count;
+			}
+
+			template<class InputIterator>
+				void insert(iterator pos, InputIterator first, InputIterator last) {
+					std::cout << "HELLO" << std::endl;
+					difference_type i = pos - begin();
+					size_type count = last - first;
+					if (_size + count > _capacity)
+						reserve(_adjust_capacity(_size + count));//pas opti du tout
+		
+					size_type newSize = _size + count;
+					iterator ite = end() - 1;
+
+					for (iterator it = iterator(begin() + newSize - 1); it != iterator(begin() + i + count - 1); --it) {
+						_alloc.construct(it.base(), *ite);
+						_alloc.destroy(ite.base());
+						--ite;
+					}
+
+					iterator endo(_data + i + count);
+	
+					// for (ite = begin() + i; ite != endo; ++ite) {
+					// 	_alloc.construct(ite.base(), *first++);
+					// }
+					_size += count;
+				}
+				
 
 			/* --- Iterator --- */
 			iterator begin() {
