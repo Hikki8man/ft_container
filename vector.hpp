@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <cstring>
-#include "vector_iterator.hpp"
+#include "reverve_iterator.hpp"
+#include "random_access_iterator.hpp"
 
 namespace ft {
 
@@ -19,9 +20,10 @@ namespace ft {
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
-			typedef vector_iterator<pointer> iterator;
-			typedef vector_iterator<const_pointer> const_iterator;
-			//todo typedef reverse_iterator<iterator> reverse_iterator;
+			typedef ft::random_access_iterator<pointer> iterator;
+			typedef ft::random_access_iterator<const_pointer> const_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 
 		protected:
@@ -135,14 +137,13 @@ namespace ft {
 			}
 
 			void reserve(size_type n) {
-				std::cout << "n: " << n << std::endl;
 				if (n > max_size())
 					throw(std::length_error("vector::reserve: max_size exceeded"));
 				if (n > _capacity) {
 					pointer newData = _alloc.allocate(n);
 					for (size_type i = 0; i < _size; ++i) {
-						_alloc.construct(&newData[i], _data[i]);
-						_alloc.destroy(&_data[i]);
+						_alloc.construct(newData + i, _data[i]);
+						_alloc.destroy(_data + i);
 					}
 					if (_capacity)
 						_alloc.deallocate(_data, _capacity);
@@ -221,12 +222,10 @@ namespace ft {
 
 
 			void push_back(const value_type& val) {
-				std::cout << "push_back" << std::endl;
-				// if (_size == _capacity)
-				// 	reserve(_adjust_capacity(_size + 1));
-				// _alloc.construct(_data + _size, val);
-				// ++_size;
-				insert(end(), 1, val);
+				if (_size == _capacity)
+					reserve(_adjust_capacity(_size + 1));
+				_alloc.construct(_data + _size, val);
+				++_size;
 			}
 
 			void pop_back() {
@@ -238,13 +237,14 @@ namespace ft {
 
 
 			iterator insert(iterator pos, const value_type& val) {
+				// val could be an existing element of this vector, so make a
+	    		// copy of it before _M_insert_aux moves elements around.
 				difference_type i = pos - begin();
 				insert(pos, val);
 				return iterator(_data + i);
 			}		
 
 			void insert(iterator pos, size_type count, const value_type& val) {
-				std::cout << "pos: "  << std::endl;
 				difference_type i = pos - begin();
 
 				if (_size + count > _capacity)
@@ -297,9 +297,28 @@ namespace ft {
 			iterator begin() {
 				return iterator(_data);
 			}
+			const_iterator begin() const {
+				return const_iterator(_data);
+			}
 			iterator end() {
 				return iterator(_data + _size);
 			}
+			const_iterator end() const {
+				return const_iterator(_data + _size);
+			}
+			reverse_iterator rbegin() {
+				return reverse_iterator(end());
+			}
+			const_reverse_iterator rbegin() const {
+				return const_reverse_iterator(end());
+			}
+			reverse_iterator rend() {
+				return reverse_iterator(begin());
+			}
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(begin());
+			}
+
 	};
 }
 
