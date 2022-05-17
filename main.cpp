@@ -33,69 +33,92 @@ class leakstest {
 
 int main(void) {
 	{
-		// std::vector<leakstest> v;
+		std::vector<leakstest> v;
 
-		// leakstest a("a");
-		// leakstest a1("b");
-		// leakstest a2("c");
-		// leakstest a3("d");
+		leakstest a("a");
+		leakstest b("b");
+		leakstest c("c");
+		leakstest d("d");
 
  
-		// std::cout << "~~~~~~~~~~" << std::endl;
+		std::cout << "~~~~~~~~~~" << std::endl;
 
-		// v.reserve(8);
+		v.reserve(8);
 
-		// v.push_back(a);
-		// v.push_back(a1);
-		// v.push_back(a2);
+		
+
+		v.push_back(a);
+		v.push_back(b);
+		v.push_back(c);
 		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
+		v.insert(v.begin(), d);
 
-		// v.insert(v.begin(), a3);
+		std::cout << "~~~~~~~~~~" << std::endl;
 	
 	}
 
 	{
-		std::vector<int> v;
+		// std::vector<int> v;
 
-		for (int i = 0; i < 10; i++) {
-			v.push_back(i);
-		}
+		// for (int i = 0; i < 10; i++) {
+		// 	v.push_back(i);
+		// }
 
-		for (std::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
-			std::cout << *it << std::endl;
-		}
+		// v.insert(v.end(), 100);
+
+		// for (int i = 0; i < v.size(); i++) {
+		// 	std::cout << v[i] << " ";
+		// }
+		// std::cout << std::endl;
+
+		// for (std::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
+		// 	std::cout << *it << std::endl;
+		// }
 	}
 
 	std::cout << "---------------------------------------------" << std::endl;
 
 	{
-		// ft::vector<leakstest> v;
+		ft::vector<leakstest> v;
 
-		// leakstest a;
-		// leakstest a1;
-		// leakstest a2;
-		// leakstest a3;
+		leakstest a("a");
+		leakstest b("b");
+		leakstest c("c");
+		leakstest d("d");
+
  
-		// std::cout << "~~~~~~~~~~" << std::endl;
+		std::cout << "~~~~~~~~~~" << std::endl;
 
-		// v.push_back(a);
-		// v.push_back(a1);
-		// v.push_back(a2);
+		v.reserve(8);
+
+		
+
+		v.push_back(a);
+		v.push_back(b);
+		v.push_back(c);
 		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// v.push_back(a3);	
+		v.insert(v.begin(), d);
+
+		std::cout << "~~~~~~~~~~" << std::endl;
 
 	}
 
 	{
-		ft::vector<int> v;
+		// ft::vector<int> v;
 
-		for (int i = 0; i < 10; i++) {
-			v.push_back(i);
-		}
+		// for (int i = 0; i < 10; i++) {
+		// 	v.push_back(i);
+		// }
 
-		for (ft::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
-			std::cout << *it << std::endl;
-		}
+		// v.insert(v.end(), 100);
+
+		// for (int i = 0; i < v.size(); i++) {
+		// 	std::cout << v[i] << " ";
+		// }
+		// std::cout << std::endl;
+		// for (ft::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
+		// 	std::cout << *it << std::endl;
+		// }
 	}
 	std::cout << "---------------------------------------------" << std::endl;
 

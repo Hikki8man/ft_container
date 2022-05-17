@@ -56,7 +56,6 @@ class leakstest {
 void segfault_handler(int sig) {
 	Test<std::string>("SEGFAULT", false);
 	throw std::runtime_error("SEGFAULT");
-
 }
 
 int main(int ac, char **av, char **env) {

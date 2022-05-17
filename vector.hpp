@@ -64,7 +64,7 @@ namespace ft {
 
 			void _destroy_array() {
 				for (size_type i = 0; i < _size; ++i)
-					_alloc.destroy(&_data[i]);
+					_alloc.destroy(_data + i);
 			}
 
 		public:
@@ -214,7 +214,7 @@ namespace ft {
 						reserve(_size);
 					for (size_type i = 0; i < _size; i++) {
 						value_type val = *first;
-						_alloc.construct(&_data[i], val);
+						_alloc.construct(_data + i, val);
 						++first;
 					}
 
@@ -239,9 +239,19 @@ namespace ft {
 			iterator insert(iterator pos, const value_type& val) {
 				// val could be an existing element of this vector, so make a
 	    		// copy of it before _M_insert_aux moves elements around.
-				difference_type i = pos - begin();
-				insert(pos, val);
-				return iterator(_data + i);
+				if (pos == this->end() && this->_size + 1 <= this->_capacity) {
+					_alloc.construct(_data + _size, val);
+					++_size;
+					return this->end() - 1;
+				} else {
+					difference_type offset = pos - this->begin();
+					if (_size == _capacity)
+						reserve(_adjust_capacity(_size + 1));
+					
+					
+					
+					return iterator(_data + offset);
+				}
 			}		
 
 			void insert(iterator pos, size_type count, const value_type& val) {

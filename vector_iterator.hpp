@@ -24,7 +24,6 @@ namespace ft {
 		public:
 			// Constructors / Destructor
 			vector_iterator() : _current(_Iterator()) {}
-			// vector_iterator(const pointer p) : _current(p) {}
 			vector_iterator(const _Iterator& p) : _current(p) {}
 			vector_iterator(const vector_iterator& other) : _current(other._current) {}
 			vector_iterator& operator=(const vector_iterator& other) {
