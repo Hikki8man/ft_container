@@ -5,6 +5,7 @@
 #include <cstring>
 #include "reverve_iterator.hpp"
 #include "random_access_iterator.hpp"
+#include "is_integral.hpp"
 
 namespace ft {
 
@@ -31,29 +32,6 @@ namespace ft {
 			size_type _size;
 			size_type _capacity;
 			Alloc _alloc;
-			
-			void _rebuild_array(value_type *newData, const size_type & toDealloc) {
-				for (size_type i = 0; i < _size; ++i) { // copy the data
-					_alloc.construct(&newData[i], _data[i]);
-					_alloc.destroy(&_data[i]);
-				}
-				if (toDealloc)
-					_alloc.deallocate(_data, toDealloc);
-				_data = newData;
-			}
-
-			void _build_array(const vector<T> &other, const size_type & n ) {
-				for (size_t i = 0; i < n; ++i) {
-					_alloc.construct(&_data[i], other._data[i]);
-				}
-			}
-			template< class InputIt >
-			void _build_array(InputIt first, InputIt last) {
-				size_type n = last - first;
-				for (size_type i = 0; i < n; ++i) {
-					_alloc.construct(&_data[i], *(first + i));
-				}
-			}
 
 			size_type _adjust_capacity(size_type newCap) {
 				if (newCap > _capacity * 2)
@@ -111,7 +89,7 @@ namespace ft {
 				return _alloc.max_size();
 			}
 
-			void resize (size_type n, value_type val = value_type()) {
+			void resize (size_type n, value_type val = value_type()) {//redo
 				if (n > _capacity) {
 					reserve(_adjust_capacity(n));
 				}
@@ -239,18 +217,39 @@ namespace ft {
 			iterator insert(iterator pos, const value_type& val) {
 				// val could be an existing element of this vector, so make a
 	    		// copy of it before _M_insert_aux moves elements around.
-				if (pos == this->end() && this->_size + 1 <= this->_capacity) {
+				if (pos == end() && _size + 1 <= _capacity) {
 					_alloc.construct(_data + _size, val);
 					++_size;
-					return this->end() - 1;
-				} else {
-					difference_type offset = pos - this->begin();
-					if (_size == _capacity)
-						reserve(_adjust_capacity(_size + 1));
-					
-					
-					
-					return iterator(_data + offset);
+					return end() - 1;
+				}
+				else if (_size + 1 > _capacity) {
+					pointer newData = _alloc.allocate(_adjust_capacity(_size + 1));
+					difference_type offset = pos - begin();
+
+					_alloc.construct(newData + offset, val);
+					for (size_type i = 0; i <= _size; ++i) {
+						if (i < offset)
+							_alloc.construct(newData + i, _data[i]);
+						else if (i > offset)
+							_alloc.construct(newData + i, _data[i - 1]);
+					}
+					_destroy_array();
+					_alloc.deallocate(_data, _capacity);
+					_capacity = _adjust_capacity(_size + 1);
+					_data = newData;
+					++_size;
+					return begin() + offset;
+				}
+				else {
+					difference_type offset = pos - begin();
+					_alloc.construct(_data + _size, *(_data + _size - 1));
+					for (size_type i = _size - 1; i > offset; --i) {
+						_data[i] = _data[i - 1];
+					}
+					*pos = val;
+					++_size;
+
+					return begin() + offset;
 				}
 			}		
 

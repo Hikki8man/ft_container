@@ -31,7 +31,15 @@ class leakstest {
 		}
 };
 
+std::ostream& operator<<(std::ostream& os, const leakstest& l) {
+	os << l.name;
+	return os;
+}
+
 int main(void) {
+
+		std::cout << std::boolalpha << "std int is int: " << std::is_integral<const int>::value << std::endl;
+		std::cout << std::boolalpha << "ft int is int: " << ft::is_integral<const int>::value << std::endl;
 	{
 		std::vector<leakstest> v;
 
@@ -43,7 +51,7 @@ int main(void) {
  
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.reserve(8);
+		v.reserve(3);
 
 		
 
@@ -51,7 +59,8 @@ int main(void) {
 		v.push_back(b);
 		v.push_back(c);
 		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		v.insert(v.begin(), d);
+		v.insert(v.begin() + 1, d);
+		v.assign(3, leakstest("e"));
 
 		std::cout << "~~~~~~~~~~" << std::endl;
 	
@@ -89,17 +98,18 @@ int main(void) {
  
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.reserve(8);
+		v.reserve(3);
 
 		
 
 		v.push_back(a);
 		v.push_back(b);
 		v.push_back(c);
+		// std::cout << "v.begin() = " << *v.begin() << std::endl;
 		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		v.insert(v.begin(), d);
+		v.insert(v.begin() + 1, d);
 
-		std::cout << "~~~~~~~~~~" << std::endl;
+		// std::cout << "~~~~~~~~~~" << std::endl;
 
 	}
 
