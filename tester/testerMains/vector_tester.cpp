@@ -1,5 +1,6 @@
 #include "../utils/color.hpp"
 #include "../utils/Test.hpp"
+#include "../utils/myTestClass.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,6 +10,7 @@
 #include <ctime>
 #include <chrono>
 #include <sys/time.h>
+
 
 #ifdef STD
 	#include <vector>
@@ -63,68 +65,258 @@ int main(int ac, char **av, char **env) {
 	std::signal(SIGSEGV, &segfault_handler);
 	ofs << "VECTOR TEST";
 	
-	ft::vector<int> v;
 
 	// struct timeval time_now;
 	// gettimeofday(&time_now, NULL);
 	// time_t time_start = (time_now.tv_sec * 1000) + (time_now.tv_usec / 1000);
 
 
-	// test 1
+	// test 1: Default constructor
 	try {
-		Test<bool>(v.empty(), false);
-	} catch (...) {}
-	// test 2
-	try {
-		Test<size_t>(v.size(), false);
-	} catch (...) {}
-	// test 3
-	try {
+		ft::vector<int> v;
 		Test<size_t>(v.capacity(), false);
-	} catch (...) {}
-	// test 4
-	v.reserve(10);
-	try {
-		Test<size_t>(v.capacity(), false);
-	} catch (...) {}
-	// test 5
-	v.push_back(17);
-	try {
-		Test<size_t>(v.size(), false);
-	} catch (...) {}
-	// test 6
-	try {
-		Test<int>(v[0], false );
-	} catch (...) {}
-	// test 7
-	v.resize(7, 4);
-	try {
-		Test<size_t>(v.size(), false);
-	} catch (...) {}
-	// test 8
-	v.push_back(2);
-	try {
-		Test<size_t>(v.capacity(), false);
-	} catch (...) {}
-	// test 9
-	v.pop_back();
-	try {
-		Test<size_t>(v.size(), false);
-	} catch (...) {}
-	// test 10
-	try {
-		Test<int>(v[v.size() - 1], false);
-	} catch (...) {}
-	// test 11
-	try {
-		Test<int>(*v.begin(), false);
-	} catch (...) {}
-	// test 12
-	try {
-		ft::vector<leakstest> vl;
-		vl.push_back(leakstest("test"));
+		Test<size_t>(v.size(), true);
+		Test<bool>(v.empty(), true);
+	}
+	catch(...) {}
 
-	} catch(...) {}
+	// test 2: Constructor with size and default value
+	try {
+		ft::vector<MyTestClass> v(10);
+		Test<size_t>(v.capacity(), false);
+		Test<size_t>(v.size(), true);
+		Test<bool>(v.empty(), true);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 3: Constructor with size and value
+	try {
+		ft::vector<MyTestClass> v(10, MyTestClass(12));
+		Test<size_t>(v.size(), false);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 4: Copy constructor
+	try {
+		ft::vector<MyTestClass> v(10, MyTestClass(22));
+		ft::vector<MyTestClass> v2(v);
+		Test<size_t>(v2.size(), false);
+		for (size_t i = 0; i < v2.size(); i++) {
+			Test<MyTestClass>(v2[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 5: Operator=
+	try {
+		ft::vector<MyTestClass> v(10, MyTestClass(32));
+		ft::vector<MyTestClass> v2;
+		v2 = v;
+		Test<size_t>(v2.size(), false);
+		for (size_t i = 0; i < v2.size(); i++) {
+			Test<MyTestClass>(v2[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 6: Constructor with iterator
+	try {
+		ft::vector<MyTestClass> v(10, MyTestClass(42));
+		ft::vector<MyTestClass> v2(v.begin(), v.end());
+		Test<size_t>(v2.size(), false);
+		for (size_t i = 0; i < v2.size(); i++) {
+			Test<MyTestClass>(v2[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 7: Reserve
+	try {
+		ft::vector<int> v;
+		v.reserve(10);
+		Test<size_t>(v.capacity(), false);
+		v.reserve(100);
+		Test<size_t>(v.capacity(), true);
+		v.reserve(0);
+		Test<size_t>(v.capacity(), true);
+		v.reserve(v.max_size() + 1);
+		Test<size_t>(v.capacity(), true);
+	}
+	catch(std::length_error) { Test<std::string>("LENGTH_ERROR", true); }
+	catch(...) {}
+
+	// test 8: Resize
+	try {
+		ft::vector<int> v;
+		v.resize(10);
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<int>(v[i], true);
+		}
+		v.resize(0);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		v.resize(11);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<int>(v[i], true);
+		}
+		v.resize(11, 1);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<int>(v[i], true);
+		}
+		v.resize(99, 42);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (size_t i = 0; i < v.size(); i++) {
+			Test<int>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 9: Max_size
+	try {
+		ft::vector<int> v;
+		Test<size_t>(v.max_size(), false);
+		// if (v.max_size() == std::distance(v.begin(), v.end())) { // not sure if this is the correct way to test this
+		// 	Test<std::string>("true", false);
+		// }
+		// else {
+		// 	Test<std::string>("false", false);
+		// }
+	}
+	catch(...) {}
+
+
+
+	// test 10: Push_back
+	try {
+		ft::vector<int> v;
+		v.push_back(42);
+		Test<size_t>(v.size(), false);
+		Test<int>(v[0], true);
+		for (int i = 0; i < 100; i++) {
+			v.push_back(i);
+			Test<size_t>(v.size(), true);
+			Test<int>(v[i], true);
+			Test<size_t>(v.capacity(), true);
+
+		}
+	}
+	catch(...) {}
+
+	// test 11: Pop_back
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 100; i++) {
+			v.push_back(i);
+		}
+		v.pop_back();
+		Test<int>(v[98], false);
+		int i = v.size() - 1;
+		while (!v.empty()) {
+			v.pop_back();
+			Test<size_t>(v.size(), true);
+			Test<int>(v[i], true);
+			--i;
+		}
+	}
+	catch(...) {}
+
+	// test 12: Front
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+		Test<int>(v.front(), false);
+		int & ref = v.front();
+		ref = 42;
+		Test<int>(v.front(), true);
+	}
+	catch(...) {}
+
+	// test 13: Back
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+		Test<int>(v.back(), false);
+		int & ref = v.back();
+		ref = 42;
+		Test<int>(v.back(), true);
+	}
+	catch(...) {}
+
+	//test 14: At
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+		Test<int>(v.at(5), false);
+		int & ref = v.at(5);
+		ref = 42;
+		Test<int>(v.at(5), true);
+		Test<int>(v.at(99), true);
+	}
+	catch(std::out_of_range) { Test<std::string>("Out of Range Exeception", true); }
+	catch(...) {}
+
+	// test 15: Clear
+	try {
+		ft::vector<int> v;
+
+		v.clear();
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < 100; i++) {
+			v.push_back(i);
+		}
+		v.clear();
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+	}
+	catch(...) {}
+
+	// test 16: Assign
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+		v.assign(7, 42);
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < 7; i++) {
+			Test<int>(v[i], true);
+		}
+		v.assign(10, 41);
+		for (int i = 0; i < 10; i++) {
+			Test<int>(v[i], true);
+		}
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		v.assign(23, 11);
+		for (int i = 0; i < 23; i++) {
+			Test<int>(v[i], true);
+		}
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		v.assign(0, 0);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+	}
+	catch(...) {}
 
 	ofs.close();
 

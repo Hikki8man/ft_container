@@ -11,12 +11,13 @@ template <typename T>
 class Test {
 	public:
 		Test(T a, bool sameTest) {
-			ofs << std::endl;
-			if (sameTest == false)
+			if (sameTest == false) {
+				ofs << std::endl;
 				ofs << "Test " << nb << ": " << a;
+				nb++;
+			}
 			else
 				ofs << " " << a;
-			nb++;
 		}
 };
 

@@ -38,97 +38,106 @@ std::ostream& operator<<(std::ostream& os, const leakstest& l) {
 
 int main(void) {
 
+	std::vector<leakstest> v;
+
 		std::cout << std::boolalpha << "std int is int: " << std::is_integral<const int>::value << std::endl;
 		std::cout << std::boolalpha << "ft int is int: " << ft::is_integral<const int>::value << std::endl;
 	{
-		std::vector<leakstest> v;
+		// std::vector<leakstest> v;
 
-		leakstest a("a");
-		leakstest b("b");
-		leakstest c("c");
-		leakstest d("d");
+		// leakstest a("a");
+		// leakstest b("b");
+		// leakstest c("c");
+		// leakstest d("d");
 
  
-		std::cout << "~~~~~~~~~~" << std::endl;
+		// std::cout << "~~~~~~~~~~" << std::endl;
 
 		v.reserve(3);
 
 		
 
-		v.push_back(a);
-		v.push_back(b);
-		v.push_back(c);
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		v.insert(v.begin() + 1, d);
-		v.assign(3, leakstest("e"));
+		// v.push_back(a);
+		// v.push_back(b);
+		// v.push_back(c);
+		// // std::cout << "v.capacity() = " << v.capacity() << std::endl;
+		// v.insert(v.begin() + 1, d);
+		// v.assign(3, leakstest("e"));
 
-		std::cout << "~~~~~~~~~~" << std::endl;
+		// std::cout << "~~~~~~~~~~" << std::endl;
 	
 	}
 
 	{
-		// std::vector<int> v;
+		std::vector<int> v;
 
-		// for (int i = 0; i < 10; i++) {
-		// 	v.push_back(i);
-		// }
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+
+		int &i = v.front();
+
+		std::cout << "i = " << i << std::endl;
+
+		i = 2;
+
+		std::cout << "at(5) = " << v.front() << std::endl;
+
+		std::vector<int> v2(v);
 
 		// v.insert(v.end(), 100);
 
-		// for (int i = 0; i < v.size(); i++) {
-		// 	std::cout << v[i] << " ";
+		// for (int i = 0; i < v2.size(); i++) {
+		// 	std::cout << v2[i] << " ";
 		// }
 		// std::cout << std::endl;
-
-		// for (std::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
-		// 	std::cout << *it << std::endl;
-		// }
 	}
 
 	std::cout << "---------------------------------------------" << std::endl;
 
 	{
-		ft::vector<leakstest> v;
+		// ft::vector<leakstest> v;
 
-		leakstest a("a");
-		leakstest b("b");
-		leakstest c("c");
-		leakstest d("d");
+		// leakstest a("a");
+		// leakstest b("b");
+		// leakstest c("c");
+		// leakstest d("d");
 
  
-		std::cout << "~~~~~~~~~~" << std::endl;
+		// std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.reserve(3);
+		// v.reserve(3);
 
 		
 
-		v.push_back(a);
-		v.push_back(b);
-		v.push_back(c);
-		// std::cout << "v.begin() = " << *v.begin() << std::endl;
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		v.insert(v.begin() + 1, d);
+		// v.push_back(a);
+		// v.push_back(b);
+		// v.push_back(c);
+		// // std::cout << "v.begin() = " << *v.begin() << std::endl;
+		// // std::cout << "v.capacity() = " << v.capacity() << std::endl;
+		// v.insert(v.begin() + 1, d);
 
 		// std::cout << "~~~~~~~~~~" << std::endl;
 
 	}
 
 	{
-		// ft::vector<int> v;
+		ft::vector<int> v;
 
-		// for (int i = 0; i < 10; i++) {
-		// 	v.push_back(i);
-		// }
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+
+		ft::vector<int> v2(v.begin(), v.end());
+
+		// fr::vector<int> v2(v.begin(), 1);
 
 		// v.insert(v.end(), 100);
 
-		// for (int i = 0; i < v.size(); i++) {
-		// 	std::cout << v[i] << " ";
-		// }
-		// std::cout << std::endl;
-		// for (ft::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
-		// 	std::cout << *it << std::endl;
-		// }
+		for (int i = 0; i < v2.size(); i++) {
+			std::cout << v2[i] << " ";
+		}
+		std::cout << std::endl;
 	}
 	std::cout << "---------------------------------------------" << std::endl;
 

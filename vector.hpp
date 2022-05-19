@@ -6,6 +6,7 @@
 #include "reverve_iterator.hpp"
 #include "random_access_iterator.hpp"
 #include "is_integral.hpp"
+#include "enable_if.hpp"
 
 namespace ft {
 
@@ -48,15 +49,22 @@ namespace ft {
 		public:
 			vector() : _data(NULL), _size(0), _capacity(0) {};
 
-			vector(size_type size, const value_type & value) {//test with size max
+			vector(size_type size, const value_type & value = value_type()) {//test with size max
 				_size = size;
 				_capacity = size;
 				_data = _alloc.allocate(_capacity);
 				for (size_type i = 0; i < size; i++)
 					_alloc.construct(&_data[i], value);
 			};
-			vector(const vector<T>& src) {
-				*this = src;
+			vector(const vector<T>& src) : _data(NULL), _size(0), _capacity(0) {
+				if (src._capacity) {
+					_capacity = src._capacity;
+					_data = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < src._size; ++i) {
+						_alloc.construct(&_data[i], src._data[i]);
+						++_size;
+					}
+				}
 			};
 
 			~vector() {
@@ -64,6 +72,15 @@ namespace ft {
 				if (_capacity)
 					_alloc.deallocate(_data, _capacity);
 			};
+
+			template<class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type>
+				vector(InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type()) {
+					_size = last - first;
+					_capacity = _size;
+					_data = _alloc.allocate(_capacity);
+					for (size_type i = 0; i < _size; i++)
+						_alloc.construct(&_data[i], *(first + i));
+				}
 
 			vector<T>& operator=(const vector<T>& rhs) {
 				if (this != &rhs) {
@@ -74,9 +91,14 @@ namespace ft {
 					_size = rhs._size;
 					_alloc = rhs._alloc;
 					_capacity = rhs._capacity;
-					_data = _alloc.allocate(_capacity);
-					_build_array(rhs, _size);
+					if (_capacity) {
+						_data = _alloc.allocate(_capacity);
+						for (size_type i = 0; i < _size; i++) {
+							_alloc.construct(&_data[i], rhs._data[i]);
+						}
+					}
 				}
+				return *this;
 			};
 
 			/* --- Capacity --- */
@@ -91,7 +113,8 @@ namespace ft {
 
 			void resize (size_type n, value_type val = value_type()) {//redo
 				if (n > _capacity) {
-					reserve(_adjust_capacity(n));
+					// reserve(_adjust_capacity(n));//pas bon sur windows
+					reserve(n);
 				}
 				if (n < _size) {
 					for (size_type i = n; i < _size; ++i)
@@ -176,26 +199,23 @@ namespace ft {
 
 			void assign(size_type n, const value_type & val) {
 				clear();
-				_size = n;
 				if (n > _capacity)
 					reserve(n);
+				_size = n;
 				for (size_type i = 0; i < n; i++)
 					_alloc.construct(&_data[i], val);
 			}
 
-			template<class InputIterator>
+			template<class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type >
 				void assign(InputIterator first, InputIterator last) {
 					clear();
-					_size = last - first;
-					// std::cout << _size << std::endl;
-					if (_size > _capacity)
-						reserve(_size);
-					for (size_type i = 0; i < _size; i++) {
-						value_type val = *first;
-						_alloc.construct(_data + i, val);
-						++first;
+					difference_type n = last - first;
+					if (n > _capacity)
+						reserve(n);
+					for (difference_type i = 0; i < n; ++i) {
+						_alloc.construct(_data + i, *first);
+						++_size;
 					}
-
 				}
 
 
