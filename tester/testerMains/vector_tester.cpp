@@ -1,6 +1,6 @@
 #include "../utils/color.hpp"
 #include "../utils/Test.hpp"
-#include "../utils/myTestClass.hpp"
+#include "../utils/MyTestClass.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
