@@ -113,8 +113,8 @@ namespace ft {
 
 			void resize (size_type n, value_type val = value_type()) {//redo
 				if (n > _capacity) {
-					// reserve(_adjust_capacity(n));//pas bon sur windows
-					reserve(n);
+					reserve(_adjust_capacity(n));//pas bon sur windows
+					// reserve(n);
 				}
 				if (n < _size) {
 					for (size_type i = n; i < _size; ++i)
