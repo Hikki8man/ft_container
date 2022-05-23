@@ -297,7 +297,7 @@ namespace ft {
 			}
 
 			template<class InputIterator>
-				void insert(iterator pos, InputIterator first, InputIterator last) {
+				void insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
 					std::cout << "HELLO" << std::endl;
 					difference_type i = pos - begin();
 					size_type count = last - first;
@@ -321,6 +321,26 @@ namespace ft {
 					_size += count;
 				}
 				
+			iterator erase(iterator pos) {
+				difference_type i = pos - begin();
+	
+				_alloc.destroy(pos.base());
+				for (iterator it = pos; it != end() - 1; ++it) {
+					*it = *(it + 1);
+				}
+				--_size;
+				return begin() + i;
+			}
+
+			iterator erase(iterator first, iterator last) {
+				difference_type i = first - begin();
+				for (iterator it = first; it != last; ++it) {
+					_alloc.destroy(it.base());
+				}
+				
+				_size -= last - first;
+				return begin() + i;
+			}
 
 			/* --- Iterator --- */
 			iterator begin() {

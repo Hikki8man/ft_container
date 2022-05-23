@@ -28,20 +28,12 @@ class leakstest {
 	public:
 		std::string *name;
 		leakstest() {
-			this->name = new std::string("");
+			this->name = new std::string("HAAA");
 		}
 		leakstest(const leakstest& other) {
-			*this = other;
+			this->name = new std::string("HAAA");
 		}
 		leakstest &operator=(const leakstest &other) {
-			if (this != &other) {
-				// if (this->name != NULL) {
-				// 	delete this->name;
-				// }
-				if (other.name != NULL && this->name != NULL) {
-					*this->name = *other.name;
-				}
-			}
 			return *this;
 		}
 		leakstest(const std::string &name) {
