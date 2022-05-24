@@ -97,8 +97,10 @@ int main(int ac, char **av, char **env) {
 	// test 4: Copy constructor
 	try {
 		ft::vector<MyTestClass> v(10, MyTestClass(22));
+		v.reserve(20);
 		ft::vector<MyTestClass> v2(v);
 		Test<size_t>(v2.size(), false);
+		Test<size_t>(v2.capacity(), true);
 		for (size_t i = 0; i < v2.size(); i++) {
 			Test<MyTestClass>(v2[i], true);
 		}
@@ -120,8 +122,10 @@ int main(int ac, char **av, char **env) {
 	// test 6: Constructor with iterator
 	try {
 		ft::vector<MyTestClass> v(10, MyTestClass(42));
+		v.reserve(20);
 		ft::vector<MyTestClass> v2(v.begin(), v.end());
 		Test<size_t>(v2.size(), false);
+		Test<size_t>(v2.capacity(), true);
 		for (size_t i = 0; i < v2.size(); i++) {
 			Test<MyTestClass>(v2[i], true);
 		}
@@ -280,7 +284,7 @@ int main(int ac, char **av, char **env) {
 	}
 	catch(...) {}
 
-	// test 16: Assign
+	// test 16: Assign nb and val
 	try {
 		ft::vector<int> v;
 		for (int i = 0; i < 10; i++) {
@@ -309,6 +313,106 @@ int main(int ac, char **av, char **env) {
 		Test<size_t>(v.capacity(), true);
 	}
 	catch(...) {}
+
+	// test 17: Assign iterators
+	try {
+		ft::vector<int> v;
+		for (int i = 0; i < 10; i++) {
+			v.push_back(i);
+		}
+		ft::vector<int> v2;
+		for (int i = 0; i < 20; i++) {
+			v2.push_back(i + 10);
+		}
+		v.assign(v2.begin(), v2.end());
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < 20; i++) {
+			Test<int>(v[i], true);
+		}
+		v.assign(v2.begin(), v2.begin() + 5);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < 5; i++) {
+			Test<int>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 18: Insert pos and val
+	try {
+		ft::vector<int> v;
+
+		v.insert(v.end(), 42);
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < 10; i++) {
+			Test<int>(*v.insert(v.end(), i), true);
+		}
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<int>(v[i], true);
+		}
+		v.insert(v.begin(), -42);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		Test<int>(v[0], true);
+	}
+	catch(...) {}
+
+	// test 19: Insert pos, count and val
+	try {
+		ft::vector<MyTestClass> v(20, MyTestClass(42));
+
+		Test<size_t>(v.size(), false);
+		v.insert(v.end(), 10, MyTestClass(0));
+		Test<size_t>(v.size(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		v.insert(v.begin(), 10, MyTestClass(0));
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		v.insert(v.begin() + 5, 10, MyTestClass(12));
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 20: Insert iterators
+	try {
+		ft::vector<MyTestClass> v;
+		ft::vector<MyTestClass> v2;
+
+		Test<size_t>(v.size(), false);
+		for (int i = 0; i < 20; i++) {
+			v2.push_back(MyTestClass(i));
+		}
+		v.insert(v.end(), v2.begin(), v2.end());
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		v.insert(v.begin(), v2.begin() + 5, v2.begin() + 10);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+	}
+	catch(...) {}
+
+
+
+		
 
 	ofs.close();
 

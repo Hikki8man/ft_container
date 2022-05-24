@@ -58,7 +58,7 @@ namespace ft {
 			};
 			vector(const vector<T>& src) : _data(NULL), _size(0), _capacity(0) {
 				if (src._capacity) {
-					_capacity = src._capacity;
+					_capacity = src._size;
 					_data = _alloc.allocate(_capacity);
 					for (size_type i = 0; i < src._size; ++i) {
 						_alloc.construct(&_data[i], src._data[i]);
@@ -214,6 +214,7 @@ namespace ft {
 						reserve(n);
 					for (difference_type i = 0; i < n; ++i) {
 						_alloc.construct(_data + i, *first);
+						++first;
 						++_size;
 					}
 				}
@@ -298,7 +299,6 @@ namespace ft {
 
 			template<class InputIterator>
 				void insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
-					std::cout << "HELLO" << std::endl;
 					difference_type i = pos - begin();
 					size_type count = last - first;
 					if (_size + count > _capacity)
@@ -314,32 +314,29 @@ namespace ft {
 					}
 
 					iterator endo(_data + i + count);
-	
-					// for (ite = begin() + i; ite != endo; ++ite) {
-					// 	_alloc.construct(ite.base(), *first++);
-					// }
 					_size += count;
 				}
 				
 			iterator erase(iterator pos) {
-				difference_type i = pos - begin();
-	
 				_alloc.destroy(pos.base());
 				for (iterator it = pos; it != end() - 1; ++it) {
 					*it = *(it + 1);
 				}
 				--_size;
-				return begin() + i;
+				return pos;
 			}
 
 			iterator erase(iterator first, iterator last) {
-				difference_type i = first - begin();
-				for (iterator it = first; it != last; ++it) {
-					_alloc.destroy(it.base());
+				iterator firstp = first;
+				for (iterator it = last; it != end(); ++it) {
+					*firstp = *it;
+					++firstp;
 				}
-				
-				_size -= last - first;
-				return begin() + i;
+				for (reverse_iterator it = rbegin(); it != reverse_iterator(firstp); ++it) {
+					_alloc.destroy(it.base().base() - 1);
+					--_size;
+				}
+				return first;
 			}
 
 			/* --- Iterator --- */

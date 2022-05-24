@@ -43,8 +43,8 @@ int main(void) {
 		leakstest a("a");
 		leakstest b("b");
 		leakstest c("c");
-		// leakstest d("d");
-		// leakstest e("e");
+		leakstest d("d");
+		leakstest e("e");
 		// leakstest f("f");
 		// leakstest g("g");
 		// leakstest h("h");
@@ -62,54 +62,28 @@ int main(void) {
 
 		v.reserve(20);
 
-		// std::vector<leakstest> v2;
-
 		v.push_back(a);
 		v.push_back(b);
 		v.push_back(c);
-		// v.push_back(d);
-		// v.push_back(e);
+		v.push_back(d);
+		v.push_back(e);
 		// v.push_back(f);
 		// v.push_back(g);
 		// v.push_back(h);
 		
 
-
-		// v2.push_back(a2);
-		// v2.push_back(b2);
-		// v2.push_back(c2);
-
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.erase(v.begin());
+		v.erase(v.begin(), v.end());
 		for (auto it = v.begin(); it != v.end(); ++it) {
 			std::cout << *it << std::endl;
 		}
-		// v.erase(v.begin());
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// v.insert(v.end() - 1, 4, d);
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// v.insert(v2.begin(), v2.end());
-		// v.assign(3, leakstest("e"));
 
 		std::cout << "~~~~~~~~~~" << std::endl;
 	
 	}
 
 	{
-		// std::vector<int> v;
-
-		// for (int i = 0; i < 10; i++) {
-		// 	v.push_back(i);
-		// }
-
-		// std::cout << "~~~~~~~~~~" << std::endl;
-		// v.erase(v.begin());
-
-		// for (int i = 0; i < v.size(); i++) {
-		// 	std::cout << v[i] << " ";
-		// }
-		// std::cout << std::endl;
 	}
 
 	std::cout << "---------------------------------------------" << std::endl;
@@ -120,8 +94,8 @@ int main(void) {
 		leakstest a("a");
 		leakstest b("b");
 		leakstest c("c");
-		// leakstest d("d");
-		// leakstest e("e");
+		leakstest d("d");
+		leakstest e("e");
 		// leakstest f("f");
 		// leakstest g("g");
 		// leakstest h("h");
@@ -143,26 +117,19 @@ int main(void) {
 		v.push_back(a);
 		v.push_back(b);
 		v.push_back(c);
-		// v.push_back(d);
-		// v.push_back(e);
+		v.push_back(d);
+		v.push_back(e);
 		// v.push_back(f);
 		// v.push_back(g);
 		// v.push_back(h);
-
+		
 
 		std::cout << "~~~~~~~~~~" << std::endl;
-		v.erase(v.begin() + 1);
+
+		v.erase(v.begin(), v.end());
 		for (auto it = v.begin(); it != v.end(); ++it) {
 			std::cout << *it << std::endl;
 		}
-
-
-		// v.erase(v.end() - 5, v.end());
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// v.insert(v.end(), 4, d);
-		// std::cout << "v.capacity() = " << v.capacity() << std::endl;
-		// v.insert(v2.begin(), v2.end());
-		// v.assign(3, leakstest("e"));
 
 		std::cout << "~~~~~~~~~~" << std::endl;
 
@@ -184,6 +151,17 @@ int main(void) {
 		// std::cout << std::endl;
 	}
 	std::cout << "---------------------------------------------" << std::endl;
+
+	{
+		std::vector<int> v;
+
+		for (int i = 0; i < 5; i++) {
+			v.push_back(i);
+		}
+		for (std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+			std::cout << *it << " ";
+		}
+	}
 
 	return 0;
 
