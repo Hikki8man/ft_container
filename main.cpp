@@ -35,7 +35,6 @@ std::ostream& operator<<(std::ostream& os, const leakstest& l) {
 
 int main(void) {
 
-	std::vector<leakstest> v;
 
 	{
 		std::vector<leakstest> v;
@@ -45,9 +44,9 @@ int main(void) {
 		leakstest c("c");
 		leakstest d("d");
 		leakstest e("e");
-		// leakstest f("f");
-		// leakstest g("g");
-		// leakstest h("h");
+		leakstest f("f");
+		leakstest g("g");
+		leakstest h("h");
 
 		// leakstest a2("a2");
 		// leakstest b2("b2");
@@ -56,17 +55,22 @@ int main(void) {
 		// leakstest e2("e2");
 		// leakstest f2("f2");
 
-
+		std::vector<leakstest> v2;
+		
  
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.reserve(20);
+		v.reserve(5);
 
 		v.push_back(a);
 		v.push_back(b);
 		v.push_back(c);
 		v.push_back(d);
 		v.push_back(e);
+
+		v2.push_back(f);
+		v2.push_back(g);
+		v2.push_back(h);
 		// v.push_back(f);
 		// v.push_back(g);
 		// v.push_back(h);
@@ -74,7 +78,8 @@ int main(void) {
 
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.erase(v.begin(), v.end());
+		v.insert(v.begin() + 1, 3, f);
+		std::cout << "capacity: " << v.capacity() << std::endl;
 		for (auto it = v.begin(); it != v.end(); ++it) {
 			std::cout << *it << std::endl;
 		}
@@ -84,6 +89,21 @@ int main(void) {
 	}
 
 	{
+		// std::vector<leakstest> v;
+		// v.reserve(100);
+		// leakstest a("a");
+		// for (int i = 0; i < 20; i++) {
+		// 	v.push_back(a);
+		// }
+
+		// std::cout << "~~~~~~~~~~" << std::endl;
+		// // v.erase(1);
+		// v.insert(v.begin(), 10, a);
+		// v.insert(v.end(), 10, a);
+		// for (int i = 0; i < v.size(); i++) {
+		// 	std::cout << v[i] << " ";
+		// }
+		// std::cout << std::endl;
 	}
 
 	std::cout << "---------------------------------------------" << std::endl;
@@ -96,9 +116,9 @@ int main(void) {
 		leakstest c("c");
 		leakstest d("d");
 		leakstest e("e");
-		// leakstest f("f");
-		// leakstest g("g");
-		// leakstest h("h");
+		leakstest f("f");
+		leakstest g("g");
+		leakstest h("h");
 
 		// leakstest a2("a2");
 		// leakstest b2("b2");
@@ -107,18 +127,22 @@ int main(void) {
 		// leakstest e2("e2");
 		// leakstest f2("f2");
 
-
+		ft::vector<leakstest> v2;
 		
  
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.reserve(20);
+		v.reserve(5);
 
 		v.push_back(a);
 		v.push_back(b);
 		v.push_back(c);
 		v.push_back(d);
 		v.push_back(e);
+
+		v2.push_back(f);
+		v2.push_back(g);
+		v2.push_back(h);
 		// v.push_back(f);
 		// v.push_back(g);
 		// v.push_back(h);
@@ -126,7 +150,8 @@ int main(void) {
 
 		std::cout << "~~~~~~~~~~" << std::endl;
 
-		v.erase(v.begin(), v.end());
+		v.insert(v.begin() + 1, 3, f);
+		std::cout << "capacity: " << v.capacity() << std::endl;
 		for (auto it = v.begin(); it != v.end(); ++it) {
 			std::cout << *it << std::endl;
 		}
@@ -136,32 +161,24 @@ int main(void) {
 	}
 
 	{
-		// ft::vector<int> v;
+		// ft::vector<leakstest> v;
 
-		// for (int i = 0; i < 5; i++) {
-		// 	v.push_back(i);
+		// v.reserve(100);
+		// leakstest a("a");
+		// for (int i = 0; i < 20; i++) {
+		// 	v.push_back(a);
 		// }
 
 		// std::cout << "~~~~~~~~~~" << std::endl;
 		// // v.erase(1);
-
+		// v.insert(v.begin(), 10, a);
+		// v.insert(v.end(), 10, a);
 		// for (int i = 0; i < v.size(); i++) {
 		// 	std::cout << v[i] << " ";
 		// }
 		// std::cout << std::endl;
 	}
 	std::cout << "---------------------------------------------" << std::endl;
-
-	{
-		std::vector<int> v;
-
-		for (int i = 0; i < 5; i++) {
-			v.push_back(i);
-		}
-		for (std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-			std::cout << *it << " ";
-		}
-	}
 
 	return 0;
 

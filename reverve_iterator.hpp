@@ -40,7 +40,7 @@ namespace ft {
 			}
 			pointer operator->() const {
 				_Iterator tmp = _current;
-				return --tmp; // return _S_to_pointer(__tmp);
+				return --tmp;
 			}
 			reverse_iterator& operator++() {
 				--_current;

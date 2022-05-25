@@ -407,11 +407,70 @@ int main(int ac, char **av, char **env) {
 		for (int i = 0; i < v.size(); i++) {
 			Test<MyTestClass>(v[i], true);
 		}
+		v.insert(v.begin() + 5, v2.begin(), v2.begin() + 5);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+	}
+	catch(...) {}
+	// test 21: Erase pos
+	try {
+		ft::vector<MyTestClass> v;
+		for (int i = 0; i < 20; i++) {
+			v.push_back(MyTestClass(i));
+		}
+		Test<size_t>(v.size(), false);
+		Test<MyTestClass>(*v.erase(v.begin()), true);
+		Test<MyTestClass>(v.front(), true);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+		Test<MyTestClass>(*v.erase(v.begin() + 5), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		Test<MyTestClass>(*v.erase(v.end() - 1), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		Test<MyTestClass>(*v.erase(v.end()), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
 	}
 	catch(...) {}
 
+	// test 22: Erase iterators
+	try {
+		ft::vector<MyTestClass> v;
+		for (int i = 0; i < 100; i++) {
+			v.push_back(MyTestClass(i));
+		}
+		Test<size_t>(v.size(), false);
+		Test<MyTestClass>(*v.erase(v.begin(), v.begin() + 5), true);
+		Test<MyTestClass>(v.front(), true);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
 
-
+		Test<MyTestClass>(*v.erase(v.begin() + 5, v.begin() + 10), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		Test<MyTestClass>(*v.erase(v.end() - 10, v.end()), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		Test<MyTestClass>(*v.erase(v.end() - 1, v.end()), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		Test<size_t>(v.size(), true);
+		Test<MyTestClass>(*v.erase(v.end(), v.end()), true);
+		Test<size_t>(v.size(), true);
+		Test<size_t>(v.capacity(), true);
+	}
+	catch(...) {}
 		
 
 	ofs.close();

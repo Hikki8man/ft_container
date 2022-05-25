@@ -144,8 +144,9 @@ namespace ft {
 					pointer newData = _alloc.allocate(n);
 					for (size_type i = 0; i < _size; ++i) {
 						_alloc.construct(newData + i, _data[i]);
-						_alloc.destroy(_data + i);
+						// _alloc.destroy(_data + i);
 					}
+					_destroy_array();
 					if (_capacity)
 						_alloc.deallocate(_data, _capacity);
 					_data = newData;
@@ -272,56 +273,98 @@ namespace ft {
 
 					return begin() + offset;
 				}
-			}		
-
+			}
 			void insert(iterator pos, size_type count, const value_type& val) {
-				difference_type i = pos - begin();
-
-				if (_size + count > _capacity)
-					reserve(_adjust_capacity(_size + count));//pas opti du tout
-		
-				size_type newSize = _size + count;
-				iterator ite = end() - 1;
-
-				for (iterator it = iterator(begin() + newSize - 1); it != iterator(begin() + i + count - 1); --it) {
-					_alloc.construct(it.base(), *ite);
-					_alloc.destroy(ite.base());
-					--ite;
+				if (_size + count > _capacity) {
+					difference_type posIndex = pos - begin();
+					pointer newData = _alloc.allocate(_adjust_capacity(_size + count));
+					size_type newCapacity = _adjust_capacity(_size + count);
+					for (size_type i = 0; i < count; ++i) {
+						_alloc.construct(newData + posIndex + i, val);
+					}
+					size_t j = 0;
+					for (size_type i = 0; i < _size + count; ++i) {
+						if (i >= posIndex && i < posIndex + count)
+							continue;
+						_alloc.construct(newData + i, _data[j]);
+						++j;
+					}
+					_destroy_array();
+					_alloc.deallocate(_data, _capacity);
+					_capacity = newCapacity;
+					_data = newData;
+					_size += count;
+					return;
 				}
 
-				iterator endo(_data + i + count);
-	
-				for (ite = begin() + i; ite != endo; ++ite) {
-					_alloc.construct(ite.base(), val);
+				if (pos != end()) {
+					for (iterator it = end(); it - count != end(); ++it) {
+						_alloc.construct(it.base(), *(it - count));
+					}
+				}
+				for (iterator it = pos + count; it < end(); ++it) {
+					*it = *(it - count);
+				}
+				for (iterator it = pos; it != pos + count; ++it) {
+					if (it >= end())
+						_alloc.construct(it.base(), val);
+					else
+						*it = val;
 				}
 				_size += count;
 			}
 
 			template<class InputIterator>
 				void insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
-					difference_type i = pos - begin();
-					size_type count = last - first;
-					if (_size + count > _capacity)
-						reserve(_adjust_capacity(_size + count));//pas opti du tout
-		
-					size_type newSize = _size + count;
-					iterator ite = end() - 1;
-
-					for (iterator it = iterator(begin() + newSize - 1); it != iterator(begin() + i + count - 1); --it) {
-						_alloc.construct(it.base(), *ite);
-						_alloc.destroy(ite.base());
-						--ite;
+					difference_type count = last - first;
+					if (_size + count > _capacity) {
+						difference_type posIndex = pos - begin();
+						pointer newData = _alloc.allocate(_adjust_capacity(_size + count));
+						size_type newCapacity = _adjust_capacity(_size + count);
+						for (size_type i = 0; i < count; ++i) {
+							_alloc.construct(newData + posIndex + i, *first);
+							++first;
+						}
+						size_t j = 0;
+						for (size_type i = 0; i < _size + count; ++i) {
+							if (i >= posIndex && i < posIndex + count)
+								continue;
+							_alloc.construct(newData + i, _data[j]);
+							++j;
+						}
+						_destroy_array();
+						_alloc.deallocate(_data, _capacity);
+						_capacity = newCapacity;
+						_data = newData;
+						_size += count;
+						return;
 					}
 
-					iterator endo(_data + i + count);
+					if (pos != end()) {
+						for (iterator it = end(); it - count != end(); ++it) {
+							_alloc.construct(it.base(), *(it - count));
+						}
+					}
+					for (iterator it = pos + count; it < end(); ++it) {
+						*it = *(it - count);
+					}
+					for (iterator it = pos; first != last; ++it) {
+						if (it >= end())
+							_alloc.construct(it.base(), *first);
+						else
+							*it = *first;
+						++first;
+					}
 					_size += count;
 				}
 				
 			iterator erase(iterator pos) {
-				_alloc.destroy(pos.base());
+				if (pos == end())
+					return end();
 				for (iterator it = pos; it != end() - 1; ++it) {
 					*it = *(it + 1);
 				}
+				_alloc.destroy((end() - 1).base());
 				--_size;
 				return pos;
 			}
