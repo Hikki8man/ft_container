@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "./utils/color.hpp"
+#include "color.hpp"
 
 int main (int ac, char **av) {
 	if (ac != 4) {

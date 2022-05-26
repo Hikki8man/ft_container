@@ -7,6 +7,7 @@
 #include "random_access_iterator.hpp"
 #include "is_integral.hpp"
 #include "enable_if.hpp"
+#include "lexicographical_compare.hpp"
 
 namespace ft {
 
@@ -190,7 +191,6 @@ namespace ft {
 
 			/* --- Modifiers --- */
 
-
 			void clear() {
 				if (!empty()) {
 					_destroy_array();
@@ -297,13 +297,11 @@ namespace ft {
 					return;
 				}
 
-				if (pos != end()) {
-					for (iterator it = end(); it - count != end(); ++it) {
-						_alloc.construct(it.base(), *(it - count));
-					}
-				}
-				for (iterator it = pos + count; it < end(); ++it) {
-					*it = *(it - count);
+				for (iterator it = end() + count -1; it != pos + count -1; --it) {
+						if (it >= end())
+							_alloc.construct(it.base(), *(it - count));
+						else
+							*it = *(it - count);
 				}
 				for (iterator it = pos; it != pos + count; ++it) {
 					if (it >= end())
@@ -339,14 +337,11 @@ namespace ft {
 						_size += count;
 						return;
 					}
-
-					if (pos != end()) {
-						for (iterator it = end(); it - count != end(); ++it) {
+					for (iterator it = end() + count -1; it != pos + count -1; --it) {
+						if (it >= end())
 							_alloc.construct(it.base(), *(it - count));
-						}
-					}
-					for (iterator it = pos + count; it < end(); ++it) {
-						*it = *(it - count);
+						else
+							*it = *(it - count);
 					}
 					for (iterator it = pos; first != last; ++it) {
 						if (it >= end())
@@ -357,6 +352,13 @@ namespace ft {
 					}
 					_size += count;
 				}
+
+			void swap(vector& b) {
+				std::swap(_data, b._data);
+				std::swap(_size, b._size);
+				std::swap(_capacity, b._capacity);
+				std::swap(_alloc, b._alloc);
+			}
 				
 			iterator erase(iterator pos) {
 				if (pos == end())
@@ -380,6 +382,11 @@ namespace ft {
 					--_size;
 				}
 				return first;
+			}
+
+			/* --- Alloctor --- */
+			allocator_type get_allocator() const {
+				return _alloc;
 			}
 
 			/* --- Iterator --- */
@@ -409,6 +416,43 @@ namespace ft {
 			}
 
 	};
+
+	template<class T, class Alloc>
+		void swap(vector<T, Alloc>& a, vector<T, Alloc>& b) {
+			a.swap(b);
+		}
+
+	/* --- Operators --- */
+
+	template<class T, class Alloc>
+		bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		}
+
+	template<class T, class Alloc>
+		bool operator!=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return !(lhs == rhs);
+		}
+	
+	template<class T, class Alloc>
+		bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		}
+	
+	template<class T, class Alloc>
+		bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return rhs < lhs;
+		}
+	
+	template<class T, class Alloc>
+		bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return !(lhs > rhs);
+		}
+	
+	template<class T, class Alloc>
+		bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+			return !(lhs < rhs);
+		}
 }
 
 #endif

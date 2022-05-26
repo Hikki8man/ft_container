@@ -16,7 +16,7 @@ VEC_OBJ =	$(VEC_SRC:.cpp=.o)
 
 CHECKER = checker
 
-CHECKER_SRC = checker.cpp
+CHECKER_SRC = ./utils/checker.cpp
 
 CHECKER_OBJ = $(CHECKER_SRC:.cpp=.o)
 

@@ -434,10 +434,10 @@ int main(int ac, char **av, char **env) {
 		for (int i = 0; i < v.size(); i++) {
 			Test<MyTestClass>(v[i], true);
 		}
-		Test<MyTestClass>(*v.erase(v.end()), true);
-		for (int i = 0; i < v.size(); i++) {
-			Test<MyTestClass>(v[i], true);
-		}
+		// Test<MyTestClass>(*v.erase(v.end()), true);
+		// for (int i = 0; i < v.size(); i++) {
+		// 	Test<MyTestClass>(v[i], true);
+		// }
 	}
 	catch(...) {}
 
@@ -457,21 +457,92 @@ int main(int ac, char **av, char **env) {
 		for (int i = 0; i < v.size(); i++) {
 			Test<MyTestClass>(v[i], true);
 		}
-		Test<MyTestClass>(*v.erase(v.end() - 10, v.end()), true);
+		Test<MyTestClass>(*v.erase(v.end() - 10, v.end() - 1), true);
 		for (int i = 0; i < v.size(); i++) {
 			Test<MyTestClass>(v[i], true);
 		}
-		Test<MyTestClass>(*v.erase(v.end() - 1, v.end()), true);
+		Test<MyTestClass>(*v.erase(v.end() - 1, v.end() - 1), true);
 		for (int i = 0; i < v.size(); i++) {
 			Test<MyTestClass>(v[i], true);
 		}
-		Test<size_t>(v.size(), true);
-		Test<MyTestClass>(*v.erase(v.end(), v.end()), true);
-		Test<size_t>(v.size(), true);
-		Test<size_t>(v.capacity(), true);
+		// Test<size_t>(v.size(), true);
+		// Test<MyTestClass>(*v.erase(v.end(), v.end()- 1), true);
+		// Test<size_t>(v.size(), true);
+		// Test<size_t>(v.capacity(), true);
 	}
 	catch(...) {}
-		
+
+	// test 23: Swap member
+	try {
+		ft::vector<MyTestClass> v2(20, MyTestClass(42));
+		ft::vector<MyTestClass> v(70, MyTestClass(21));
+		v.swap(v2);
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		Test<size_t>(v2.size(), true);
+		Test<size_t>(v2.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		for (int i = 0; i < v2.size(); i++) {
+			Test<MyTestClass>(v2[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 24: Swap non member
+	try {
+		ft::vector<MyTestClass> v2(20, MyTestClass(42));
+		ft::vector<MyTestClass> v(70, MyTestClass(21));
+		ft::swap(v, v2);
+		Test<size_t>(v.size(), false);
+		Test<size_t>(v.capacity(), true);
+		Test<size_t>(v2.size(), true);
+		Test<size_t>(v2.capacity(), true);
+		for (int i = 0; i < v.size(); i++) {
+			Test<MyTestClass>(v[i], true);
+		}
+		for (int i = 0; i < v2.size(); i++) {
+			Test<MyTestClass>(v2[i], true);
+		}
+	}
+	catch(...) {}
+
+	// test 25: < operator | <= operator
+	try {
+		ft::vector<int> v1(20, int(42));
+		ft::vector<int> v2(20, int(42));
+		Test<bool>(v1 < v2, false);
+		Test<bool>(v1 <= v2, true);
+		v2.push_back(int(12));
+		Test<bool>(v1 < v2, true);
+		Test<bool>(v1 <= v2, true);
+	}
+	catch(...) {}
+
+	// test 26: > operator | >= operator
+	try {
+		ft::vector<int> v1(20, int(42));
+		ft::vector<int> v2(20, int(42));
+		Test<bool>(v1 > v2, false);
+		Test<bool>(v1 >= v2, true);
+		v1.push_back(int(12));
+		Test<bool>(v1 > v2, true);
+		Test<bool>(v1 >= v2, true);
+	}
+	catch(...) {}
+
+	// test 27: == operator | != operator
+	try {
+		ft::vector<int> v1(20, int(42));
+		ft::vector<int> v2(20, int(42));
+		Test<bool>(v1 == v2, false);
+		Test<bool>(v1 != v2, true);
+		v1.push_back(int(12));
+		Test<bool>(v1 == v2, true);
+		Test<bool>(v1 != v2, true);
+	}
+	catch(...) {}
 
 	ofs.close();
 
