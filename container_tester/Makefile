@@ -2,7 +2,7 @@ STACK_STD	=	std_stack
 
 STACK_FT	=	ft_stack
 
-STACK_SRC =	./testerMains/stack_tester.cpp
+STACK_SRC =	./mains/stack_tester.cpp
 
 STACK_OBJ =	$(STACK_SRC:.cpp=.o)
 
@@ -10,7 +10,7 @@ VEC_STD	=	std_vector
 
 VEC_FT	=	ft_vector
 
-VEC_SRC =	./testerMains/vector_tester.cpp
+VEC_SRC =	./mains/vector_tester.cpp
 
 VEC_OBJ =	$(VEC_SRC:.cpp=.o)
 
@@ -22,7 +22,7 @@ CHECKER_OBJ = $(CHECKER_SRC:.cpp=.o)
 
 TESTOUT = ./testOutput/
 
-TESTPATH = testerMains/
+TESTPATH = mains/
 
 CFLAGS	=   #-Wall -Werror -Wextra
 
