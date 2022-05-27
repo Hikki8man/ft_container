@@ -1,10 +1,11 @@
 #ifndef FT_STACK_HPP
 #define FT_STACK_HPP
 #include <deque>
+#include "vector.hpp"
 
 namespace ft {
 
-	template < class T, class Container = std::deque<T> > //to change to my vector
+	template < class T, class Container = ft::vector<T> >
 	class stack {
 		protected:
 			Container c;

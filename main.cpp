@@ -109,6 +109,7 @@ int main(void) {
 	{
 		std::vector<leakstest> v;
 		std::vector<leakstest> v2;
+		std::vector<leakstest>::reverse_iterator it;
 		v.swap(v2);
 		v.reserve(100);
 		leakstest a("a");

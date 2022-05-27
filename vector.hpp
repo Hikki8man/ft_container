@@ -74,8 +74,8 @@ namespace ft {
 					_alloc.deallocate(_data, _capacity);
 			};
 
-			template<class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type>
-				vector(InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type()) {
+			template<class InputIterator>
+				vector(InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
 					_size = last - first;
 					_capacity = _size;
 					_data = _alloc.allocate(_capacity);
@@ -207,8 +207,8 @@ namespace ft {
 					_alloc.construct(&_data[i], val);
 			}
 
-			template<class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type >
-				void assign(InputIterator first, InputIterator last) {
+			template<class InputIterator>
+				void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
 					clear();
 					difference_type n = last - first;
 					if (n > _capacity)
