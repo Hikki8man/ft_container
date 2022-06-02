@@ -29,9 +29,9 @@ namespace ft {
 		template < class T > struct    is_integral_base : public false_type {};
 		template <> struct    is_integral_base<bool> : public true_type {};
 		template <> struct    is_integral_base<char> : public true_type {};
-		template <> struct    is_integral_base<char16_t> : public true_type {};
-		template <> struct    is_integral_base<char32_t> : public true_type {};
-		template <> struct    is_integral_base<wchar_t> : public true_type {};
+		// template <> struct    is_integral_base<char16_t> : public true_type {};
+		// template <> struct    is_integral_base<char32_t> : public true_type {};
+		// template <> struct    is_integral_base<wchar_t> : public true_type {};
 		template <> struct    is_integral_base<signed char> : public true_type {};
 		template <> struct    is_integral_base<short> : public true_type {};
 		template <> struct    is_integral_base<int> : public true_type {};

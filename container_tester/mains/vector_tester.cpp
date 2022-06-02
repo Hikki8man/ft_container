@@ -17,7 +17,7 @@
 	namespace ft = std;
 	std::ofstream ofs("testOutput/std_vector_out.txt");
 #else
-	#include "../../vector.hpp" // include your stack header file
+	#include "../../vector.hpp" // include your vector header file
 	std::ofstream ofs("testOutput/ft_vector_out.txt");
 
 #endif
@@ -631,6 +631,21 @@ int main() {
 		Test<int>(*(rendo - 50), true);
 	}
 	catch(...) {}
+
+	// test 33: const value_type
+	// try {
+	// 	ft::vector<const int> v;
+
+	// 	for (int i = 0; i < 100; i++) {
+	// 		v.push_back(i);
+	// 	}
+	// 	Test<int>(v.size(), false);
+	// 	v.insert(v.begin(), 20, 42);
+	// 	for (size_t i = 0; i < v.size(); i++) {
+	// 		Test<int>(v[i], true);
+	// 	}
+	// }
+	// catch(...) {}
 
 	ofs.close();
 
