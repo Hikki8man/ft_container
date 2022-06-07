@@ -6,10 +6,15 @@
 
 int main() {
 
-	std::pair<std::string, int> p("a", 1);
-	std::pair<std::string, int> p2("b", 2);
+	std::map<int, char> m;
 
-	std::cout << p.first << " " << p.second << std::endl;	
-	std::cout << p2.first << " " << p2.second << std::endl;
+	m.insert(std::make_pair(1, 'a'));
+	m.insert(std::make_pair(2, 'b'));
+	m.insert(std::make_pair(3, 'c'));
+	m.insert(std::make_pair(0, 'd'));
+	for (auto it = m.begin(); it != m.end(); ++it) {
+		std::cout << it->first << " " << it->second << std::endl;
+	}
 	
+	return 0;
 }
