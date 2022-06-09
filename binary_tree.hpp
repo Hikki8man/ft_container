@@ -2,124 +2,156 @@
 #define BINARY_TREE_HPP
 
 #include <memory>
-// #include "bi_tree_iterator.hpp"
 #include "iterator_traits.hpp"
 
 namespace ft {
 
-	template<class value_type>
+	template<class Pair>
 	struct tree_node {
-		typedef tree_node<value_type>* node_ptr;
+		typedef tree_node<Pair>* node_ptr;
 
-		tree_node() : value(), left(NULL), right(NULL), parent(NULL) {}
+		tree_node() : pair(), left(NULL), right(NULL), parent(NULL) {}
 
-		tree_node(const value_type& value) : value(value), left(NULL), right(NULL), parent(NULL) {}
+		tree_node(const Pair& pair) : pair(pair), left(NULL), right(NULL), parent(NULL) {}
 	
-		value_type value;
+		Pair pair;
 		node_ptr left;
 		node_ptr right;
 		node_ptr parent;
 
-		value_type& operator*() { return value; }
+	};
 
-		tree_node& operator++() {
-			if (right) {
-				*this = *right;
-			} else {
-				node_ptr p = parent;
-				while (p && p->right == *this) {
-					*this = *p;
-					p = p->parent;
+template< class Node >
+	class bi_tree_iterator {
+
+			public:
+
+				typedef typename ft::iterator_traits<Node>::value_type value_type;
+				typedef typename ft::iterator_traits<Node>::reference reference;
+				typedef typename ft::iterator_traits<Node>::pointer pointer;
+				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
+				typedef ft::bidirectional_iterator_tag	iterator_category;
+
+				typedef bi_tree_iterator<Node> _Self;
+
+				pointer _node;
+
+				bi_tree_iterator() : _node() {}
+
+				bi_tree_iterator(pointer _x) : _node(_x) {}
+
+
+				pointer base() const { return _node; }
+
+				reference operator*() const { return *_node; }
+
+				pointer operator->() const { return _node; }
+
+				_Self& operator++() {
+					if (_node->right != NULL) {
+						_node = _node->right;
+						while (_node->left != NULL) {
+							_node = _node->left;
+						}
+					}
+					else {
+						pointer _y = _node->parent;
+						while (_y != NULL && _node == _y->right) {
+							_node = _y;
+							_y = _y->parent;
+						}
+						_node = _y;
+					}
+					return *this;
 				}
-				if (p) {
-					*this = *p;
+
+				_Self operator++(int) {
+					_Self _Tmp = *this;
+					++*this;
+					return _Tmp;
 				}
-			}
-			return *this;
+
+				_Self& operator--() {
+					if (_node->left != NULL) {
+						_node = _node->left;
+						while (_node->right != NULL) {
+							_node = _node->right;
+						}
+					}
+					else {
+						pointer _y = _node->parent;
+						while (_y != NULL && _node == _y->left) {
+							_node = _y;
+							_y = _y->parent;
+						}
+						_node = _y;
+					}
+					return *this;
+				}
+
+				_Self operator--(int) {
+					_Self _Tmp = *this;
+					--*this;
+					return _Tmp;
+				}
+	};
+
+	template<class Node>
+		bool operator==(const bi_tree_iterator<Node>& _Left, const bi_tree_iterator<Node>& _Right) {
+			return _Left.base() == _Right.base();
 		}
-	};
+	
+	template<class Node>
+		bool operator!=(const bi_tree_iterator<Node>& _Left, const bi_tree_iterator<Node>& _Right) {
+			return _Left.base() != _Right.base();
+		}
 
-template< typename _Iterator >
-	struct bi_tree_iterator {
-
-			_Iterator _node;
-
-			typedef _Iterator value_type;
-			typedef _Iterator& reference;
-			typedef _Iterator* pointer;
-
-			typedef ft::bidirectional_iterator_tag	iterator_category;
-			typedef ptrdiff_t	difference_type;
-
-			typedef bi_tree_iterator<_Iterator> _Self;
-			typedef typename ft::tree_node<value_type>::node_ptr _Base_ptr;
-			typedef bi_tree_iterator<_Iterator>* _Link_type;
-
-			bi_tree_iterator() : _node() {}
-
-			bi_tree_iterator(_Base_ptr _x) : _node(_x) {}
-
-			reference operator*() const { return *_node; }
-
-			pointer operator->() const { return _node; }
-
-			_Self& operator++() {
-				_node++;
-				return *this;
-			}
-
-	};
-
-	template<typename _Key, typename _Val, typename _Alloc = std::allocator<_Val> >
+	template<class Pair, class _Alloc = std::allocator<ft::tree_node<Pair> > >
 	class BItree {
 
-		// protected:
 		public:
-			typedef tree_node<_Val> node;
-			node *_root;
 
-			template< class _node_ptr >
-			_node_ptr _min(_node_ptr _x) {
+			typedef Pair value_type;
+			typedef _Alloc allocator_type;
+
+			typedef typename allocator_type::reference reference;
+			typedef typename allocator_type::const_reference const_reference;
+			typedef typename allocator_type::pointer pointer;
+			typedef typename allocator_type::const_pointer const_pointer;
+
+			typedef ft::bi_tree_iterator<pointer> iterator;
+
+			pointer _root;
+			_Alloc _alloc;
+
+			pointer _min(pointer _x) {
 				while (_x->left != NULL) {
 					_x = _x->left;
 				}
 				return _x;
 			}
 
-			template< class _node_ptr >
-			_node_ptr _max(_node_ptr _x) {
+			pointer _max(pointer _x) {
 				while (_x->right != NULL) {
 					_x = _x->right;
 				}
 				return _x;
 			}
 
-
-
-		public:
-
-			typedef _Key key_type;
-			typedef _Val value_type;
-			typedef _Alloc allocator_type;
-			typedef value_type& reference;
-			typedef const value_type& const_reference;
-			typedef value_type* pointer;
-			typedef const value_type* const_pointer;
-
-			typedef ft::bi_tree_iterator<node*> iterator;
-
 			BItree() : _root(NULL) {}
 
 			void insert(const value_type& val) {
 				if (_root == NULL) {
-					_root = new node(val);
+					// _root = new tree_node<value_type>(val);
+					_root = _alloc.allocate(1);
+					_alloc.construct(_root, val);
 				}
 				else {
-					node *curr = _root;
+					pointer curr = _root;
 					while (curr != NULL) {
-						if (val < curr->value) {
+						if (val < curr->pair) {
 							if (curr->left == NULL) {
-								curr->left = new node(val);
+								curr->left = new tree_node<value_type>(val);
 								curr->left->parent = curr;
 								break;
 							}
@@ -129,7 +161,7 @@ template< typename _Iterator >
 						}
 						else {
 							if (curr->right == NULL) {
-								curr->right = new node(val);
+								curr->right = new tree_node<value_type>(val);
 								curr->right->parent = curr;
 								break;
 							}
@@ -138,6 +170,46 @@ template< typename _Iterator >
 							}
 						}
 					}
+				}
+			}
+
+			void erase (iterator pos) {
+				pointer curr = pos.base();
+				if (curr->left == NULL && curr->right == NULL) {
+					if (curr->parent->left == curr) {
+						curr->parent->left = NULL;
+					}
+					else {
+						curr->parent->right = NULL;
+					}
+					delete curr;
+				}
+				else if (curr->left != NULL && curr->right == NULL) {
+					if (curr->parent->left == curr) {
+						curr->parent->left = curr->left;
+						curr->left->parent = curr->parent;
+					}
+					else {
+						curr->parent->right = curr->left;
+						curr->left->parent = curr->parent;
+					}
+					delete curr;
+				}
+				else if (curr->left == NULL && curr->right != NULL) {
+					if (curr->parent->left == curr) {
+						curr->parent->left = curr->right;
+						curr->right->parent = curr->parent;
+					}
+					else {
+						curr->parent->right = curr->right;
+						curr->right->parent = curr->parent;
+					}
+					delete curr;
+				}
+				else {
+					pointer min = _min(curr->right);
+					curr->pair = min->pair;
+					erase(min);
 				}
 			}
 

@@ -16,13 +16,30 @@ int main() {
 	m.insert(std::make_pair(2, 'b'));
 	m.insert(std::make_pair(3, 'c'));
 	m.insert(std::make_pair(0, 'd'));
-	for (auto it = m.begin(); it != m.end(); ++it) {
-		std::cout << it->first << " " << it->second << std::endl;
+	
+	std::map<int, char>::iterator it = m.begin();
+
+	std::cout << it->first << " " << it->second << std::endl;
+
+	ft::BItree<ft::pair<int, char> > bt;
+	bt.insert(ft::make_pair(1, 'a'));
+	bt.insert(ft::make_pair(2, 'b'));
+	bt.insert(ft::make_pair(3, 'c'));
+
+	ft::BItree<ft::pair<int, char> >::iterator it2 = bt.begin();
+
+	for (; it2 != bt.end(); ++it2) {
+		std::cout << it2->pair.first << " " << it2->pair.second << std::endl;
 	}
 
-	ft::BItree<int, ft::pair<int, char> > bt;
-	bt.insert(ft::make_pair(1, 'a'));
-	// std::cout << "bt.begin() = " << << std::endl;
+	// bt.erase(bt.begin());
+
+	// std::cout << it2->pair.first << " " << std::endl;
+
+	// std::cout << node->pair.first << " " << node->pair.second << std::endl;
+	// std::cout << * << std::endl;
+
+	// std::cout << it2->first << " " << it2->second << " " << it2->second << std::endl;
 
 	// std::__tree<int, std::pair<int, char>, _Select1st<std::pair<int, char> >, std::less<int>, std::allocator<std::pair<int, char>> >
 	return 0;
