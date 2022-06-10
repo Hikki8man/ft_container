@@ -16,21 +16,31 @@ int main() {
 	m.insert(std::make_pair(2, 'b'));
 	m.insert(std::make_pair(3, 'c'));
 	m.insert(std::make_pair(0, 'd'));
+	m.insert(std::make_pair(5, 'e'));
 	
 	std::map<int, char>::iterator it = m.begin();
 
-	std::cout << it->first << " " << it->second << std::endl;
+	it = m.upper_bound(4);
 
-	ft::BItree<ft::pair<int, char> > bt;
+	std::cout << it->first << std::endl;
+
+	std::cout << "--------------------------------" << std::endl;
+
+	ft::BItree<int, ft::pair<int, char>, std::less<int> > bt;
 	bt.insert(ft::make_pair(1, 'a'));
 	bt.insert(ft::make_pair(2, 'b'));
 	bt.insert(ft::make_pair(3, 'c'));
+	bt.insert(ft::make_pair(5, 'e'));
 
-	ft::BItree<ft::pair<int, char> >::iterator it2 = bt.begin();
+	ft::BItree<int, ft::pair<int, char>, std::less<int> >::iterator it2 = bt.begin();
 
 	for (; it2 != bt.end(); ++it2) {
 		std::cout << it2->pair.first << " " << it2->pair.second << std::endl;
 	}
+
+	it2 = bt.find(2);
+
+	std::cout << "found: " << it2->pair.first << " " << it2->pair.second << std::endl;
 
 	// bt.erase(bt.begin());
 

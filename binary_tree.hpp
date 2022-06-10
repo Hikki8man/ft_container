@@ -14,6 +14,14 @@ namespace ft {
 
 		tree_node(const Pair& pair) : pair(pair), left(NULL), right(NULL), parent(NULL) {}
 	
+		tree_node &operator=(const tree_node &other) {
+			pair = other.pair;
+			left = other.left;
+			right = other.right;
+			parent = other.parent;
+			return *this;
+		}
+
 		Pair pair;
 		node_ptr left;
 		node_ptr right;
@@ -106,23 +114,28 @@ template< class Node >
 			return _Left.base() != _Right.base();
 		}
 
-	template<class Pair, class _Alloc = std::allocator<ft::tree_node<Pair> > >
+	template<typename Key, class Pair, class Compare, class _Alloc = std::allocator<ft::tree_node<Pair> > >
 	class BItree {
 
 		public:
 
+			typedef Key key_type;
 			typedef Pair value_type;
 			typedef _Alloc allocator_type;
 
+			// node type
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
+			typedef ft::tree_node<value_type> node_type;
 
 			typedef ft::bi_tree_iterator<pointer> iterator;
 
+
 			pointer _root;
 			_Alloc _alloc;
+			Compare _comp;
 
 			pointer _min(pointer _x) {
 				while (_x->left != NULL) {
@@ -143,15 +156,14 @@ template< class Node >
 			void insert(const value_type& val) {
 				if (_root == NULL) {
 					// _root = new tree_node<value_type>(val);
-					_root = _alloc.allocate(1);
-					_alloc.construct(_root, val);
+					_root = _new_node(val);
 				}
 				else {
 					pointer curr = _root;
 					while (curr != NULL) {
-						if (val < curr->pair) {
+						if (_comp(val.first, curr->pair.first)) {
 							if (curr->left == NULL) {
-								curr->left = new tree_node<value_type>(val);
+								curr->left = _new_node(val);
 								curr->left->parent = curr;
 								break;
 							}
@@ -161,7 +173,7 @@ template< class Node >
 						}
 						else {
 							if (curr->right == NULL) {
-								curr->right = new tree_node<value_type>(val);
+								curr->right =_new_node(val);
 								curr->right->parent = curr;
 								break;
 							}
@@ -173,44 +185,29 @@ template< class Node >
 				}
 			}
 
-			void erase (iterator pos) {
-				pointer curr = pos.base();
-				if (curr->left == NULL && curr->right == NULL) {
-					if (curr->parent->left == curr) {
-						curr->parent->left = NULL;
+			void erase(iterator pos) {
+				
+			}
+
+			iterator find(const key_type& k) {//do const one
+				pointer node = _root;
+
+				while (node != NULL) {
+					if (k == node->pair.first) {
+						return iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
 					}
 					else {
-						curr->parent->right = NULL;
+						node = node->right;
 					}
-					delete curr;
 				}
-				else if (curr->left != NULL && curr->right == NULL) {
-					if (curr->parent->left == curr) {
-						curr->parent->left = curr->left;
-						curr->left->parent = curr->parent;
-					}
-					else {
-						curr->parent->right = curr->left;
-						curr->left->parent = curr->parent;
-					}
-					delete curr;
-				}
-				else if (curr->left == NULL && curr->right != NULL) {
-					if (curr->parent->left == curr) {
-						curr->parent->left = curr->right;
-						curr->right->parent = curr->parent;
-					}
-					else {
-						curr->parent->right = curr->right;
-						curr->right->parent = curr->parent;
-					}
-					delete curr;
-				}
-				else {
-					pointer min = _min(curr->right);
-					curr->pair = min->pair;
-					erase(min);
-				}
+				return iterator(end());
+			}
+
+			iterator lower_bound(const key_type& k) {
+				
 			}
 
 			iterator begin() {
@@ -220,6 +217,14 @@ template< class Node >
 			iterator end() {
 				return iterator(NULL);
 			}
+
+			private:
+			
+				pointer _new_node(const value_type& val) {
+					pointer _x = _alloc.allocate(1);
+					_alloc.construct(_x, val);
+					return _x;
+				}
 
 	};
 
