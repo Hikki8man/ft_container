@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "iterator_traits.hpp"
+#include "pair.hpp"
 
 namespace ft {
 
@@ -41,6 +42,7 @@ template< class Node >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef bi_tree_iterator<Node> _Self;
+				typedef tree_node<value_type>* _Link_type;
 
 				pointer _node;
 
@@ -114,28 +116,35 @@ template< class Node >
 			return _Left.base() != _Right.base();
 		}
 
-	template<typename Key, class Pair, class Compare, class _Alloc = std::allocator<ft::tree_node<Pair> > >
+	template<typename _Key, class _Pair, class _Compare, class _Alloc = std::allocator<ft::tree_node<_Pair> > >
 	class BItree {
 
 		public:
 
-			typedef Key key_type;
-			typedef Pair value_type;
-			typedef _Alloc allocator_type;
+			typedef _Key key_type;
+			typedef _Pair value_type;
+			// typedef value_type* 		pointer;
+			// typedef const value_type* 	const_pointer;
+			// typedef value_type& 		reference;
+			// typedef const value_type& 	const_reference;
+			typedef std::size_t 				size_type;
+			typedef std::ptrdiff_t 			difference_type;
+			typedef _Alloc 				allocator_type;
 
 			// node type
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
-			typedef ft::tree_node<value_type> node_type;
+			typedef ft::tree_node<value_type> node_type;//??
 
 			typedef ft::bi_tree_iterator<pointer> iterator;
+			typedef ft::bi_tree_iterator<const_pointer> const_iterator;
 
-
+		
 			pointer _root;
 			_Alloc _alloc;
-			Compare _comp;
+			_Compare _comp;
 
 			pointer _min(pointer _x) {
 				while (_x->left != NULL) {
@@ -151,11 +160,10 @@ template< class Node >
 				return _x;
 			}
 
-			BItree() : _root(NULL) {}
+			BItree() : _root(NULL), _size(0) {}
 
 			void insert(const value_type& val) {
 				if (_root == NULL) {
-					// _root = new tree_node<value_type>(val);
 					_root = _new_node(val);
 				}
 				else {
@@ -183,6 +191,7 @@ template< class Node >
 						}
 					}
 				}
+				++_size;
 			}
 
 			void erase(iterator pos) {
@@ -203,11 +212,14 @@ template< class Node >
 						node = node->right;
 					}
 				}
-				return iterator(end());
+				return end();
 			}
 
-			iterator lower_bound(const key_type& k) {
-				
+			size_t count(const key_type& k) {
+				if (find(k) != end()) {
+					return 1;
+				}
+				return 0;
 			}
 
 			iterator begin() {
@@ -218,6 +230,68 @@ template< class Node >
 				return iterator(NULL);
 			}
 
+			iterator lower_bound(const key_type& k) {
+				pointer node = _root;
+				if (_comp(_max(_root)->pair.first, k)) {
+					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
+				}
+				while (node != NULL) {
+					if (k == node->pair.first) {
+						return iterator(node);
+					}
+					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
+						return iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
+					}
+					else {
+						node = node->right;
+					}
+				}
+				return iterator(_root);
+			}
+
+			iterator upper_bound(const key_type& k) {
+				pointer node = _root;
+				if (_comp(_max(_root)->pair.first, k) || _max(_root)->pair.first == k) { // pas opti du tout
+					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
+				}
+				while (node != NULL) {
+					if (k == node->pair.first && node->right != NULL) {
+						return iterator(node->right);
+					}
+					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
+						return iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
+					}
+					else {
+						node = node->right;
+					}
+				}
+				return iterator(_root);
+			}
+
+			// Capacity
+			
+			size_type size() {
+				return _size;
+			}
+
+			bool empty() {
+				return _size == 0;
+			}
+
+			size_type max_size() {
+				return _alloc.max_size();
+			}
+
+			// Element access
+
+
+
 			private:
 			
 				pointer _new_node(const value_type& val) {
@@ -226,10 +300,9 @@ template< class Node >
 					return _x;
 				}
 
+				size_type _size;
+
 	};
-
-
-	
 }
 
 #endif

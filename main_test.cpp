@@ -12,17 +12,17 @@ int main() {
 
 	std::map<int, char> m;
 
+	// m.insert(std::make_pair(1, 'a'));
 	m.insert(std::make_pair(1, 'a'));
 	m.insert(std::make_pair(2, 'b'));
 	m.insert(std::make_pair(3, 'c'));
-	m.insert(std::make_pair(0, 'd'));
+	// m.insert(std::make_pair(0, 'd'));
 	m.insert(std::make_pair(5, 'e'));
 	
 	std::map<int, char>::iterator it = m.begin();
 
-	it = m.upper_bound(4);
 
-	std::cout << it->first << std::endl;
+	std::cout << "count: " << m.count(4) << std::endl;
 
 	std::cout << "--------------------------------" << std::endl;
 
@@ -30,6 +30,7 @@ int main() {
 	bt.insert(ft::make_pair(1, 'a'));
 	bt.insert(ft::make_pair(2, 'b'));
 	bt.insert(ft::make_pair(3, 'c'));
+	// m.insert(std::make_pair(0, 'd'));
 	bt.insert(ft::make_pair(5, 'e'));
 
 	ft::BItree<int, ft::pair<int, char>, std::less<int> >::iterator it2 = bt.begin();
@@ -38,19 +39,26 @@ int main() {
 		std::cout << it2->pair.first << " " << it2->pair.second << std::endl;
 	}
 
-	it2 = bt.find(2);
+	// it2 = bt.find(2);
 
-	std::cout << "found: " << it2->pair.first << " " << it2->pair.second << std::endl;
+	std::cout << "count: " << bt.count(4) << std::endl;
 
-	// bt.erase(bt.begin());
+	std::cout << "--------------------------------" << std::endl;
 
-	// std::cout << it2->pair.first << " " << std::endl;
+	ft::map<int, char> m2;
 
-	// std::cout << node->pair.first << " " << node->pair.second << std::endl;
-	// std::cout << * << std::endl;
+	m2.insert(ft::make_pair(1, 'a'));
+	m2.insert(ft::make_pair(2, 'b'));
+	m2.insert(ft::make_pair(3, 'c'));
+	m2.insert(ft::make_pair(0, 'd'));
 
-	// std::cout << it2->first << " " << it2->second << " " << it2->second << std::endl;
+	ft::map<int, char>::iterator it3 = m2.begin();
 
-	// std::__tree<int, std::pair<int, char>, _Select1st<std::pair<int, char> >, std::less<int>, std::allocator<std::pair<int, char>> >
+	// std::cout << "it: " << it3->first << " " << it3->second << std::endl;
+
+	for (; it3 != m2.end(); ++it3) {
+		std::cout << it3->first << " " << it3->second << std::endl;
+	}
+
 	return 0;
 }
