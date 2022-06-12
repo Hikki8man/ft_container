@@ -195,7 +195,67 @@ template< class Node >
 			}
 
 			void erase(iterator pos) {
-				
+				pointer curr = pos.base();//check if it is a valid iterator
+
+				// if no child
+				if (curr->left == NULL && curr->right == NULL) {
+					if (curr->parrent == NULL) {
+						_delete_node(curr);//does root is null?
+					}
+					else {
+						if (curr->parent->left == curr) {
+							curr->parent->left = NULL;
+						}
+						else {
+							curr->parent->right = NULL;
+						}
+						_delete_node(curr);
+					}
+				} // if one child
+				else if (curr->left == NULL || curr->right == NULL) {
+					if (curr->left == NULL) {
+						if (curr->parent == NULL) {
+							_root = curr->right;
+							_root->parent = NULL;
+							_delete_node(curr);
+						}
+						else {
+							if (curr->parent->left == curr) {
+								curr->parent->left = curr->right;
+								curr->right->parent = curr->parent;
+								_delete_node(curr);
+							}
+							else {
+								curr->parent->right = curr->right;
+								curr->right->parent = curr->parent;
+								_delete_node(curr);
+							}
+						}
+					}
+					else {
+						if (curr->parent == NULL) {
+							_root = curr->left;
+							_root->parent = NULL;
+							_delete_node(curr);
+						}
+						else {
+							if (curr->parent->left == curr) {
+								curr->parent->left = curr->left;
+								curr->left->parent = curr->parent;
+								_delete_node(curr);
+							}
+							else {
+								curr->parent->right = curr->left;
+								curr->left->parent = curr->parent;
+								_delete_node(curr);
+							}
+						}
+					}
+				}
+				else {
+					pointer succ = _min(curr->right);
+					
+				}
 			}
 
 			iterator find(const key_type& k) {//do const one
@@ -367,6 +427,13 @@ template< class Node >
 					pointer _x = _alloc.allocate(1);
 					_alloc.construct(_x, val);
 					return _x;
+				}
+
+				void _delete_node(pointer x) {
+					_alloc.destroy(x);
+					_alloc.deallocate(x, 1);
+					x = NULL;
+					--_size;
 				}
 
 				size_type _size;
