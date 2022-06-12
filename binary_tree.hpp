@@ -215,6 +215,23 @@ template< class Node >
 				return end();
 			}
 
+			const_iterator find(const key_type& k) const {
+				pointer node = _root;
+
+				while (node != NULL) {
+					if (k == node->pair.first) {
+						return const_iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
+					}
+					else {
+						node = node->right;
+					}
+				}
+				return end();
+			}
+
 			size_t count(const key_type& k) {
 				if (find(k) != end()) {
 					return 1;
@@ -226,8 +243,16 @@ template< class Node >
 				return iterator(_min(_root));
 			}
 
+			const_iterator begin() const {
+				return const_iterator(_min(_root));
+			}
+
 			iterator end() {
 				return iterator(NULL);
+			}
+
+			const_iterator end() const {
+				return const_iterator(NULL);
 			}
 
 			iterator lower_bound(const key_type& k) {
@@ -252,6 +277,28 @@ template< class Node >
 				return iterator(_root);
 			}
 
+			const_iterator lower_bound(const key_type& k) const {
+				pointer node = _root;
+				if (_comp(_max(_root)->pair.first, k)) {
+					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
+				}
+				while (node != NULL) {
+					if (k == node->pair.first) {
+						return const_iterator(node);
+					}
+					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
+						return const_iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
+					}
+					else {
+						node = node->right;
+					}
+				}
+				return const_iterator(_root);
+			}
+
 			iterator upper_bound(const key_type& k) {
 				pointer node = _root;
 				if (_comp(_max(_root)->pair.first, k) || _max(_root)->pair.first == k) { // pas opti du tout
@@ -272,6 +319,28 @@ template< class Node >
 					}
 				}
 				return iterator(_root);
+			}
+
+			const_iterator upper_bound(const key_type& k) const {
+				pointer node = _root;
+				if (_comp(_max(_root)->pair.first, k) || _max(_root)->pair.first == k) { // pas opti du tout
+					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
+				}
+				while (node != NULL) {
+					if (k == node->pair.first && node->right != NULL) {
+						return const_iterator(node->right);
+					}
+					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
+						return const_iterator(node);
+					}
+					else if (_comp(k, node->pair.first)) {
+						node = node->left;
+					}
+					else {
+						node = node->right;
+					}
+				}
+				return const_iterator(_root);
 			}
 
 			// Capacity

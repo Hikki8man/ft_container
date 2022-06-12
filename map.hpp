@@ -113,12 +113,60 @@ namespace ft {
 				_tree.insert(value);
 			}
 
+			// Iterator
+
 			iterator begin() {
 				return iterator(_tree.begin());
 			}
 
+			const_iterator begin() const {
+				return const_iterator(_tree.begin());
+			}
+
 			iterator end() {
 				return iterator(_tree.end());
+			}
+
+			const_iterator end() const {
+				return const_iterator(_tree.end());
+			}
+
+			// Lookup
+
+			iterator find(const key_type& key) {
+				return iterator(_tree.find(key));
+			}
+
+			const_iterator find(const key_type& key) const {
+				return const_iterator(_tree.find(key));
+			}
+
+			size_type count(const key_type& key) const {
+				return _tree.count(key);
+			}
+
+			iterator lower_bound(const key_type& key) {
+				return iterator(_tree.lower_bound(key));
+			}
+
+			const_iterator lower_bound(const key_type& key) const {
+				return const_iterator(_tree.lower_bound(key));
+			}
+
+			iterator upper_bound(const key_type& key) {
+				return iterator(_tree.upper_bound(key));
+			}
+
+			const_iterator upper_bound(const key_type& key) const {
+				return const_iterator(_tree.upper_bound(key));
+			}
+
+			ft::pair<iterator, iterator> equal_range(const key_type& key) {
+				return ft::pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+			}
+
+			ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
+				return ft::pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
 			}
 	};
 }
