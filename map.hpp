@@ -108,9 +108,32 @@ namespace ft {
 
 			map() : _tree() {}
 
+			// Capacity
+
+			bool empty() const {
+				return _tree.empty();
+			}
+
+			size_type size() const {
+				return _tree.size();
+			}
+
+			size_type max_size() const {
+				return _tree.max_size();
+			}
+
+			// Modifiers
 
 			void insert(const value_type& value) {//not void
 				_tree.insert(value);
+			}
+
+			void erase(iterator position) {
+				_tree.erase(position.base());
+			}
+
+			size_type erase(const key_type& key) {
+				return _tree.erase(key);
 			}
 
 			// Iterator

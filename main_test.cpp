@@ -13,17 +13,26 @@ int main() {
 	{
 		std::map<int, char> m;
 
-		// m.insert(std::make_pair(1, 'a'));
-		m.insert(std::make_pair(1, 'a'));
-		m.insert(std::make_pair(2, 'b'));
-		m.insert(std::make_pair(3, 'c'));
-		// m.insert(std::make_pair(0, 'd'));
-		m.insert(std::make_pair(5, 'e'));
+		m.insert(std::make_pair(15, 'a'));
+		m.insert(std::make_pair(20, 'b'));
+		m.insert(std::make_pair(10, 'c'));
+		m.insert(std::make_pair(8, 'd'));
+		m.insert(std::make_pair(12, 'e'));
+
+		m.insert(std::make_pair(18, 'f'));
+		m.insert(std::make_pair(30, 'g'));
+		m.insert(std::make_pair(16, 'h'));
+		m.insert(std::make_pair(19, 'i'));
+
+		m.erase(20);
+
+
+		std::cout << "size: " << m.size() << std::endl;
 		
+		for (auto it = m.begin(); it != m.end(); ++it) {
+			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
+		}
 
-		auto it = m.equal_range(1);
-
-		std::cout << "RANGE first: " << it.first->first << " second: " << it.second->first << std::endl;
 	}
 
 
@@ -35,17 +44,29 @@ int main() {
 
 		ft::map<int, char> m;
 
-		m.insert(ft::make_pair(1, 'a'));
-		m.insert(ft::make_pair(2, 'b'));
-		m.insert(ft::make_pair(3, 'c'));
-		m.insert(ft::make_pair(5, 'd'));
+		m.insert(ft::make_pair(15, 'a'));
+		m.insert(ft::make_pair(20, 'b'));
+		m.insert(ft::make_pair(10, 'c'));
+		m.insert(ft::make_pair(8, 'd'));
+		m.insert(ft::make_pair(12, 'e'));
 
-		auto it = m.equal_range(1);
+		m.insert(ft::make_pair(18, 'f'));
+		m.insert(ft::make_pair(30, 'g'));
+		m.insert(ft::make_pair(16, 'h'));
+		m.insert(ft::make_pair(19, 'i'));
 
-		std::cout << "RANGE first: " << it.first->first << " second: " << it.second->first << std::endl;
+		m.erase(20);
+
+		std::cout << "size: " << m.size() << std::endl;
+
+		for (auto it = m.begin(); it != m.end(); ++it) {
+			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
+		}
 
 
 	}
+
+	// std::cout << "--------------------------------" << std::endl;
 
 	return 0;
 }

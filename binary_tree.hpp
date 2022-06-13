@@ -147,15 +147,19 @@ template< class Node >
 			_Compare _comp;
 
 			pointer _min(pointer _x) {
-				while (_x->left != NULL) {
-					_x = _x->left;
+				if (_x != NULL) {
+					while (_x->left != NULL) {
+						_x = _x->left;
+					}
 				}
 				return _x;
 			}
 
 			pointer _max(pointer _x) {
-				while (_x->right != NULL) {
-					_x = _x->right;
+				if (_x != NULL) {
+					while (_x->right != NULL) {
+						_x = _x->right;
+					}
 				}
 				return _x;
 			}
@@ -199,8 +203,9 @@ template< class Node >
 
 				// if no child
 				if (curr->left == NULL && curr->right == NULL) {
-					if (curr->parrent == NULL) {
+					if (curr->parent == NULL) {
 						_delete_node(curr);//does root is null?
+						_root = NULL;
 					}
 					else {
 						if (curr->parent->left == curr) {
@@ -254,8 +259,34 @@ template< class Node >
 				}
 				else {
 					pointer succ = _min(curr->right);
-					
+					value_type tmp(succ->pair.first, succ->pair.second);
+					erase(iterator(succ));
+					pointer newnode = _new_node(tmp);
+					newnode->left = curr->left;
+					newnode->right = curr->right;
+					newnode->parent = curr->parent;
+					if (curr->parent == NULL) {
+						_root = newnode;
+					}
+					// else {
+					// 	if (curr->parent->left == curr) {
+					// 		curr->parent->left = newnode;
+					// 	}
+					// 	else {
+					// 		curr->parent->right = newnode;
+					// 	}
+					// }
+					_delete_node(curr);
 				}
+			}
+
+			size_type erase(const key_type& key) {
+				iterator it = find(key);
+				if (it != end()) {
+					erase(it);
+					return 1;
+				}
+				return 0;
 			}
 
 			iterator find(const key_type& k) {//do const one
@@ -405,15 +436,15 @@ template< class Node >
 
 			// Capacity
 			
-			size_type size() {
+			size_type size() const {
 				return _size;
 			}
 
-			bool empty() {
+			bool empty() const {
 				return _size == 0;
 			}
 
-			size_type max_size() {
+			size_type max_size() const {
 				return _alloc.max_size();
 			}
 
@@ -430,10 +461,12 @@ template< class Node >
 				}
 
 				void _delete_node(pointer x) {
-					_alloc.destroy(x);
-					_alloc.deallocate(x, 1);
-					x = NULL;
-					--_size;
+					if (x != NULL) {
+						_alloc.destroy(x);
+						_alloc.deallocate(x, 1);
+						x = NULL;
+						--_size;
+					}
 				}
 
 				size_type _size;
