@@ -24,7 +24,13 @@ int main() {
 		m.insert(std::make_pair(16, 'h'));
 		m.insert(std::make_pair(19, 'i'));
 
-		m.erase(20);
+		auto ite = m.end();
+
+		--ite;
+
+		std::cout << ite->first << " " << ite->second << std::endl;
+
+		m.clear();
 
 
 		std::cout << "size: " << m.size() << std::endl;
@@ -55,7 +61,13 @@ int main() {
 		m.insert(ft::make_pair(16, 'h'));
 		m.insert(ft::make_pair(19, 'i'));
 
-		m.erase(20);
+		auto ite = m.end();
+
+		--ite;
+
+		std::cout << ite->first << " " << ite->second << std::endl;
+
+		m.clear();
 
 		std::cout << "size: " << m.size() << std::endl;
 

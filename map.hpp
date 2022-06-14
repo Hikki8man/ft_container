@@ -136,6 +136,14 @@ namespace ft {
 				return _tree.erase(key);
 			}
 
+			void erase(iterator first, iterator last) {
+				_tree.erase(first.base(), last.base());
+			}
+
+			void clear() {
+				_tree.clear();
+			}
+
 			// Iterator
 
 			iterator begin() {

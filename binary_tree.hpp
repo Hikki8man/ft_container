@@ -123,10 +123,6 @@ template< class Node >
 
 			typedef _Key key_type;
 			typedef _Pair value_type;
-			// typedef value_type* 		pointer;
-			// typedef const value_type* 	const_pointer;
-			// typedef value_type& 		reference;
-			// typedef const value_type& 	const_reference;
 			typedef std::size_t 				size_type;
 			typedef std::ptrdiff_t 			difference_type;
 			typedef _Alloc 				allocator_type;
@@ -205,6 +201,7 @@ template< class Node >
 				if (curr->left == NULL && curr->right == NULL) {
 					if (curr->parent == NULL) {
 						_delete_node(curr);//does root is null?
+						--_size;
 						_root = NULL;
 					}
 					else {
@@ -215,6 +212,7 @@ template< class Node >
 							curr->parent->right = NULL;
 						}
 						_delete_node(curr);
+						--_size;
 					}
 				} // if one child
 				else if (curr->left == NULL || curr->right == NULL) {
@@ -223,17 +221,20 @@ template< class Node >
 							_root = curr->right;
 							_root->parent = NULL;
 							_delete_node(curr);
+							--_size;
 						}
 						else {
 							if (curr->parent->left == curr) {
 								curr->parent->left = curr->right;
 								curr->right->parent = curr->parent;
 								_delete_node(curr);
+								--_size;
 							}
 							else {
 								curr->parent->right = curr->right;
 								curr->right->parent = curr->parent;
 								_delete_node(curr);
+								--_size;
 							}
 						}
 					}
@@ -242,6 +243,7 @@ template< class Node >
 							_root = curr->left;
 							_root->parent = NULL;
 							_delete_node(curr);
+							--_size;
 						}
 						else {
 							if (curr->parent->left == curr) {
@@ -253,30 +255,43 @@ template< class Node >
 								curr->parent->right = curr->left;
 								curr->left->parent = curr->parent;
 								_delete_node(curr);
+								--_size;
 							}
 						}
 					}
 				}
-				else {
+				else {// if two children, not the best way to do it i think
 					pointer succ = _min(curr->right);
 					value_type tmp(succ->pair.first, succ->pair.second);
 					erase(iterator(succ));
 					pointer newnode = _new_node(tmp);
 					newnode->left = curr->left;
+					if (newnode->left != NULL) {
+						newnode->left->parent = newnode;
+					}
 					newnode->right = curr->right;
+					if (newnode->right != NULL) {
+						newnode->right->parent = newnode;
+					}
 					newnode->parent = curr->parent;
 					if (curr->parent == NULL) {
 						_root = newnode;
 					}
-					// else {
-					// 	if (curr->parent->left == curr) {
-					// 		curr->parent->left = newnode;
-					// 	}
-					// 	else {
-					// 		curr->parent->right = newnode;
-					// 	}
-					// }
+					else {
+						if (curr->parent->left == curr) {
+							curr->parent->left = newnode;
+						}
+						else {
+							curr->parent->right = newnode;
+						}
+					}
 					_delete_node(curr);
+				}
+			}
+
+			void erase(iterator first, iterator last) {
+				while (first != last) {
+					erase(first++);
 				}
 			}
 
@@ -287,6 +302,10 @@ template< class Node >
 					return 1;
 				}
 				return 0;
+			}
+
+			void clear() {
+				erase(begin(), end());
 			}
 
 			iterator find(const key_type& k) {//do const one
@@ -465,7 +484,6 @@ template< class Node >
 						_alloc.destroy(x);
 						_alloc.deallocate(x, 1);
 						x = NULL;
-						--_size;
 					}
 				}
 
