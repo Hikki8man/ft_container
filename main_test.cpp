@@ -57,6 +57,15 @@ int main() {
 
 		std::cout << "size: " << m.size() << std::endl;
 
+		auto ite = m.end();
+
+		--ite;
+		++ite;
+		++ite;
+		++ite;
+
+		std::cout << "first: " << ite->first << " second: " << ite->second << std::endl;
+
 		for (auto it = m.begin(); it != m.end(); ++it) {
 			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
 		}
@@ -64,14 +73,14 @@ int main() {
 
 		std::cout << "--------------------------------" << std::endl;
 
-		ft::map<int, char> m2(m);
+		// ft::map<int, char> m2(m);
 
-		std::cout << "size: " << m2.size() << std::endl;
-		std::cout << "root key: " << m._tree._root->pair.first << std::endl;
+		// std::cout << "size: " << m2.size() << std::endl;
+		// std::cout << "root key: " << m._tree._root->pair.first << std::endl;
 
-		for (auto it = m2.begin(); it != m2.end(); ++it) {
-			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
-		}
+		// for (auto it = m2.begin(); it != m2.end(); ++it) {
+		// 	std::cout << "first: " << it->first << " second: " << it->second << std::endl;
+		// }
 
 
 	}

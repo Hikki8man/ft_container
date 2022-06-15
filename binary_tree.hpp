@@ -8,29 +8,103 @@
 namespace ft {
 
 	template<class Pair>
-	struct tree_node {
-		typedef tree_node<Pair>* node_ptr;
+		struct tree_node;
 
-		tree_node() : pair(), left(NULL), right(NULL), parent(NULL) {}
+	template<class value_type>
+	struct tree_node_base {
 
-		tree_node(const Pair& pair) : pair(pair), left(NULL), right(NULL), parent(NULL) {}
+		typedef tree_node<value_type>* node_ptr;
+
+		tree_node_base() : left(NULL), right(NULL), parent(NULL) {}
+
+		tree_node_base(const tree_node_base & src) {
+			left = src.left;
+			right = src.right;
+			parent = src.parent;
+		}
+
+		~tree_node_base() {}
 	
-		tree_node &operator=(const tree_node &other) {
-			pair = other.pair;
+		tree_node_base &operator=(const tree_node_base &other) {
 			left = other.left;
 			right = other.right;
 			parent = other.parent;
 			return *this;
 		}
 
-		Pair pair;
+
 		node_ptr left;
 		node_ptr right;
 		node_ptr parent;
 
 	};
 
-template< class Node >
+	template<class Pair>
+	struct tree_node : public ft::tree_node_base<Pair> {
+
+		typedef ft::tree_node_base<Pair> base;
+		typedef tree_node<Pair>* node_ptr;
+
+		tree_node() : base(), pair() {}
+		tree_node(const Pair &p) : base(), pair(p) {}
+		tree_node(const tree_node & src) : base(src), pair(src.pair) {}
+		~tree_node() {}
+		tree_node &operator=(const tree_node &other) {
+			base::operator=(other);
+			pair = other.pair;
+			return *this;
+		}
+
+		node_ptr next() {
+			if (this->right != NULL) {
+				node_ptr tmp = this->right;
+				while (tmp->left != NULL) {
+					tmp = tmp->left;
+				}
+				return tmp;
+			}
+			node_ptr tmp = this->parent;
+			while (tmp != NULL && tmp->right == this) {
+				tmp = tmp->parent;
+			}
+			return tmp;
+		}
+
+		node_ptr prev() {
+			if (this->left != NULL) {
+				node_ptr tmp = this->left;
+				while (tmp->right != NULL) {
+					tmp = tmp->right;
+				}
+				return tmp;
+			}
+			node_ptr tmp = this->parent;
+			while (tmp != NULL && tmp->left == this) {
+				tmp = tmp->parent;
+			}
+			return tmp;
+		}
+
+		node_ptr min() {
+			node_ptr tmp = this;
+			while (tmp->left != NULL) {
+				tmp = tmp->left;
+			}
+			return tmp;
+		}
+
+		node_ptr max() {
+			node_ptr tmp = this;
+			while (tmp->right != NULL) {
+				tmp = tmp->right;
+			}
+			return tmp;
+		}
+
+		Pair pair;
+	};
+
+template< class Node, class Node_Base >
 	class bi_tree_iterator {
 
 			public:
@@ -41,14 +115,25 @@ template< class Node >
 				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
-				typedef bi_tree_iterator<Node> _Self;
+				typedef bi_tree_iterator<Node, Node_Base> _Self;
 				typedef tree_node<value_type>* _Link_type;
 
+				// typedef Node_Base<value_type>* _Base_ptr;
+
 				pointer _node;
+				Node_Base _sentinel;
 
-				bi_tree_iterator() : _node() {}
+				bi_tree_iterator() : _node(), _sentinel() {}
 
-				bi_tree_iterator(pointer _x) : _node(_x) {}
+				bi_tree_iterator(pointer _x, Node_Base _s) : _node(_x), _sentinel(_s) {}
+
+				bi_tree_iterator(const _Self &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
+
+				bi_tree_iterator& operator=(const _Self &_x) {
+					_node = _x._node;
+					_sentinel = _x._sentinel;
+					return *this;
+				}
 
 
 				pointer base() const { return _node; }
@@ -72,6 +157,9 @@ template< class Node >
 						}
 						_node = _y;
 					}
+					if (_node == NULL) {
+						_node = static_cast<pointer>(_sentinel);
+					}
 					return *this;
 				}
 
@@ -82,7 +170,10 @@ template< class Node >
 				}
 
 				_Self& operator--() {
-					if (_node->left != NULL) {
+					if (_node == _sentinel) {
+						_node = _sentinel->left->max();
+					}
+					else if (_node->left != NULL) {
 						_node = _node->left;
 						while (_node->right != NULL) {
 							_node = _node->right;
@@ -106,13 +197,13 @@ template< class Node >
 				}
 	};
 
-	template<class Node>
-		bool operator==(const bi_tree_iterator<Node>& _Left, const bi_tree_iterator<Node>& _Right) {
+	template<class Node, class Node_Base>
+		bool operator==(const bi_tree_iterator<Node, Node_Base>& _Left, const bi_tree_iterator<Node, Node_Base>& _Right) {
 			return _Left.base() == _Right.base();
 		}
 	
-	template<class Node>
-		bool operator!=(const bi_tree_iterator<Node>& _Left, const bi_tree_iterator<Node>& _Right) {
+	template<class Node, class Node_Base>
+		bool operator!=(const bi_tree_iterator<Node, Node_Base>& _Left, const bi_tree_iterator<Node, Node_Base>& _Right) {
 			return _Left.base() != _Right.base();
 		}
 
@@ -134,46 +225,57 @@ template< class Node >
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef ft::tree_node<value_type> node_type;//??
 
-			typedef ft::bi_tree_iterator<pointer> iterator;
-			typedef ft::bi_tree_iterator<const_pointer> const_iterator;
+			typedef ft::bi_tree_iterator<pointer, ft::tree_node_base<value_type>* > iterator;
+			typedef ft::bi_tree_iterator<const_pointer, const ft::tree_node_base<value_type>* > const_iterator;
 
 		
 			pointer _root;
+			ft::tree_node_base<value_type> _sentinel;
 			_Alloc _alloc;
 			_Compare _comp;
 
-			pointer _min(pointer _x) {
-				if (_x != NULL) {
-					while (_x->left != NULL) {
-						_x = _x->left;
-					}
-				}
-				return _x;
+			BItree() : _root(NULL), _size(0), _sentinel() {
+				_sentinel.left = static_cast<pointer>(&_sentinel);
 			}
-
-			pointer _max(pointer _x) {
-				if (_x != NULL) {
-					while (_x->right != NULL) {
-						_x = _x->right;
-					}
-				}
-				return _x;
-			}
-
-			BItree() : _root(NULL), _size(0) {}
 
 			BItree(const BItree& _X) : _root(NULL), _size(0) {
 				_root = _copy_tree(_X._root);
 				_comp = _X._comp;
 				_size = _X._size;
-			}
-
-			void insert(const value_type& val) {
-				if (_root == NULL) {
-					_root = _new_node(val);
+				if (_root != NULL) {
+					_sentinel.left = _root;
 				}
 				else {
-					pointer curr = _root;
+					_sentinel.left = static_cast<pointer>(&_sentinel);
+				}
+			}
+
+			BItree& operator=(const BItree& _X) {
+				if (this != &_X) {
+					clear(_root);
+					_root = _copy_tree(_X._root);
+					_comp = _X._comp;
+					_size = _X._size;
+					if (_root != NULL) {
+						_sentinel.left = _root;
+					}
+					else {
+						_sentinel.left = static_cast<pointer>(&_sentinel);
+					}
+				}
+				return *this;
+			}
+
+			ft::pair<iterator, bool> insert(const value_type& val) {
+				pointer curr = _root;
+				iterator it = find(val.first);
+				if (it != end()) { return ft::make_pair(it, false); }
+				else if (_root == NULL) {
+					_root = _new_node(val);
+					curr = _root;
+					_sentinel.left = _root;
+				}
+				else {
 					while (curr != NULL) {
 						if (_comp(val.first, curr->pair.first)) {
 							if (curr->left == NULL) {
@@ -181,9 +283,8 @@ template< class Node >
 								curr->left->parent = curr;
 								break;
 							}
-							else {
+							else
 								curr = curr->left;
-							}
 						}
 						else {
 							if (curr->right == NULL) {
@@ -191,13 +292,13 @@ template< class Node >
 								curr->right->parent = curr;
 								break;
 							}
-							else {
+							else
 								curr = curr->right;
-							}
 						}
 					}
 				}
 				++_size;
+				return ft::make_pair(iterator(curr, &_sentinel), true);
 			}
 
 			void erase(iterator pos) {
@@ -209,6 +310,7 @@ template< class Node >
 						_delete_node(curr);//does root is null?
 						--_size;
 						_root = NULL;
+						_sentinel.left = static_cast<pointer>(&_sentinel);
 					}
 					else {
 						if (curr->parent->left == curr) {
@@ -226,6 +328,7 @@ template< class Node >
 						if (curr->parent == NULL) {
 							_root = curr->right;
 							_root->parent = NULL;
+							_sentinel.left = _root;
 							_delete_node(curr);
 							--_size;
 						}
@@ -248,6 +351,7 @@ template< class Node >
 						if (curr->parent == NULL) {
 							_root = curr->left;
 							_root->parent = NULL;
+							_sentinel.left = _root;
 							_delete_node(curr);
 							--_size;
 						}
@@ -267,7 +371,7 @@ template< class Node >
 					}
 				}
 				else {// if two children, not the best way to do it i think
-					pointer succ = _min(curr->right);
+					pointer succ = curr->right.min();
 					value_type tmp(succ->pair.first, succ->pair.second);
 					erase(iterator(succ));
 					pointer newnode = _new_node(tmp);
@@ -321,7 +425,7 @@ template< class Node >
 
 				while (node != NULL) {
 					if (k == node->pair.first) {
-						return iterator(node);
+						return iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -358,19 +462,19 @@ template< class Node >
 			}
 
 			iterator begin() {
-				return iterator(_min(_root));
+				return iterator(_root->min(), &_sentinel);
 			}
 
 			const_iterator begin() const {
-				return const_iterator(_min(_root));
+				return const_iterator(_root->min(), &_sentinel);
 			}
 
 			iterator end() {
-				return iterator(NULL);
+				return iterator(static_cast<pointer>(&_sentinel) ,&_sentinel);
 			}
 
 			const_iterator end() const {
-				return const_iterator(NULL);
+				return const_iterator(static_cast<pointer>(&_sentinel), &_sentinel);
 			}
 
 			iterator lower_bound(const key_type& k) {
@@ -500,6 +604,7 @@ template< class Node >
 						_delete_tree(x->left);
 						_delete_tree(x->right);
 						_delete_node(x);
+						_sentinel->left = static_cast<pointer>(&_sentinel);
 					}
 				}
 
