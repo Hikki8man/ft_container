@@ -24,13 +24,6 @@ int main() {
 		m.insert(std::make_pair(16, 'h'));
 		m.insert(std::make_pair(19, 'i'));
 
-		auto ite = m.end();
-
-		--ite;
-
-		std::cout << ite->first << " " << ite->second << std::endl;
-
-		m.clear();
 
 
 		std::cout << "size: " << m.size() << std::endl;
@@ -61,13 +54,6 @@ int main() {
 		m.insert(ft::make_pair(16, 'h'));
 		m.insert(ft::make_pair(19, 'i'));
 
-		auto ite = m.end();
-
-		--ite;
-
-		std::cout << ite->first << " " << ite->second << std::endl;
-
-		m.clear();
 
 		std::cout << "size: " << m.size() << std::endl;
 
@@ -76,9 +62,20 @@ int main() {
 		}
 
 
+		std::cout << "--------------------------------" << std::endl;
+
+		ft::map<int, char> m2(m);
+
+		std::cout << "size: " << m2.size() << std::endl;
+		std::cout << "root key: " << m._tree._root->pair.first << std::endl;
+
+		for (auto it = m2.begin(); it != m2.end(); ++it) {
+			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
+		}
+
+
 	}
 
-	// std::cout << "--------------------------------" << std::endl;
 
 	return 0;
 }

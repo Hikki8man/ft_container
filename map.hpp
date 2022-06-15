@@ -93,9 +93,9 @@ namespace ft {
 		private:
 			typedef BItree<key_type, value_type, key_compare> _Bi_type;
 
-			_Bi_type _tree;
 
 		public:
+			_Bi_type _tree;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
@@ -107,6 +107,8 @@ namespace ft {
 
 
 			map() : _tree() {}
+
+			map(const map& m) : _tree(m._tree) {}
 
 			// Capacity
 

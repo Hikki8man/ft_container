@@ -162,6 +162,12 @@ template< class Node >
 
 			BItree() : _root(NULL), _size(0) {}
 
+			BItree(const BItree& _X) : _root(NULL), _size(0) {
+				_root = _copy_tree(_X._root);
+				_comp = _X._comp;
+				_size = _X._size;
+			}
+
 			void insert(const value_type& val) {
 				if (_root == NULL) {
 					_root = _new_node(val);
@@ -305,7 +311,9 @@ template< class Node >
 			}
 
 			void clear() {
-				erase(begin(), end());
+				_delete_tree(_root);
+				_root = NULL;
+				_size = 0;
 			}
 
 			iterator find(const key_type& k) {//do const one
@@ -485,6 +493,30 @@ template< class Node >
 						_alloc.deallocate(x, 1);
 						x = NULL;
 					}
+				}
+
+				void _delete_tree(pointer x) {
+					if (x != NULL) {
+						_delete_tree(x->left);
+						_delete_tree(x->right);
+						_delete_node(x);
+					}
+				}
+
+				pointer _copy_tree(pointer x) {
+					if (x == NULL) {
+						return NULL;
+					}
+					pointer y = _new_node(x->pair);
+					y->left = _copy_tree(x->left);
+					if (y->left != NULL) {
+						y->left->parent = y;
+					}
+					y->right = _copy_tree(x->right);
+					if (y->right != NULL) {
+						y->right->parent = y;
+					}
+					return y;
 				}
 
 				size_type _size;
