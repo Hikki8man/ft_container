@@ -13,13 +13,6 @@ int main() {
 	{
 		std::map<int, char> m;
 
-		std::map<int, char> m2;
-
-		m2.insert(std::make_pair(1, 'a'));
-		m2.insert(std::make_pair(2, 'b'));
-		m2.insert(std::make_pair(33, 'c'));
-		m2.insert(std::make_pair(4, 'd'));
-
 		m.insert(std::make_pair(15, 'a'));
 		m.insert(std::make_pair(20, 'b'));
 		m.insert(std::make_pair(10, 'c'));
@@ -32,7 +25,11 @@ int main() {
 		
 
 
-		m.insert(m2.begin(), m2.end());
+		char& c = m[22];
+
+		std::cout << c << std::endl;
+
+		c = 'z';
 
 
 		std::cout << "size: " << m.size() << std::endl;
@@ -52,13 +49,6 @@ int main() {
 
 		ft::map<int, char> m;
 
-		ft::map<int, char> m2;
-
-		m2.insert(ft::make_pair(1, 'a'));
-		m2.insert(ft::make_pair(2, 'b'));
-		m2.insert(ft::make_pair(33, 'c'));
-		m2.insert(ft::make_pair(4, 'd'));
-
 
 		m.insert(ft::make_pair(15, 'a'));
 		m.insert(ft::make_pair(20, 'b'));
@@ -71,8 +61,11 @@ int main() {
 		m.insert(ft::make_pair(16, 'h'));
 
 
-		m.insert(m2.begin(), m2.end());
+		char& c = m[22];
 
+		std::cout << c << std::endl;
+
+		c = 'z';
 
 		std::cout << "size: " << m.size() << std::endl;
 

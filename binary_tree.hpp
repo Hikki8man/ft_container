@@ -223,7 +223,8 @@ template< class Node, class Node_Base >
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
-			typedef ft::tree_node<value_type> node_type;//??
+
+			typedef _Compare key_compare;
 
 			typedef ft::bi_tree_iterator<pointer, ft::tree_node_base<value_type>* > iterator;
 			typedef ft::bi_tree_iterator<const_pointer, const ft::tree_node_base<value_type>* > const_iterator;
@@ -232,7 +233,7 @@ template< class Node, class Node_Base >
 			pointer _root;
 			ft::tree_node_base<value_type> _sentinel;
 			_Alloc _alloc;
-			_Compare _comp;
+			key_compare _comp;
 
 			BItree() : _root(NULL), _size(0), _sentinel() {
 				_sentinel.left = static_cast<pointer>(&_sentinel);
@@ -264,6 +265,14 @@ template< class Node, class Node_Base >
 					}
 				}
 				return *this;
+			}
+
+			~BItree() {
+				_delete_tree(_root);
+			}
+
+			key_compare key_comp() const {
+				return _comp;
 			}
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
@@ -661,7 +670,7 @@ template< class Node, class Node_Base >
 						_delete_tree(x->left);
 						_delete_tree(x->right);
 						_delete_node(x);
-						_sentinel->left = static_cast<pointer>(&_sentinel);
+						_sentinel.left = static_cast<pointer>(&_sentinel);
 					}
 				}
 

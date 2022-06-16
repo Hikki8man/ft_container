@@ -110,7 +110,7 @@ namespace ft {
 
 			map(const map& m) : _tree(m._tree) {}
 
-			// Capacity
+			// Capacity======================================================================================================
 
 			bool empty() const {
 				return _tree.empty();
@@ -124,7 +124,7 @@ namespace ft {
 				return _tree.max_size();
 			}
 
-			// Modifiers
+			// Modifiers=====================================================================================================
 
 			ft::pair<iterator, bool> insert(const value_type& value) {
 				return _tree.insert(value);
@@ -155,7 +155,23 @@ namespace ft {
 				_tree.clear();
 			}
 
-			// Iterator
+			void swap(map& m) {
+				BItree<key_type, value_type, key_compare> tmp = _tree;
+				_tree = m._tree;
+				m._tree = tmp;
+			}
+
+
+			// Observers=====================================================================================================
+
+			key_compare key_comp() const {
+				return _tree.key_comp();
+			}
+
+
+
+
+			// Iterator======================================================================================================
 
 			iterator begin() {
 				return iterator(_tree.begin());
@@ -173,7 +189,17 @@ namespace ft {
 				return const_iterator(_tree.end());
 			}
 
-			// Lookup
+			// Element access================================================================================================
+
+			mapped_type& operator[](const key_type& key) {
+				iterator it = lower_bound(key);
+
+				if (it == end() || key_comp()(key, it->first))
+					it = insert(it, value_type(key, mapped_type()));
+				return it->second;
+			}
+
+			// Lookup========================================================================================================
 
 			iterator find(const key_type& key) {
 				return iterator(_tree.find(key));
