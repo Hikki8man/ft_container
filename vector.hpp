@@ -48,9 +48,9 @@ namespace ft {
 			}
 
 		public:
-			vector() : _data(NULL), _size(0), _capacity(0) {};
+			explicit vector() : _data(NULL), _size(0), _capacity(0) {};
 
-			vector(size_type size, const value_type & value = value_type()) {//test with size max
+			explicit vector(size_type size, const value_type & value = value_type()) {//test with size max
 				_size = size;
 				_capacity = size;
 				_data = _alloc.allocate(_capacity);

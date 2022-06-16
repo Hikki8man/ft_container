@@ -93,9 +93,10 @@ namespace ft {
 		private:
 			typedef BItree<key_type, value_type, key_compare> _Bi_type;
 
+		protected:
+			_Bi_type _tree;
 
 		public:
-			_Bi_type _tree;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
@@ -105,8 +106,17 @@ namespace ft {
 			typedef typename _Bi_type::size_type size_type;
 			typedef typename _Bi_type::difference_type difference_type;
 
+			//what todo with thooose
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _tree() {}
 
-			map() : _tree() {}
+			template<class InputIterator>
+			map(InputIterator first, InputIterator last,
+			 const key_compare& comp = key_compare(),
+			 const allocator_type& alloc = allocator_type()) : _tree() {
+				for(; first != last; ++first) {
+					insert(first);
+				}
+			 }
 
 			map(const map& m) : _tree(m._tree) {}
 
@@ -235,6 +245,12 @@ namespace ft {
 
 			ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
 				return ft::pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
+			}
+
+			// Allocator=====================================================================================================
+
+			allocator_type get_allocator() const {
+				return allocator_type();//non?
 			}
 	};
 }
