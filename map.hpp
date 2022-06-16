@@ -126,8 +126,17 @@ namespace ft {
 
 			// Modifiers
 
-			void insert(const value_type& value) {//not void
-				_tree.insert(value);
+			ft::pair<iterator, bool> insert(const value_type& value) {
+				return _tree.insert(value);
+			}
+
+			iterator insert(iterator hint, const value_type& value) {
+				return _tree.insert(hint.base(), value);
+			}
+
+			template<class InputIterator>
+			void insert(InputIterator first, InputIterator last) {
+				_tree.insert(first.base(), last.base());
 			}
 
 			void erase(iterator position) {

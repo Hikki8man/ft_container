@@ -268,6 +268,7 @@ template< class Node, class Node_Base >
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				pointer curr = _root;
+				pointer to_ret = NULL;
 				iterator it = find(val.first);
 				if (it != end()) { return ft::make_pair(it, false); }
 				else if (_root == NULL) {
@@ -281,6 +282,7 @@ template< class Node, class Node_Base >
 							if (curr->left == NULL) {
 								curr->left = _new_node(val);
 								curr->left->parent = curr;
+								to_ret = curr->left;
 								break;
 							}
 							else
@@ -290,6 +292,7 @@ template< class Node, class Node_Base >
 							if (curr->right == NULL) {
 								curr->right =_new_node(val);
 								curr->right->parent = curr;
+								to_ret = curr->right;
 								break;
 							}
 							else
@@ -298,7 +301,61 @@ template< class Node, class Node_Base >
 					}
 				}
 				++_size;
-				return ft::make_pair(iterator(curr, &_sentinel), true);
+				return ft::make_pair(iterator(to_ret, &_sentinel), true);
+			}
+
+
+			iterator insert(iterator hint, const value_type& val) {
+				pointer _hint = hint.base();
+				pointer to_ret = NULL;
+				if (_hint == &_sentinel || _hint == NULL || _hint->parent == NULL) {
+					return insert(val).first;
+				} // if _hint is left child of its parent and val to insert is greater than parent value then recall insert with parent
+				else if (_hint->parent->left == _hint && !_comp(val.first, _hint->parent->pair.first)) {
+					std::cout << "insert left" << std::endl;
+					to_ret = insert(iterator(_hint->parent, &_sentinel), val).base();
+				} // if _hint is right child of its parent and val to insert is less than parent value then recall insert with parent
+				else if (_hint->parent->right == _hint && _comp(val.first, _hint->parent->pair.first)) {
+					std::cout << "insert right" << std::endl;
+					to_ret = insert(iterator(_hint->parent, &_sentinel), val).base();
+				}
+				else {
+					while (_hint != NULL) {
+						if (_hint->pair.first == val.first) {
+							return iterator(_hint, &_sentinel);
+						}
+						else if (_comp(val.first, _hint->pair.first)) {
+							if (_hint->left == NULL) {
+								_hint->left = _new_node(val);
+								_hint->left->parent = _hint;
+								to_ret = _hint->left;
+								++_size;
+								break;
+							}
+							else
+								_hint = _hint->left;
+						}
+						else {
+							if (_hint->right == NULL) {
+								_hint->right = _new_node(val);
+								_hint->right->parent = _hint;
+								to_ret = _hint->right;
+								++_size;
+								break;
+							}
+							else
+								_hint = _hint->right;
+						}
+					}
+				}
+				return iterator(to_ret, &_sentinel);
+			}
+
+			template<class InputIterator>
+			void insert(InputIterator first, InputIterator last) {
+				for (; first != last; ++first) {
+					insert(first->pair);
+				}
 			}
 
 			void erase(iterator pos) {
@@ -479,15 +536,15 @@ template< class Node, class Node_Base >
 
 			iterator lower_bound(const key_type& k) {
 				pointer node = _root;
-				if (_comp(_max(_root)->pair.first, k)) {
+				if (_comp(_root->max()->pair.first, k)) {
 					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
 				}
 				while (node != NULL) {
 					if (k == node->pair.first) {
-						return iterator(node);
+						return iterator(node, &_sentinel);
 					}
 					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
-						return iterator(node);
+						return iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -496,20 +553,20 @@ template< class Node, class Node_Base >
 						node = node->right;
 					}
 				}
-				return iterator(_root);
+				return iterator(_root, &_sentinel);
 			}
 
 			const_iterator lower_bound(const key_type& k) const {
 				pointer node = _root;
-				if (_comp(_max(_root)->pair.first, k)) {
+				if (_comp(_root->max()->pair.first, k)) {
 					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
 				}
 				while (node != NULL) {
 					if (k == node->pair.first) {
-						return const_iterator(node);
+						return const_iterator(node, &_sentinel);
 					}
 					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
-						return const_iterator(node);
+						return const_iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -518,20 +575,20 @@ template< class Node, class Node_Base >
 						node = node->right;
 					}
 				}
-				return const_iterator(_root);
+				return const_iterator(_root, &_sentinel);
 			}
 
 			iterator upper_bound(const key_type& k) {
 				pointer node = _root;
-				if (_comp(_max(_root)->pair.first, k) || _max(_root)->pair.first == k) { // pas opti du tout
+				if (_comp(_root->max()->pair.first, k) || _root->max()->pair.first == k) { // pas opti du tout
 					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
 				}
 				while (node != NULL) {
 					if (k == node->pair.first && node->right != NULL) {
-						return iterator(node->right);
+						return iterator(node->right, &_sentinel);
 					}
 					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
-						return iterator(node);
+						return iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -540,20 +597,20 @@ template< class Node, class Node_Base >
 						node = node->right;
 					}
 				}
-				return iterator(_root);
+				return iterator(_root, &_sentinel);
 			}
 
 			const_iterator upper_bound(const key_type& k) const {
 				pointer node = _root;
-				if (_comp(_max(_root)->pair.first, k) || _max(_root)->pair.first == k) { // pas opti du tout
+				if (_comp(_root->max()->pair.first, k) || _root->max()->pair.first == k) { // pas opti du tout
 					return end(); // stl doesnt segfault when you try to dereference an iterator that is end() if key is an int
 				}
 				while (node != NULL) {
 					if (k == node->pair.first && node->right != NULL) {
-						return const_iterator(node->right);
+						return const_iterator(node->right, &_sentinel);
 					}
 					else if (node->parent != NULL && !_comp(k, node->parent->pair.first) && _comp(k, node->pair.first)) {
-						return const_iterator(node);
+						return const_iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -562,7 +619,7 @@ template< class Node, class Node_Base >
 						node = node->right;
 					}
 				}
-				return const_iterator(_root);
+				return const_iterator(_root, &_sentinel);
 			}
 
 			// Capacity
