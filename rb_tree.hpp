@@ -1,5 +1,5 @@
-#ifndef BINARY_TREE_HPP
-#define BINARY_TREE_HPP
+#ifndef RB_TREE_HPP
+#define RB_TREE_HPP
 
 #include <memory>
 #include "iterator_traits.hpp"
@@ -45,13 +45,14 @@ namespace ft {
 		typedef ft::tree_node_base<Pair> base;
 		typedef tree_node<Pair>* node_ptr;
 
-		tree_node() : base(), pair() {}
-		tree_node(const Pair &p) : base(), pair(p) {}
-		tree_node(const tree_node & src) : base(src), pair(src.pair) {}
+		tree_node() : base(), pair(), is_black(false) {}
+		tree_node(const Pair &p) : base(), pair(p), is_black(false) {}
+		tree_node(const tree_node & src) : base(src), pair(src.pair), is_black(src.is_black) {}
 		~tree_node() {}
 		tree_node &operator=(const tree_node &other) {
 			base::operator=(other);
 			pair = other.pair;
+			is_black = other.is_black;
 			return *this;
 		}
 
@@ -106,10 +107,11 @@ namespace ft {
 		}
 
 		Pair pair;
+		bool is_black;
 	};
 
 template< class Node, class Node_Base >
-	class bi_tree_iterator {
+	class rb_tree_iterator {
 
 			public:
 
@@ -119,7 +121,7 @@ template< class Node, class Node_Base >
 				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
-				typedef bi_tree_iterator<Node, Node_Base> _Self;
+				typedef rb_tree_iterator<Node, Node_Base> _Self;
 				typedef tree_node<value_type>* _Link_type;
 
 				// typedef Node_Base<value_type>* _Base_ptr;
@@ -127,13 +129,13 @@ template< class Node, class Node_Base >
 				pointer _node;
 				Node_Base _sentinel;
 
-				bi_tree_iterator() : _node(), _sentinel() {}
+				rb_tree_iterator() : _node(), _sentinel() {}
 
-				bi_tree_iterator(pointer _x, Node_Base _s) : _node(_x), _sentinel(_s) {}
+				rb_tree_iterator(pointer _x, Node_Base _s) : _node(_x), _sentinel(_s) {}
 
-				bi_tree_iterator(const _Self &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
+				rb_tree_iterator(const _Self &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
 
-				bi_tree_iterator& operator=(const _Self &_x) {
+				rb_tree_iterator& operator=(const _Self &_x) {
 					_node = _x._node;
 					_sentinel = _x._sentinel;
 					return *this;
@@ -202,17 +204,17 @@ template< class Node, class Node_Base >
 	};
 
 	template<class Node, class Node_Base>
-		bool operator==(const bi_tree_iterator<Node, Node_Base>& _Left, const bi_tree_iterator<Node, Node_Base>& _Right) {
+		bool operator==(const rb_tree_iterator<Node, Node_Base>& _Left, const rb_tree_iterator<Node, Node_Base>& _Right) {
 			return _Left.base() == _Right.base();
 		}
 	
 	template<class Node, class Node_Base>
-		bool operator!=(const bi_tree_iterator<Node, Node_Base>& _Left, const bi_tree_iterator<Node, Node_Base>& _Right) {
+		bool operator!=(const rb_tree_iterator<Node, Node_Base>& _Left, const rb_tree_iterator<Node, Node_Base>& _Right) {
 			return _Left.base() != _Right.base();
 		}
 
 	template<typename _Key, class _Pair, class _Compare, class _Alloc = std::allocator<ft::tree_node<_Pair> > >
-	class BItree {
+	class rb_tree {
 
 		public:
 
@@ -230,8 +232,8 @@ template< class Node, class Node_Base >
 
 			typedef _Compare key_compare;
 
-			typedef ft::bi_tree_iterator<pointer, ft::tree_node_base<value_type>* > iterator;
-			typedef ft::bi_tree_iterator<const_pointer, const ft::tree_node_base<value_type>* > const_iterator;
+			typedef ft::rb_tree_iterator<pointer, ft::tree_node_base<value_type>* > iterator;
+			typedef ft::rb_tree_iterator<const_pointer, const ft::tree_node_base<value_type>* > const_iterator;
 
 		
 			pointer _root;
@@ -239,11 +241,11 @@ template< class Node, class Node_Base >
 			_Alloc _alloc;
 			key_compare _comp;
 
-			BItree() : _root(NULL), _size(0), _sentinel() {
+			rb_tree() : _root(NULL), _size(0), _sentinel() {
 				_sentinel.left = static_cast<pointer>(&_sentinel);
 			}
 
-			BItree(const BItree& _X) : _root(NULL), _size(0) {
+			rb_tree(const rb_tree& _X) : _root(NULL), _size(0) {
 				_root = _copy_tree(_X._root);
 				_comp = _X._comp;
 				_size = _X._size;
@@ -255,7 +257,7 @@ template< class Node, class Node_Base >
 				}
 			}
 
-			BItree& operator=(const BItree& _X) {
+			rb_tree& operator=(const rb_tree& _X) {
 				if (this != &_X) {
 					clear(_root);
 					_root = _copy_tree(_X._root);
@@ -271,7 +273,7 @@ template< class Node, class Node_Base >
 				return *this;
 			}
 
-			~BItree() {
+			~rb_tree() {
 				_delete_tree(_root);
 			}
 

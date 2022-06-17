@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "map.hpp"
-#include "binary_tree.hpp"
+// #include "binary_tree.hpp"
 // #include <pair>
 
 
@@ -25,12 +25,9 @@ int main() {
 		
 
 
-		char& c = m[22];
+		std::cout << "upper_bound: " << m.upper_bound(9)->first << std::endl;
 
-		std::cout << c << std::endl;
-
-		c = 'z';
-
+		std::cout << "lower_bound: " << m.lower_bound(9)->first << std::endl;
 
 		std::cout << "size: " << m.size() << std::endl;
 		
@@ -61,11 +58,9 @@ int main() {
 		m.insert(ft::make_pair(16, 'h'));
 
 
-		char& c = m[22];
+		std::cout << "upper_bound: " << m.upper_bound(9)->first << std::endl;
 
-		std::cout << c << std::endl;
-
-		c = 'z';
+		std::cout << "lower_bound: " << m.lower_bound(9)->first << std::endl;
 
 		std::cout << "size: " << m.size() << std::endl;
 

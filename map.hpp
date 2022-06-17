@@ -3,7 +3,8 @@
 
 #include <memory>
 #include "pair.hpp"
-#include "binary_tree.hpp"
+// #include "binary_tree.hpp"
+#include "rb_tree.hpp"
 
 namespace ft {
 
@@ -91,34 +92,38 @@ namespace ft {
 
 			
 		private:
-			typedef BItree<key_type, value_type, key_compare> _Bi_type;
 
 		protected:
-			_Bi_type _tree;
+			typedef rb_tree<key_type, value_type, key_compare> _Red_type;
+			_Red_type _tree;
+			key_compare _comp;
+			allocator_type _alloc;
 
 		public:
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
-			typedef map_iterator<pointer, typename _Bi_type::iterator> iterator;
-			typedef map_iterator<pointer, typename _Bi_type::const_iterator> const_iterator;
-			typedef typename _Bi_type::size_type size_type;
-			typedef typename _Bi_type::difference_type difference_type;
+			typedef map_iterator<pointer, typename _Red_type::iterator> iterator;
+			typedef map_iterator<pointer, typename _Red_type::const_iterator> const_iterator;
+			typedef typename _Red_type::size_type size_type;
+			typedef typename _Red_type::difference_type difference_type;
 
 			//what todo with thooose
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _tree() {}
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _comp(comp), _alloc(alloc), _tree() {}
 
 			template<class InputIterator>
 			map(InputIterator first, InputIterator last,
 			 const key_compare& comp = key_compare(),
-			 const allocator_type& alloc = allocator_type()) : _tree() {
+			 const allocator_type& alloc = allocator_type()) : _comp(comp), _alloc(alloc), _tree() {
 				for(; first != last; ++first) {
 					insert(first);
 				}
 			 }
 
-			map(const map& m) : _tree(m._tree) {}
+			map(const map& m) : _alloc(m.get_allocator()), _comp(key_comp()), _tree(m._tree) {}
+
+			~map() { clear(); }
 
 			// Capacity======================================================================================================
 
@@ -166,7 +171,7 @@ namespace ft {
 			}
 
 			void swap(map& m) {
-				BItree<key_type, value_type, key_compare> tmp = _tree;
+				_Red_type tmp = _tree;
 				_tree = m._tree;
 				m._tree = tmp;
 			}
@@ -250,7 +255,7 @@ namespace ft {
 			// Allocator=====================================================================================================
 
 			allocator_type get_allocator() const {
-				return allocator_type();//non?
+				return _alloc;//non?
 			}
 	};
 }
