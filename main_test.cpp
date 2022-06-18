@@ -52,15 +52,10 @@ int main() {
 		m.insert(ft::make_pair(10, 'c'));
 		m.insert(ft::make_pair(8, 'd'));
 		m.insert(ft::make_pair(12, 'e'));
-
-		// m.insert(ft::make_pair(18, 'f'));
-		m.insert(ft::make_pair(25, 'g'));
-		m.insert(ft::make_pair(16, 'h'));
+		// m.insert(ft::make_pair(25, 'g'));
+		// m.insert(ft::make_pair(16, 'h'));
 
 
-		std::cout << "upper_bound: " << m.upper_bound(9)->first << std::endl;
-
-		std::cout << "lower_bound: " << m.lower_bound(9)->first << std::endl;
 
 		std::cout << "size: " << m.size() << std::endl;
 
@@ -76,6 +71,17 @@ int main() {
 		for (auto it = m.begin(); it != m.end(); ++it) {
 			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
 		}
+
+		ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::iterator ite = m._tree.begin();
+
+		for (; ite != m._tree.end(); ++ite) {
+			std::cout << "first: " << ite->pair.first << " color: " << ite->is_black  << std::endl;
+		}
+
+		// ite = m._tree.find(16);
+
+		// std::cout << ite->parent->pair.first << std::endl;
+
 
 
 		std::cout << "--------------------------------" << std::endl;

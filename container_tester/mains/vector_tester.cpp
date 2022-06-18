@@ -632,21 +632,6 @@ int main() {
 	}
 	catch(...) {}
 
-	// test 33: const value_type
-	// try {
-	// 	ft::vector<const int> v;
-
-	// 	for (int i = 0; i < 100; i++) {
-	// 		v.push_back(i);
-	// 	}
-	// 	Test<int>(v.size(), false);
-	// 	v.insert(v.begin(), 20, 42);
-	// 	for (size_t i = 0; i < v.size(); i++) {
-	// 		Test<int>(v[i], true);
-	// 	}
-	// }
-	// catch(...) {}
-
 	ofs.close();
 
 	// gettimeofday(&time_now, NULL);

@@ -39,7 +39,7 @@ namespace ft {
 			}
 
 			reference operator*() const {
-				return *_current->pair;
+				return _current->pair;
 			}
 
 			pointer operator->() const {
@@ -95,11 +95,11 @@ namespace ft {
 
 		protected:
 			typedef rb_tree<key_type, value_type, key_compare> _Red_type;
-			_Red_type _tree;
 			key_compare _comp;
 			allocator_type _alloc;
 
 		public:
+			_Red_type _tree;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;

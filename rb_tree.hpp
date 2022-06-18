@@ -290,6 +290,7 @@ template< class Node, class Node_Base >
 					_root = _new_node(val);
 					curr = _root;
 					_sentinel.left = _root;
+					to_ret = _root;
 				}
 				else {
 					while (curr != NULL) {
@@ -316,6 +317,13 @@ template< class Node, class Node_Base >
 					}
 				}
 				++_size;
+				if (to_ret->parent == NULL) {
+					to_ret->is_black = true;
+				}
+				else if (to_ret->parent->parent) {
+					insertFix(to_ret);
+				}
+
 				return ft::make_pair(iterator(to_ret, &_sentinel), true);
 			}
 
@@ -372,6 +380,95 @@ template< class Node, class Node_Base >
 					insert(first->pair);
 				}
 			}
+
+			void left_rotate(pointer x) {
+				pointer y = x->right;
+				x->right = y->left;
+				if (y->left != NULL) {
+					y->left->parent = x;
+				}
+				y->parent = x->parent;
+				if (x->parent == NULL) {
+					_root = y;
+				}
+				else if (x == x->parent->left) {
+					x->parent->left = y;
+				}
+				else {
+					x->parent->right = y;
+				}
+				y->left = x;
+				x->parent = y;
+			}
+
+			void right_rotate(pointer x) {
+				pointer y = x->left;
+				x->left = y->right;
+				if (y->right != NULL) {
+					y->right->parent = x;
+				}
+				y->parent = x->parent;
+				if (x->parent == NULL) {
+					_root = y;
+				}
+				else if (x == x->parent->right) {
+					x->parent->right = y;
+				}
+				else {
+					x->parent->left = y;
+				}
+				y->right = x;
+				x->parent = y;
+			}
+
+			void insertFix(pointer k) {
+				pointer u;
+				while (k->parent != NULL && k->parent->is_black == false) {
+					if (k->parent == k->parent->parent->left) {
+						u = k->parent->parent->right;
+						if (u != NULL && u->is_black == false) {
+							k->parent->is_black = true;
+							u->is_black = true;
+							k->parent->parent->is_black = false;
+							k = k->parent->parent;
+						}
+						else {
+							if (k == k->parent->right) {
+								k = k->parent;
+								left_rotate(k);
+							}
+							k->parent->is_black = true;
+							k->parent->parent->is_black = false;
+							right_rotate(k->parent->parent);
+						}
+					}
+					else {
+						u = k->parent->parent->left;
+						if (u != NULL && u->is_black == false) {
+							k->parent->is_black = true;
+							u->is_black = true;
+							k->parent->parent->is_black = false;
+							k = k->parent->parent;
+						}
+						else {
+							if (k == k->parent->left) {
+								k = k->parent;
+								right_rotate(k);
+							}
+							k->parent->is_black = true;
+							k->parent->parent->is_black = false;
+							left_rotate(k->parent->parent);
+						}
+					}
+					if (k == _root) {
+						break;
+					}
+				}
+				_root->is_black = true;
+			}
+
+
+			// Erase=========================================================================================================
 
 			void erase(iterator pos) {
 				pointer curr = pos.base();//check if it is a valid iterator
