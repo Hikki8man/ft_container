@@ -22,6 +22,14 @@ int main() {
 		// m.insert(std::make_pair(18, 'f'));
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
+
+		auto it = m.begin();
+
+		m.count(15);
+
+		std::cout << "oyoo" << it->first << std::endl;
+
+		m.insert(it, std::make_pair(18, 'i'));
 		
 
 

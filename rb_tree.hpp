@@ -26,12 +26,13 @@ namespace ft {
 		~tree_node_base() {}
 	
 		tree_node_base &operator=(const tree_node_base &other) {
-			left = other.left;
-			right = other.right;
-			parent = other.parent;
+			if (this != &other) {
+				left = other.left;
+				right = other.right;
+				parent = other.parent;
+			}
 			return *this;
 		}
-
 
 		node_ptr left;
 		node_ptr right;
@@ -45,8 +46,7 @@ namespace ft {
 		typedef ft::tree_node_base<Pair> base;
 		typedef tree_node<Pair>* node_ptr;
 
-		tree_node() : base(), pair(), is_black(false) {}
-		tree_node(const Pair &p) : base(), pair(p), is_black(false) {}
+		tree_node(const Pair &p = Pair()) : base(), pair(p), is_black(false) {}
 		tree_node(const tree_node & src) : base(src), pair(src.pair), is_black(src.is_black) {}
 		~tree_node() {}
 		tree_node &operator=(const tree_node &other) {
@@ -223,6 +223,7 @@ template< class Node, class Node_Base >
 			typedef std::size_t 				size_type;
 			typedef std::ptrdiff_t 			difference_type;
 			typedef _Alloc 				allocator_type;
+			typedef _Compare		 key_compare;
 
 			// node type
 			typedef typename allocator_type::reference reference;
@@ -230,14 +231,16 @@ template< class Node, class Node_Base >
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 
-			typedef _Compare key_compare;
 
-			typedef ft::rb_tree_iterator<pointer, ft::tree_node_base<value_type>* > iterator;
-			typedef ft::rb_tree_iterator<const_pointer, const ft::tree_node_base<value_type>* > const_iterator;
+			typedef ft::tree_node_base<value_type> _node_base;
+			typedef _node_base* _node_base_ptr;
+
+			typedef ft::rb_tree_iterator<pointer, _node_base_ptr > iterator;
+			typedef ft::rb_tree_iterator<const_pointer, _node_base_ptr > const_iterator;
 
 		
 			pointer _root;
-			ft::tree_node_base<value_type> _sentinel;
+			_node_base _sentinel;
 			_Alloc _alloc;
 			key_compare _comp;
 
@@ -259,7 +262,7 @@ template< class Node, class Node_Base >
 
 			rb_tree& operator=(const rb_tree& _X) {
 				if (this != &_X) {
-					clear(_root);
+					this->clear();
 					_root = _copy_tree(_X._root);
 					_comp = _X._comp;
 					_size = _X._size;
@@ -471,6 +474,7 @@ template< class Node, class Node_Base >
 			// Erase=========================================================================================================
 
 			void erase(iterator pos) {
+				if (pos == end() || pos.base() == NULL) { return; }
 				pointer curr = pos.base();//check if it is a valid iterator
 
 				// if no child
@@ -540,9 +544,9 @@ template< class Node, class Node_Base >
 					}
 				}
 				else {// if two children, not the best way to do it i think
-					pointer succ = curr->right.min();
+					pointer succ = curr->right->min();
 					value_type tmp(succ->pair.first, succ->pair.second);
-					erase(iterator(succ));
+					erase(iterator(succ, &_sentinel));
 					pointer newnode = _new_node(tmp);
 					newnode->left = curr->left;
 					if (newnode->left != NULL) {
@@ -611,7 +615,7 @@ template< class Node, class Node_Base >
 
 				while (node != NULL) {
 					if (k == node->pair.first) {
-						return const_iterator(node);
+						return const_iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
 						node = node->left;
@@ -623,11 +627,8 @@ template< class Node, class Node_Base >
 				return end();
 			}
 
-			size_t count(const key_type& k) {
-				if (find(k) != end()) {
-					return 1;
-				}
-				return 0;
+			size_t count(const key_type& k) const {
+				return find(k) == end() ? 0 : 1;
 			}
 
 			iterator begin() {
@@ -643,7 +644,7 @@ template< class Node, class Node_Base >
 			}
 
 			const_iterator end() const {
-				return const_iterator(static_cast<pointer>(&_sentinel), &_sentinel);
+				return const_iterator(static_cast<const_pointer>(&_sentinel), &_sentinel);
 			}
 
 			iterator lower_bound(const key_type& k) {

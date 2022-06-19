@@ -105,7 +105,7 @@ namespace ft {
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef map_iterator<pointer, typename _Red_type::iterator> iterator;
-			typedef map_iterator<pointer, typename _Red_type::const_iterator> const_iterator;
+			typedef map_iterator<const_pointer, typename _Red_type::const_iterator> const_iterator;
 			typedef typename _Red_type::size_type size_type;
 			typedef typename _Red_type::difference_type difference_type;
 
@@ -122,6 +122,15 @@ namespace ft {
 			 }
 
 			map(const map& m) : _alloc(m.get_allocator()), _comp(key_comp()), _tree(m._tree) {}
+
+			map &operator=(const map& m) {
+				if(this != &m) {
+					_tree = m._tree;
+					_comp = m._comp;
+					_alloc = m._alloc;
+				}
+				return *this;
+			}
 
 			~map() { clear(); }
 
@@ -214,6 +223,13 @@ namespace ft {
 				return it->second;
 			}
 
+			mapped_type& at(const key_type& key) {
+				iterator it = find(key);
+				if (it == end())
+					throw std::out_of_range("map::at");
+				return it->second;
+			}
+
 			// Lookup========================================================================================================
 
 			iterator find(const key_type& key) {
@@ -225,7 +241,8 @@ namespace ft {
 			}
 
 			size_type count(const key_type& key) const {
-				return _tree.count(key);
+				// return _tree.count(key);
+				return find(key) == end() ? 0 : 1;
 			}
 
 			iterator lower_bound(const key_type& key) {
