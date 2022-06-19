@@ -24,13 +24,16 @@ namespace ft {
 		public:
 			// Constructors / Destructor
 			random_access_iterator() : _current(_Iterator()) {}
+
 			random_access_iterator(const _Iterator& p) : _current(p) {}
+			
 			template<typename _Iter>
 				random_access_iterator(const random_access_iterator<_Iter>& other) : _current(other.base()) {}
-				random_access_iterator& operator=(const random_access_iterator& other) {
-					_current = other._current;
-					return *this;
-				}
+
+			random_access_iterator& operator=(const random_access_iterator& other) {
+				_current = other._current;
+				return *this;
+			}
 			~random_access_iterator() {}
 
 			const _Iterator& base() const {

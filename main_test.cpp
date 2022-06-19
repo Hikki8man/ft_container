@@ -23,7 +23,12 @@ int main() {
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
 
-		std::map<int, char>::const_iterator ite2 = m.find(15);
+		std::map<int, char>::const_iterator ite2 = m.begin();
+		for (; ite2 != m.end(); ++ite2) {
+			std::cout << ite2->first << " " << ite2->second << std::endl;
+		}
+
+
 
 	}
 
@@ -56,11 +61,11 @@ int main() {
 
 		std::cout << "--------------------------------" << std::endl;
 
-		auto tree = m._tree;
+		//  const ft::rb_tree<int, ft::pair<const int, char>, std::less<int> > tree(m._tree);
 
-		ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::const_iterator it = tree.begin();
+		// ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::const_iterator it = tree.begin();
 
-		std::cout << it->pair.first << std::endl;
+		// std::cout << it->pair.first << std::endl;
 
 		// ft::map<int, char>::const_iterator ite2 = m.find(15);
 

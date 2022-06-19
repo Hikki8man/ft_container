@@ -122,7 +122,6 @@ template< class Node, class Node_Base >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_iterator<Node, Node_Base> _Self;
-				typedef tree_node<Node>* _Link_type;
 
 				// typedef Node_Base<value_type>* _Base_ptr;
 
@@ -149,20 +148,25 @@ template< class Node, class Node_Base >
 				pointer operator->() const { return _node; }
 
 				_Self& operator++() {
-					if (_node->right != NULL) {
-						_node = _node->right;
-						while (_node->left != NULL) {
-							_node = _node->left;
-						}
-					}
-					else {
-						pointer _y = _node->parent;
-						while (_y != NULL && _node == _y->right) {
-							_node = _y;
-							_y = _y->parent;
-						}
-						_node = _y;
-					}
+					// if (_node->right != NULL) {
+					// 	_node = _node->right;
+					// 	while (_node->left != NULL) {
+					// 		_node = _node->left;
+					// 	}
+					// }
+					// else {
+					// 	pointer _y = _node->parent;
+					// 	while (_y != NULL && _node == _y->right) {
+					// 		_node = _y;
+					// 		_y = _y->parent;
+					// 	}
+					// 	_node = _y;
+					// }
+					// if (_node == NULL) {
+					// 	_node = static_cast<pointer>(_sentinel);
+					// }
+					// return *this;
+					_node = _node->next();
 					if (_node == NULL) {
 						_node = static_cast<pointer>(_sentinel);
 					}
@@ -176,23 +180,27 @@ template< class Node, class Node_Base >
 				}
 
 				_Self& operator--() {
-					if (_node == _sentinel) {
+					// if (_node == _sentinel) {
+					// 	_node = _sentinel->left->max();
+					// }
+					// else if (_node->left != NULL) {
+					// 	_node = _node->left;
+					// 	while (_node->right != NULL) {
+					// 		_node = _node->right;
+					// 	}
+					// }
+					// else {
+					// 	pointer _y = _node->parent;
+					// 	while (_y != NULL && _node == _y->left) {
+					// 		_node = _y;
+					// 		_y = _y->parent;
+					// 	}
+					// 	_node = _y;
+					// }
+					if (_node == _sentinel)
 						_node = _sentinel->left->max();
-					}
-					else if (_node->left != NULL) {
-						_node = _node->left;
-						while (_node->right != NULL) {
-							_node = _node->right;
-						}
-					}
-					else {
-						pointer _y = _node->parent;
-						while (_y != NULL && _node == _y->left) {
-							_node = _y;
-							_y = _y->parent;
-						}
-						_node = _y;
-					}
+					else
+						_node = _node->prev();
 					return *this;
 				}
 
@@ -234,6 +242,7 @@ template< class Node, class Node_Base >
 
 			typedef ft::tree_node_base<value_type> _node_base;
 			typedef _node_base* _node_base_ptr;
+
 
 			typedef ft::rb_tree_iterator<pointer, _node_base_ptr > iterator;
 			typedef ft::rb_tree_iterator<const_pointer, _node_base_ptr > const_iterator;
