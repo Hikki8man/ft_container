@@ -23,25 +23,7 @@ int main() {
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
 
-		auto it = m.begin();
-
-		m.count(15);
-
-		std::cout << "oyoo" << it->first << std::endl;
-
-		m.insert(it, std::make_pair(18, 'i'));
-		
-
-
-		std::cout << "upper_bound: " << m.upper_bound(9)->first << std::endl;
-
-		std::cout << "lower_bound: " << m.lower_bound(9)->first << std::endl;
-
-		std::cout << "size: " << m.size() << std::endl;
-		
-		for (auto it = m.begin(); it != m.end(); ++it) {
-			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
-		}
+		std::map<int, char>::const_iterator ite2 = m.find(15);
 
 	}
 
@@ -66,26 +48,6 @@ int main() {
 
 
 		std::cout << "size: " << m.size() << std::endl;
-
-		// auto ite = m.end();
-
-		// --ite;
-		// ++ite;
-		// ++ite;
-		// ++ite;
-
-		// std::cout << "first: " << ite->first << " second: " << ite->second << std::endl;
-
-		for (auto it = m.begin(); it != m.end(); ++it) {
-			std::cout << "first: " << it->first << " second: " << it->second << std::endl;
-		}
-
-		ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::iterator ite = m._tree.begin();
-
-		for (; ite != m._tree.end(); ++ite) {
-			std::cout << "first: " << ite->pair.first << " color: " << ite->is_black  << std::endl;
-		}
-
 		// ite = m._tree.find(16);
 
 		// std::cout << ite->parent->pair.first << std::endl;
@@ -94,14 +56,13 @@ int main() {
 
 		std::cout << "--------------------------------" << std::endl;
 
-		// ft::map<int, char> m2(m);
+		auto tree = m._tree;
 
-		// std::cout << "size: " << m2.size() << std::endl;
-		// std::cout << "root key: " << m._tree._root->pair.first << std::endl;
+		ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::const_iterator it = tree.begin();
 
-		// for (auto it = m2.begin(); it != m2.end(); ++it) {
-		// 	std::cout << "first: " << it->first << " second: " << it->second << std::endl;
-		// }
+		std::cout << it->pair.first << std::endl;
+
+		// ft::map<int, char>::const_iterator ite2 = m.find(15);
 
 
 	}

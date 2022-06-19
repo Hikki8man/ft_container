@@ -122,7 +122,7 @@ template< class Node, class Node_Base >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_iterator<Node, Node_Base> _Self;
-				typedef tree_node<value_type>* _Link_type;
+				typedef tree_node<Node>* _Link_type;
 
 				// typedef Node_Base<value_type>* _Base_ptr;
 
