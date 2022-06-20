@@ -27,7 +27,7 @@ int main() {
 		// for (; ite2 != m.end(); ++ite2) {
 		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
 		// }
-		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
 			m.erase(ite);
 		}
 		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
@@ -72,7 +72,7 @@ int main() {
 		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
 		// }
 
-		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
 			m.erase(ite);
 		}
 		std::cout << std::boolalpha << m.empty() << std::endl;

@@ -219,22 +219,24 @@ template< class Node >
 				pointer operator->() const { return _node; }
 
 				_Self& operator++() {
-					if (_node->right != NULL) {
-						_node = _node->right;
-						while (_node->left != NULL) {
-							_node = _node->left;
+					if (_node) {
+						if (_node->right != NULL) {
+							_node = _node->right;
+							while (_node->left != NULL) {
+								_node = _node->left;
+							}
 						}
-					}
-					else {
-						pointer _y = _node->parent;
-						while (_y != NULL && _node == _y->right) {
+						else {
+							pointer _y = _node->parent;
+							while (_y != NULL && _node == _y->right) {
+								_node = _y;
+								_y = _y->parent;
+							}
 							_node = _y;
-							_y = _y->parent;
 						}
-						_node = _y;
 					}
 					if (_node == NULL) {
-						_node = static_cast<pointer>(_sentinel);
+						_node = _sentinel;
 					}
 					return *this;
 				}
@@ -785,11 +787,17 @@ template< class Node >
 			}
 
 			iterator begin() {
-				return iterator(_root->min(), &_sentinel);
+				pointer beg = _root->min();
+				if (beg == NULL)
+					beg = &_sentinel;
+				return iterator(beg, &_sentinel);
 			}
 
 			const_iterator begin() const {
-				return const_iterator(_root->min(), &_sentinel);
+				pointer beg = _root->min();
+				if (beg == NULL)
+					beg = &_sentinel;
+				return const_iterator(beg, &_sentinel);
 			}
 
 			iterator end() {
