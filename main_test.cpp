@@ -23,12 +23,17 @@ int main() {
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
 
-		std::map<int, char>::const_iterator ite2 = m.begin();
-		for (; ite2 != m.end(); ++ite2) {
-			std::cout << ite2->first << " " << ite2->second << std::endl;
+		// std::map<int, char>::const_iterator ite2 = m.begin();
+		// for (; ite2 != m.end(); ++ite2) {
+		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
+		// }
+		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+			m.erase(ite);
 		}
-
-
+		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+			std::cout << ite->first << " " << ite->second << std::endl;
+		}
+		std::cout << std::boolalpha << m.empty() << std::endl;
 
 	}
 
@@ -47,16 +52,37 @@ int main() {
 		m.insert(ft::make_pair(10, 'c'));
 		m.insert(ft::make_pair(8, 'd'));
 		m.insert(ft::make_pair(12, 'e'));
-		// m.insert(ft::make_pair(25, 'g'));
-		// m.insert(ft::make_pair(16, 'h'));
+		m.insert(ft::make_pair(25, 'g'));
+		m.insert(ft::make_pair(16, 'h'));
 
 
 
-		std::cout << "size: " << m.size() << std::endl;
+		// std::cout << "size: " << m.size() << std::endl;
 		// ite = m._tree.find(16);
 
 		// std::cout << ite->parent->pair.first << std::endl;
+		// for (auto ite = m.begin(); ite != m.end(); ++ite) {
+		// 	std::cout << ite->first << " " << ite->second << std::endl;
+		// }
 
+		// ft::map<int, char>::const_iterator ite2 = m.begin();
+		// ft::map<int, char>::const_iterator ite3 = m.end();
+
+		// for (; ite2 != ite3; ++ite2) {
+		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
+		// }
+
+		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+			m.erase(ite);
+		}
+		std::cout << std::boolalpha << m.empty() << std::endl;
+		std::cout << "size: " << m.size() << std::endl;
+		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+			std::cout << ite->first << " " << ite->second << std::endl;
+		}
+
+
+		
 
 
 		std::cout << "--------------------------------" << std::endl;
