@@ -49,9 +49,7 @@ namespace ft {
 			map(InputIterator first, InputIterator last,
 			 const key_compare& comp = key_compare(),
 			 const allocator_type& alloc = allocator_type()) : _comp(comp), _alloc(alloc), _tree() {
-				for(; first != last; ++first) {
-					insert(first);
-				}
+					insert(first, last);
 			 }
 
 			map(const map& m) : _alloc(m.get_allocator()), _comp(key_comp()), _tree(m._tree) {}
@@ -171,6 +169,13 @@ namespace ft {
 				return it->second;
 			}
 
+			const mapped_type& at(const key_type& key) const {
+				const_iterator it = find(key);
+				if (it == end())
+					throw std::out_of_range("map::at");
+				return it->second;
+			}
+
 			// Lookup========================================================================================================
 
 			iterator find(const key_type& key) {
@@ -225,6 +230,8 @@ namespace ft {
 			operator<(const map<_K1, _T1, _C1, _A1>&,
 		  			const map<_K1, _T1, _C1, _A1>&);
 	};
+
+	// Map compare operators=================================================================================================
 
 	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
 	bool operator==(const map<_Key, _Tp, _Compare, _Alloc>& _l,
