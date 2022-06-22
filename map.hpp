@@ -182,7 +182,6 @@ namespace ft {
 			}
 
 			size_type count(const key_type& key) const {
-				// return _tree.count(key);
 				return find(key) == end() ? 0 : 1;
 			}
 
@@ -213,9 +212,56 @@ namespace ft {
 			// Allocator=====================================================================================================
 
 			allocator_type get_allocator() const {
-				return _alloc;//non?
+				return _alloc;
 			}
+
+			template<typename _K1, typename _T1, typename _C1, typename _A1>
+			friend bool
+			operator==(const map<_K1, _T1, _C1, _A1>&,
+		   			const map<_K1, _T1, _C1, _A1>&);
+
+			template<typename _K1, typename _T1, typename _C1, typename _A1>
+			friend bool
+			operator<(const map<_K1, _T1, _C1, _A1>&,
+		  			const map<_K1, _T1, _C1, _A1>&);
 	};
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator==(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return _l._tree == _r._tree; }
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator<(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return _l._tree < _r._tree; }
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator!=(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return !(_l == _r); }
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator>(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return _r < _l; }
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator<=(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return !(_r < _l); }
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	bool operator>=(const map<_Key, _Tp, _Compare, _Alloc>& _l,
+	const map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ return !(_l < _r); }
+
+	// Swap==================================================================================================================
+
+	template<typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	void swap(map<_Key, _Tp, _Compare, _Alloc>& _l,
+			map<_Key, _Tp, _Compare, _Alloc>& _r)
+	{ _l.swap(_r); }
 }
 
 #endif

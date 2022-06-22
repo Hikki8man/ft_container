@@ -5,6 +5,8 @@
 #include "iterator_traits.hpp"
 #include "pair.hpp"
 #include "reverse_iterator.hpp"
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
 
 namespace ft {
 
@@ -96,9 +98,7 @@ template< class _Pair >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_iterator<_Pair> _Self;
-				typedef tree_node<_Pair> _Node;
-				typedef _Node* _Node_ptr;
-				typedef _Node& _Node_ref;
+				typedef tree_node<_Pair>* _Node_ptr;
 
 				_Node_ptr _node;
 				_Node_ptr _sentinel;
@@ -197,10 +197,8 @@ template< class _Pair >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_const_iterator<_Pair> _Self;
-				typedef const tree_node<_Pair> _Node;
-				typedef _Node* _Node_ptr;
-				typedef _Node& _Node_ref;
-
+				typedef const tree_node<_Pair>* _Node_ptr;
+			
 				_Node_ptr _node;
 				_Node_ptr _sentinel;
 
@@ -316,6 +314,7 @@ template< class _Pair >
 			tree_node<value_type> _sentinel;
 			_Alloc _alloc;
 			key_compare _comp;
+			size_type _size;
 
 		public:
 			rb_tree() : _root(NULL), _size(0), _sentinel() {
@@ -662,11 +661,15 @@ template< class _Pair >
 				return 0;
 			}
 
+			// Clear=========================================================================================================
+
 			void clear() {
 				_delete_tree(_root);
 				_root = NULL;
 				_size = 0;
 			}
+
+			// Find==========================================================================================================
 
 			iterator find(const key_type& k) {
 				pointer node = _root;
@@ -700,10 +703,6 @@ template< class _Pair >
 					}
 				}
 				return end();
-			}
-
-			size_t count(const key_type& k) const {
-				return find(k) == end() ? 0 : 1;
 			}
 
 			// Bi Iterator
@@ -750,6 +749,7 @@ template< class _Pair >
 				for (; it != end() && _comp(it->first, k); ++it);
 				return it;
 			}
+			// Upper Bound===================================================================================================
 
 			iterator upper_bound(const key_type& k) {
 				iterator it = begin();
@@ -777,12 +777,7 @@ template< class _Pair >
 				return _alloc.max_size();
 			}
 
-			// Element access
-
-
-
 			private:
-			
 				pointer _new_node(const value_type& val) {
 					pointer _x = _alloc.allocate(1);
 					_alloc.construct(_x, val);
@@ -822,8 +817,33 @@ template< class _Pair >
 					return y;
 				}
 
-				size_type _size;
+				// Compare===================================================================================================
 
+				friend bool
+				operator==(const rb_tree& _l, const rb_tree& _r) {
+					return _l.size() == _r.size() && ft::equal(_l.begin(), _l.end(), _r.begin(), _r.end());
+				}
+
+				friend bool
+				operator<(const rb_tree& _l, const rb_tree& _r) {
+					return ft::lexicographical_compare(_l.begin(), _l.end(), _r.begin(), _r.end());
+				}
+
+				friend bool
+				operator!=(const rb_tree& _l, const rb_tree& _r)
+				{ return !(_l == _r); }
+
+				friend bool
+				operator>(const rb_tree& _l, const rb_tree& _r)
+				{ return _r < _l; }
+
+				friend bool
+				operator<=(const rb_tree& _l, const rb_tree& _r)
+				{ return !(_r < _l); }
+
+				friend bool
+				operator>=(const rb_tree& _l, const rb_tree& _r)
+				{ return !(_l < _r); }
 	};
 }
 

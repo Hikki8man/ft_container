@@ -13,6 +13,12 @@ int main() {
 	{
 		std::map<int, char> m;
 
+		std::map<int, char> p;
+
+		if (m < p) {
+			
+		}
+
 		m.insert(std::make_pair(15, 'a'));
 		m.insert(std::make_pair(20, 'b'));
 		m.insert(std::make_pair(10, 'c'));
@@ -23,15 +29,13 @@ int main() {
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
 
-		std::map<int, char>::iterator ite2 = m.begin();
+		std::map<int, char>::const_iterator it = m.begin();
 
-		std::map<int, char>::reverse_iterator it = m.rbegin();
 
-		for (; it != m.rend(); it++) {
-			std::cout << it->first << std::endl;
+		for (; it != m.end(); it++) {
+			// it->second = 'a';
+			std::cout << it->first << " " << it->second << " |" << std::endl;
 		}
-		--it;
-		std::cout << it->first << std::endl;
 		// for (; ite2 != m.end(); ++ite2) {
 		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
 		// }
@@ -77,16 +81,16 @@ int main() {
 		// 	std::cout << ite->first << " " << ite->second << std::endl;
 		// }
 
-		ft::map<int, char>::reverse_iterator it = m.rbegin();
+		ft::map<int, char>::const_iterator it = m.begin();
 
 			// std::cout << ite2->first << std::endl;
 
 
-		for (; it != m.rend(); it++) {
-			std::cout << it->first << std::endl;
+		for (; it != m.end(); it++) {
+			// it->second = 'a';
+			std::cout << it->first << " " << it->second << " |" << std::endl;
 		}
-		--it;
-		std::cout << it->first << std::endl;
+		// std::cout << it->first << std::endl;
 
 		// for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
 		// 	m.erase(ite);

@@ -422,7 +422,7 @@ namespace ft {
 			a.swap(b);
 		}
 
-	/* --- Operators --- */
+	/* --- Compare --- */
 
 	template<class T, class Alloc>
 		bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
