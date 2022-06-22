@@ -556,7 +556,7 @@ template< class _Pair >
 						_delete_node(curr);//does root is null?
 						--_size;
 						_root = NULL;
-						_sentinel.left = static_cast<pointer>(&_sentinel);
+						_sentinel.left = &_sentinel;
 					}
 					else {
 						if (curr->parent->left == curr) {
@@ -708,16 +708,15 @@ template< class _Pair >
 			// Bi Iterator
 			iterator begin() {
 				pointer beg = _root->min();
-				if (beg == NULL)
-					beg = &_sentinel;
-				return iterator(beg, &_sentinel);
+				if (beg == NULL) {
+					std::cout << "fe" << std::endl;
+				}
+				return iterator(beg != NULL ? beg : &_sentinel, &_sentinel);
 			}
 
 			const_iterator begin() const {
-				pointer beg = _root->min();
-				if (beg == NULL)
-					beg = &_sentinel;
-				return const_iterator(beg, &_sentinel);
+				pointer cbeg = _root->min();
+				return const_iterator(cbeg != NULL ? cbeg : &_sentinel, &_sentinel);
 			}
 
 			iterator end() {
