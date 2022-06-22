@@ -5,6 +5,7 @@
 #include "pair.hpp"
 // #include "binary_tree.hpp"
 #include "rb_tree.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft {
 
@@ -32,8 +33,12 @@ namespace ft {
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
+
 			typedef typename _Red_type::iterator iterator;
 			typedef typename _Red_type::const_iterator const_iterator;
+			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
 			typedef typename _Red_type::size_type size_type;
 			typedef typename _Red_type::difference_type difference_type;
 
@@ -139,6 +144,14 @@ namespace ft {
 
 			const_iterator end() const {
 				return const_iterator(_tree.end());
+			}
+
+			reverse_iterator rbegin() {
+				return reverse_iterator(end());
+			}
+
+			reverse_iterator rend() {
+				return reverse_iterator(begin());
 			}
 
 			// Element access================================================================================================

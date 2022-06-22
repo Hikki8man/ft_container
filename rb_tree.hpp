@@ -4,111 +4,9 @@
 #include <memory>
 #include "iterator_traits.hpp"
 #include "pair.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft {
-
-	// template<class Pair>
-	// 	struct tree_node;
-
-	// template<class value_type>
-	// struct tree_node_base {
-
-	// 	typedef tree_node<value_type>* node_ptr;
-
-	// 	tree_node_base() : left(NULL), right(NULL), parent(NULL) {}
-
-	// 	tree_node_base(const tree_node_base & src) {
-	// 		left = src.left;
-	// 		right = src.right;
-	// 		parent = src.parent;
-	// 	}
-
-	// 	~tree_node_base() {}
-	
-	// 	tree_node_base &operator=(const tree_node_base &other) {
-	// 		if (this != &other) {
-	// 			left = other.left;
-	// 			right = other.right;
-	// 			parent = other.parent;
-	// 		}
-	// 		return *this;
-	// 	}
-
-	// 	node_ptr left;
-	// 	node_ptr right;
-	// 	node_ptr parent;
-
-	// };
-
-	// template<class Pair>
-	// struct tree_node : public ft::tree_node_base<Pair> {
-
-	// 	typedef ft::tree_node_base<Pair> base;
-	// 	typedef tree_node<Pair>* node_ptr;
-
-	// 	tree_node(const Pair &p = Pair()) : base(), pair(p), is_black(false) {}
-	// 	tree_node(const tree_node & src) : base(src), pair(src.pair), is_black(src.is_black) {}
-	// 	~tree_node() {}
-	// 	tree_node &operator=(const tree_node &other) {
-	// 		base::operator=(other);
-	// 		pair = other.pair;
-	// 		is_black = other.is_black;
-	// 		return *this;
-	// 	}
-
-	// 	node_ptr next() {
-	// 		if (this->right != NULL) {
-	// 			node_ptr tmp = this->right;
-	// 			while (tmp->left != NULL) {
-	// 				tmp = tmp->left;
-	// 			}
-	// 			return tmp;
-	// 		}
-	// 		node_ptr tmp = this->parent;
-	// 		node_ptr tmp2 = this;
-	// 		while (tmp != NULL && tmp->right == tmp2) {
-	// 			tmp2 = tmp;
-	// 			tmp = tmp->parent;
-	// 		}
-	// 		return tmp;
-	// 	}
-
-	// 	node_ptr prev() {
-	// 		if (this->left != NULL) {
-	// 			node_ptr tmp = this->left;
-	// 			while (tmp->right != NULL) {
-	// 				tmp = tmp->right;
-	// 			}
-	// 			return tmp;
-	// 		}
-	// 		node_ptr tmp = this->parent;
-	// 		node_ptr tmp2 = this;
-	// 		while (tmp != NULL && tmp->left == tmp2) {
-	// 			tmp2 = tmp;
-	// 			tmp = tmp->parent;
-	// 		}
-	// 		return tmp;
-	// 	}
-
-	// 	node_ptr min() {
-	// 		node_ptr tmp = this;
-	// 		while (tmp->left != NULL) {
-	// 			tmp = tmp->left;
-	// 		}
-	// 		return tmp;
-	// 	}
-
-	// 	node_ptr max() {
-	// 		node_ptr tmp = this;
-	// 		while (tmp->right != NULL) {
-	// 			tmp = tmp->right;
-	// 		}
-	// 		return tmp;
-	// 	}
-
-	// 	Pair pair;
-	// 	bool is_black;
-	// };
 
 	//Node===================================================================================================================
 	template<class Pair>
@@ -185,106 +83,7 @@ namespace ft {
 		bool is_black;
 	};
 
-// template< class Node >
-// 	class rb_tree_iterator {
-
-// 			public:
-// 				typedef typename ft::iterator_traits<Node>::value_type value_type;
-// 				typedef typename ft::iterator_traits<Node>::reference reference;
-// 				typedef typename ft::iterator_traits<Node>::pointer pointer;
-// 				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
-// 				typedef ft::bidirectional_iterator_tag	iterator_category;
-
-// 				typedef rb_tree_iterator<Node> _Self;
-
-// 				pointer _node;
-// 				pointer _sentinel;
-
-// 				rb_tree_iterator() : _node(), _sentinel() {}
-
-// 				rb_tree_iterator(pointer _x, pointer _s) : _node(_x), _sentinel(_s) {}
-
-// 				rb_tree_iterator(const rb_tree_iterator<N> &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
-
-// 				rb_tree_iterator& operator=(const _Self &_x) {
-// 					_node = _x._node;
-// 					_sentinel = _x._sentinel;
-// 					return *this;
-// 				}
-
-// 				pointer base() const { return _node; }
-
-// 				reference operator*() const { return *_node; }
-
-// 				pointer operator->() const { return _node; }
-
-// 				_Self& operator++() {
-// 					if (_node) {
-// 						if (_node->right != NULL) {
-// 							_node = _node->right;
-// 							while (_node->left != NULL) {
-// 								_node = _node->left;
-// 							}
-// 						}
-// 						else {
-// 							pointer _y = _node->parent;
-// 							while (_y != NULL && _node == _y->right) {
-// 								_node = _y;
-// 								_y = _y->parent;
-// 							}
-// 							_node = _y;
-// 						}
-// 					}
-// 					if (_node == NULL) {
-// 						_node = _sentinel;
-// 					}
-// 					return *this;
-// 				}
-
-// 				_Self operator++(int) {
-// 					_Self _Tmp = *this;
-// 					++*this;
-// 					return _Tmp;
-// 				}
-
-// 				_Self& operator--() {
-// 					if (_node == _sentinel) {
-// 						_node = _sentinel->left->max();
-// 					}
-// 					else if (_node->left != NULL) {
-// 						_node = _node->left;
-// 						while (_node->right != NULL) {
-// 							_node = _node->right;
-// 						}
-// 					}
-// 					else {
-// 						pointer _y = _node->parent;
-// 						while (_y != NULL && _node == _y->left) {
-// 							_node = _y;
-// 							_y = _y->parent;
-// 						}
-// 						_node = _y;
-// 					}
-// 					return *this;
-// 				}
-
-// 				_Self operator--(int) {
-// 					_Self _Tmp = *this;
-// 					--*this;
-// 					return _Tmp;
-// 				}
-// 	};
-
-// 	template<class Node>
-// 		bool operator==(const rb_tree_iterator<Node> _Left, const rb_tree_iterator<Node> _Right) {
-// 			return _Left.base() == _Right.base();
-// 		}
-	
-// 	template<class Node>
-// 		bool operator!=(const rb_tree_iterator<Node> _Left, const rb_tree_iterator<Node> _Right) {
-// 			return _Left.base() != _Right.base();
-// 		}
-
+// TREE ITERATOR=============================================================================================================
 template< class _Pair >
 	class rb_tree_iterator {
 
@@ -383,6 +182,7 @@ template< class _Pair >
 				operator!=(const _Self& _l, const _Self& _r) { return _l._node != _r._node; }
 	};
 
+// TREE CONST ITERATOR=======================================================================================================
 	template< class _Pair >
 	class rb_tree_const_iterator {
 
@@ -416,7 +216,7 @@ template< class _Pair >
 					return *this;
 				}
 
-				_Node_ptr base() const {return _node; }
+				_Node_ptr base() const { return _node; }
 
 				reference operator*() const { return _node->pair; }
 
@@ -485,6 +285,7 @@ template< class _Pair >
 				operator!=(const _Self& _l, const _Self& _r) { return _l._node != _r._node; }
 	};
 
+//	TREE=====================================================================================================================
 	template<typename _Key, class _Pair, class _Compare, class _Alloc = std::allocator<ft::tree_node<_Pair> > >
 	class rb_tree {
 
@@ -497,7 +298,7 @@ template< class _Pair >
 			typedef _Alloc 				allocator_type;
 			typedef _Compare		 key_compare;
 
-			// node type
+
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
 			typedef typename allocator_type::pointer pointer;
@@ -506,13 +307,17 @@ template< class _Pair >
 
 			typedef ft::rb_tree_iterator<value_type> iterator;
 			typedef ft::rb_tree_const_iterator<value_type> const_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-		
+
+		protected:
 			pointer _root;
 			tree_node<value_type> _sentinel;
 			_Alloc _alloc;
 			key_compare _comp;
 
+		public:
 			rb_tree() : _root(NULL), _size(0), _sentinel() {
 				_sentinel.left = &_sentinel;
 			}
@@ -552,6 +357,8 @@ template< class _Pair >
 			key_compare key_comp() const {
 				return _comp;
 			}
+
+			// INSERT========================================================================================================
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				pointer curr = _root;
@@ -598,7 +405,6 @@ template< class _Pair >
 
 				return ft::make_pair(iterator(to_ret, &_sentinel), true);
 			}
-
 
 			iterator insert(iterator hint, const value_type& val) {
 				pointer _hint = hint.base();
@@ -900,6 +706,7 @@ template< class _Pair >
 				return find(k) == end() ? 0 : 1;
 			}
 
+			// Bi Iterator
 			iterator begin() {
 				pointer beg = _root->min();
 				if (beg == NULL)
@@ -922,6 +729,16 @@ template< class _Pair >
 				return const_iterator(&_sentinel, &_sentinel);
 			}
 
+			// Reverse Iterator==============================================================================================
+			reverse_iterator rbegin() {
+				return reverse_iterator(end());
+			}
+
+			reverse_iterator rend() {
+				return reverse_iterator(begin());
+			}
+
+			// Lower Bound===================================================================================================
 			iterator lower_bound(const key_type& k) {
 				iterator it = begin();
 				for (; it != end() && _comp(it->first, k); ++it);
