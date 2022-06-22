@@ -8,78 +8,6 @@
 
 namespace ft {
 
-	template<class Pair, class Iter>
-	class map_iterator {
-		
-		public:
-
-			typedef typename ft::iterator_traits<Pair>::value_type value_type;
-			typedef typename ft::iterator_traits<Pair>::pointer pointer;
-			typedef typename ft::iterator_traits<Pair>::reference reference;
-			typedef typename ft::iterator_traits<Pair>::difference_type difference_type;
-			typedef typename ft::bidirectional_iterator_tag iterator_category;
-
-		private:
-			Iter _current;
-
-		public:
-			map_iterator() : _current() {}
-			map_iterator(Iter it) : _current(it) {}
-			template<class P, class I>
-			map_iterator(const map_iterator<P, I>& it) : _current(it.base()) {}
-			~map_iterator() {}
-
-			map_iterator& operator=(const map_iterator& it) {
-				_current = it.base();
-				return *this;
-			}
-
-			Iter base() const {
-				return _current;
-			}
-
-			reference operator*() const {
-				return _current->pair;
-			}
-
-			pointer operator->() const {
-				return &_current->pair;
-			}
-
-			map_iterator& operator++() {
-				++_current;
-				return *this;
-			}
-
-			map_iterator operator++(int) {
-				map_iterator tmp(*this);
-				++_current;
-				return tmp;
-			}
-
-			map_iterator& operator--() {
-				--_current;
-				return *this;
-			}
-
-			map_iterator operator--(int) {
-				map_iterator tmp(*this);
-				--_current;
-				return tmp;
-			}
-	};
-
-	template<class Pair, class Iter>
-	bool operator==(const map_iterator<Pair, Iter>& it1, const map_iterator<Pair, Iter>& it2) {
-		return it1.base() == it2.base();
-	}
-
-	template<class Pair, class Iter>
-	bool operator!=(const map_iterator<Pair, Iter>& it1, const map_iterator<Pair, Iter>& it2) {
-		return it1.base() != it2.base();
-	}
-
-
 	template< class _Key, class _T, class _Compare = std::less<_Key>, class _Alloc = std::allocator<ft::pair<const _Key, _T> > >
 	class map {
 		public:
@@ -104,8 +32,8 @@ namespace ft {
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_reference const_reference;
-			typedef map_iterator<pointer, typename _Red_type::iterator> iterator;
-			typedef map_iterator<const_pointer, typename _Red_type::const_iterator> const_iterator;
+			typedef typename _Red_type::iterator iterator;
+			typedef typename _Red_type::const_iterator const_iterator;
 			typedef typename _Red_type::size_type size_type;
 			typedef typename _Red_type::difference_type difference_type;
 
@@ -155,16 +83,16 @@ namespace ft {
 			}
 
 			iterator insert(iterator hint, const value_type& value) {
-				return _tree.insert(hint.base(), value);
+				return _tree.insert(hint, value);
 			}
 
 			template<class InputIterator>
 			void insert(InputIterator first, InputIterator last) {
-				_tree.insert(first.base(), last.base());
+				_tree.insert(first, last);
 			}
 
 			void erase(iterator position) {
-				_tree.erase(position.base());
+				_tree.erase(position);
 			}
 
 			size_type erase(const key_type& key) {
@@ -172,7 +100,7 @@ namespace ft {
 			}
 
 			void erase(iterator first, iterator last) {
-				_tree.erase(first.base(), last.base());
+				_tree.erase(first, last);
 			}
 
 			void clear() {

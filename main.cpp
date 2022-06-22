@@ -225,12 +225,7 @@ int main(void) {
 		v.push_back(d);
 		v.push_back(e);
 
-		std::cout << "~~~~~~~~~~" << std::endl;
-		v.erase(v.begin());
-		std::cout << "~~~~~~~~~~" << std::endl;
-		for (int i = 0; i < v.size(); i++) {
-			std::cout << v[i] << " ";
-		}
+		for (ft::vector<leakstest>::const_iterator it)
 		std::cout << std::endl;
 	}
 	std::cout << "---------------------------------------------" << std::endl;

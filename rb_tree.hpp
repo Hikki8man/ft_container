@@ -185,26 +185,128 @@ namespace ft {
 		bool is_black;
 	};
 
-template< class Node >
+// template< class Node >
+// 	class rb_tree_iterator {
+
+// 			public:
+// 				typedef typename ft::iterator_traits<Node>::value_type value_type;
+// 				typedef typename ft::iterator_traits<Node>::reference reference;
+// 				typedef typename ft::iterator_traits<Node>::pointer pointer;
+// 				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
+// 				typedef ft::bidirectional_iterator_tag	iterator_category;
+
+// 				typedef rb_tree_iterator<Node> _Self;
+
+// 				pointer _node;
+// 				pointer _sentinel;
+
+// 				rb_tree_iterator() : _node(), _sentinel() {}
+
+// 				rb_tree_iterator(pointer _x, pointer _s) : _node(_x), _sentinel(_s) {}
+
+// 				rb_tree_iterator(const rb_tree_iterator<N> &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
+
+// 				rb_tree_iterator& operator=(const _Self &_x) {
+// 					_node = _x._node;
+// 					_sentinel = _x._sentinel;
+// 					return *this;
+// 				}
+
+// 				pointer base() const { return _node; }
+
+// 				reference operator*() const { return *_node; }
+
+// 				pointer operator->() const { return _node; }
+
+// 				_Self& operator++() {
+// 					if (_node) {
+// 						if (_node->right != NULL) {
+// 							_node = _node->right;
+// 							while (_node->left != NULL) {
+// 								_node = _node->left;
+// 							}
+// 						}
+// 						else {
+// 							pointer _y = _node->parent;
+// 							while (_y != NULL && _node == _y->right) {
+// 								_node = _y;
+// 								_y = _y->parent;
+// 							}
+// 							_node = _y;
+// 						}
+// 					}
+// 					if (_node == NULL) {
+// 						_node = _sentinel;
+// 					}
+// 					return *this;
+// 				}
+
+// 				_Self operator++(int) {
+// 					_Self _Tmp = *this;
+// 					++*this;
+// 					return _Tmp;
+// 				}
+
+// 				_Self& operator--() {
+// 					if (_node == _sentinel) {
+// 						_node = _sentinel->left->max();
+// 					}
+// 					else if (_node->left != NULL) {
+// 						_node = _node->left;
+// 						while (_node->right != NULL) {
+// 							_node = _node->right;
+// 						}
+// 					}
+// 					else {
+// 						pointer _y = _node->parent;
+// 						while (_y != NULL && _node == _y->left) {
+// 							_node = _y;
+// 							_y = _y->parent;
+// 						}
+// 						_node = _y;
+// 					}
+// 					return *this;
+// 				}
+
+// 				_Self operator--(int) {
+// 					_Self _Tmp = *this;
+// 					--*this;
+// 					return _Tmp;
+// 				}
+// 	};
+
+// 	template<class Node>
+// 		bool operator==(const rb_tree_iterator<Node> _Left, const rb_tree_iterator<Node> _Right) {
+// 			return _Left.base() == _Right.base();
+// 		}
+	
+// 	template<class Node>
+// 		bool operator!=(const rb_tree_iterator<Node> _Left, const rb_tree_iterator<Node> _Right) {
+// 			return _Left.base() != _Right.base();
+// 		}
+
+template< class _Pair >
 	class rb_tree_iterator {
 
 			public:
-				typedef typename ft::iterator_traits<Node>::value_type value_type;
-				typedef typename ft::iterator_traits<Node>::reference reference;
-				typedef typename ft::iterator_traits<Node>::pointer pointer;
-				typedef typename ft::iterator_traits<Node>::difference_type difference_type;
+				typedef _Pair value_type;
+				typedef _Pair& reference;
+				typedef _Pair* pointer;
+
+				typedef typename std::ptrdiff_t difference_type;
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
-				typedef rb_tree_iterator<Node> _Self;
+				typedef rb_tree_iterator<_Pair> _Self;
+				typedef tree_node<_Pair> _Node;
+				typedef _Node* _Node_ptr;
+				typedef _Node& _Node_ref;
 
-				pointer _node;
-				pointer _sentinel;
+				_Node_ptr _node;
+				_Node_ptr _sentinel;
 
 				rb_tree_iterator() : _node(), _sentinel() {}
 
-				rb_tree_iterator(pointer _x, pointer _s) : _node(_x), _sentinel(_s) {}
-				template<class N>
-				rb_tree_iterator(const rb_tree_iterator<N> &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
+				rb_tree_iterator(_Node_ptr _x, _Node_ptr _s) : _node(_x), _sentinel(_s) {}
 
 				rb_tree_iterator& operator=(const _Self &_x) {
 					_node = _x._node;
@@ -212,11 +314,11 @@ template< class Node >
 					return *this;
 				}
 
-				pointer base() const { return _node; }
+				_Node_ptr base() const { return _node; }
 
-				reference operator*() const { return *_node; }
+				reference operator*() const { return _node->pair; }
 
-				pointer operator->() const { return _node; }
+				pointer operator->() const { return &_node->pair; }
 
 				_Self& operator++() {
 					if (_node) {
@@ -227,7 +329,7 @@ template< class Node >
 							}
 						}
 						else {
-							pointer _y = _node->parent;
+							_Node_ptr _y = _node->parent;
 							while (_y != NULL && _node == _y->right) {
 								_node = _y;
 								_y = _y->parent;
@@ -258,7 +360,7 @@ template< class Node >
 						}
 					}
 					else {
-						pointer _y = _node->parent;
+						_Node_ptr _y = _node->parent;
 						while (_y != NULL && _node == _y->left) {
 							_node = _y;
 							_y = _y->parent;
@@ -273,103 +375,115 @@ template< class Node >
 					--*this;
 					return _Tmp;
 				}
+
+				friend bool
+				operator==(const _Self& _l, const _Self& _r) { return _l._node == _r._node; }
+
+				friend bool
+				operator!=(const _Self& _l, const _Self& _r) { return _l._node != _r._node; }
 	};
 
-	template<class Node>
-		bool operator==(const rb_tree_iterator<Node>& _Left, const rb_tree_iterator<Node>& _Right) {
-			return _Left.base() == _Right.base();
-		}
-	
-	template<class Node>
-		bool operator!=(const rb_tree_iterator<Node>& _Left, const rb_tree_iterator<Node>& _Right) {
-			return _Left.base() != _Right.base();
-		}
+	template< class _Pair >
+	class rb_tree_const_iterator {
 
-	// template<class Node>
-	// 	class const_rb_tree_iterator {
+			public:
+				typedef _Pair value_type;
+				typedef const _Pair& reference;
+				typedef const _Pair* pointer;
 
-	// 		public:
-	// 			typedef typename ft::iterator_traits<Node>::value_type value_type;
-	// 			typedef typename ft::iterator_traits<Node>::reference reference;
-	// 			typedef typename ft::iterator_traits<Node>::pointer pointer;
-	// 			typedef typename ft::iterator_traits<Node>::difference_type difference_type;
-	// 			typedef ft::bidirectional_iterator_tag	iterator_category;
+				typedef rb_tree_iterator<_Pair> iterator;
 
-	// 			typedef const_rb_tree_iterator<Node> _Self;
+				typedef typename std::ptrdiff_t difference_type;
+				typedef ft::bidirectional_iterator_tag	iterator_category;
 
-	// 			pointer _node;
-	// 			pointer _sentinel;
+				typedef rb_tree_const_iterator<_Pair> _Self;
+				typedef const tree_node<_Pair> _Node;
+				typedef _Node* _Node_ptr;
+				typedef _Node& _Node_ref;
 
-	// 			const_rb_tree_iterator() : _node(), _sentinel() {}
+				_Node_ptr _node;
+				_Node_ptr _sentinel;
 
-	// 			const_rb_tree_iterator(pointer _x, pointer _s) : _node(_x), _sentinel(_s) {}
+				rb_tree_const_iterator() : _node(), _sentinel() {}
 
-	// 			template<typename _Node>
-	// 			const_rb_tree_iterator(const rb_tree_iterator<_Node> &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
+				rb_tree_const_iterator(_Node_ptr _x, _Node_ptr _s) : _node(_x), _sentinel(_s) {}
 
-	// 			const_rb_tree_iterator& operator=(const _Self &_x) {
-	// 				_node = _x._node;
-	// 				_sentinel = _x._sentinel;
-	// 				return *this;
-	// 			}
+				rb_tree_const_iterator(const iterator &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
 
-	// 			pointer base() const { return _node; }
+				rb_tree_const_iterator& operator=(const _Self &_x) {
+					_node = _x._node;
+					_sentinel = _x._sentinel;
+					return *this;
+				}
 
-	// 			reference operator*() const { return *_node; }
+				_Node_ptr base() const {return _node; }
 
-	// 			pointer operator->() const { return _node; }
+				reference operator*() const { return _node->pair; }
 
-	// 			_Self& operator++() {
-	// 				_node = _node->next();
-	// 				if (_node == NULL) {
-	// 					_node = _sentinel;
-	// 				}
-	// 				return *this;
-	// 			}
+				pointer operator->() const { return &_node->pair; }
 
-	// 			_Self operator++(int) {
-	// 				_Self _Tmp = *this;
-	// 				++*this;
-	// 				return _Tmp;
-	// 			}
+				_Self& operator++() {
+					if (_node) {
+						if (_node->right != NULL) {
+							_node = _node->right;
+							while (_node->left != NULL) {
+								_node = _node->left;
+							}
+						}
+						else {
+							_Node_ptr _y = _node->parent;
+							while (_y != NULL && _node == _y->right) {
+								_node = _y;
+								_y = _y->parent;
+							}
+							_node = _y;
+						}
+					}
+					if (_node == NULL) {
+						_node = _sentinel;
+					}
+					return *this;
+				}
 
-	// 			_Self& operator--() {
-	// 				if (_node == _sentinel)
-	// 					_node = _sentinel->left->max();
-	// 				else
-	// 					_node = _node->prev();
-	// 				return *this;
-	// 			}
+				_Self operator++(int) {
+					_Self _Tmp = *this;
+					++*this;
+					return _Tmp;
+				}
 
-	// 			_Self operator--(int) {
-	// 				_Self _Tmp = *this;
-	// 				--*this;
-	// 				return _Tmp;
-	// 			}
+				_Self& operator--() {
+					if (_node == _sentinel) {
+						_node = _sentinel->left->max();
+					}
+					else if (_node->left != NULL) {
+						_node = _node->left;
+						while (_node->right != NULL) {
+							_node = _node->right;
+						}
+					}
+					else {
+						_Node_ptr _y = _node->parent;
+						while (_y != NULL && _node == _y->left) {
+							_node = _y;
+							_y = _y->parent;
+						}
+						_node = _y;
+					}
+					return *this;
+				}
 
-	// 			bool operator==(const _Self &_x) const {
-	// 				return _node == _x._node;
-	// 			}
+				_Self operator--(int) {
+					_Self _Tmp = *this;
+					--*this;
+					return _Tmp;
+				}
 
-	// 			bool operator!=(const _Self &_x) const {
-	// 				return _node != _x._node;
-	// 			}
+				friend bool
+				operator==(const _Self& _l, const _Self& _r) { return _l._node == _r._node; }
 
-	// 			reference operator[](difference_type _Off) const {
-	// 				return *(_node + _Off);
-	// 			}
-	// 	};
-
-	// template<class Node>
-	// 	bool operator==(const const_rb_tree_iterator<Node>& _Left, const const_rb_tree_iterator<Node>& _Right) {
-	// 		return _Left.base() == _Right.base();
-	// 	}
-	
-	// template<class Node>
-	// 	bool operator!=(const const_rb_tree_iterator<Node>& _Left, const const_rb_tree_iterator<Node>& _Right) {
-	// 		return _Left.base() != _Right.base();
-	// 	}
-
+				friend bool
+				operator!=(const _Self& _l, const _Self& _r) { return _l._node != _r._node; }
+	};
 
 	template<typename _Key, class _Pair, class _Compare, class _Alloc = std::allocator<ft::tree_node<_Pair> > >
 	class rb_tree {
@@ -390,8 +504,8 @@ template< class Node >
 			typedef typename allocator_type::const_pointer const_pointer;
 
 
-			typedef ft::rb_tree_iterator<pointer> iterator;
-			typedef ft::rb_tree_iterator<const_pointer> const_iterator;
+			typedef ft::rb_tree_iterator<value_type> iterator;
+			typedef ft::rb_tree_const_iterator<value_type> const_iterator;
 
 		
 			pointer _root;
@@ -535,7 +649,7 @@ template< class Node >
 			template<class InputIterator>
 			void insert(InputIterator first, InputIterator last) {
 				for (; first != last; ++first) {
-					insert(first->pair);
+					insert(*first);
 				}
 			}
 
@@ -629,8 +743,7 @@ template< class Node >
 			// Erase=========================================================================================================
 
 			void erase(iterator pos) {
-				if (pos == end() || pos.base() == NULL) { return; }
-				pointer curr = pos.base();//check if it is a valid iterator
+				pointer curr = pos.base();
 
 				// if no child
 				if (curr->left == NULL && curr->right == NULL) {
@@ -698,7 +811,7 @@ template< class Node >
 						}
 					}
 				}
-				else {// if two children, not the best way to do it i think
+				else {// if two children
 					pointer succ = curr->right->min();
 					value_type tmp(succ->pair.first, succ->pair.second);
 					erase(iterator(succ, &_sentinel));
@@ -714,6 +827,7 @@ template< class Node >
 					newnode->parent = curr->parent;
 					if (curr->parent == NULL) {
 						_root = newnode;
+						_sentinel.left = _root;
 					}
 					else {
 						if (curr->parent->left == curr) {
@@ -748,7 +862,7 @@ template< class Node >
 				_size = 0;
 			}
 
-			iterator find(const key_type& k) {//do const one
+			iterator find(const key_type& k) {
 				pointer node = _root;
 
 				while (node != NULL) {
@@ -810,25 +924,25 @@ template< class Node >
 
 			iterator lower_bound(const key_type& k) {
 				iterator it = begin();
-				for (; it != end() && _comp(it->pair.first, k); ++it);
+				for (; it != end() && _comp(it->first, k); ++it);
 				return it;
 			}
 
 			const_iterator lower_bound(const key_type& k) const {
 				const_iterator it = begin();
-				for (; it != end() && _comp(it->pair.first, k); ++it);
+				for (; it != end() && _comp(it->first, k); ++it);
 				return it;
 			}
 
 			iterator upper_bound(const key_type& k) {
 				iterator it = begin();
-				for (; it != end() && !_comp(k, it->pair.first); it++);
+				for (; it != end() && !_comp(k, it->first); it++);
 				return it;
 			}
 
 			const_iterator upper_bound(const key_type& k) const {
 				const_iterator it = begin();
-				for (; it != end() && !_comp(k, it->pair.first); it++);
+				for (; it != end() && !_comp(k, it->first); it++);
 				return it;
 			}
 

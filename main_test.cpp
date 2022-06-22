@@ -23,17 +23,21 @@ int main() {
 		m.insert(std::make_pair(25, 'g'));
 		m.insert(std::make_pair(16, 'h'));
 
-		// std::map<int, char>::const_iterator ite2 = m.begin();
+		std::map<int, char>::iterator ite2 = m.begin();
 		// for (; ite2 != m.end(); ++ite2) {
 		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
 		// }
-		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
-			m.erase(ite);
-		}
-		for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
-			std::cout << ite->first << " " << ite->second << std::endl;
-		}
-		std::cout << std::boolalpha << m.empty() << std::endl;
+		// for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
+		// 	m.erase(ite);
+		// }
+		// for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+		// 	std::cout << ite->first << " " << ite->second << std::endl;
+		// }
+		// std::cout << std::boolalpha << m.empty() << std::endl;
+
+		// std::map<int, char>::iterator it = m.end();
+
+		// m.erase(it);
 
 	}
 
@@ -65,21 +69,24 @@ int main() {
 		// 	std::cout << ite->first << " " << ite->second << std::endl;
 		// }
 
-		// ft::map<int, char>::const_iterator ite2 = m.begin();
-		// ft::map<int, char>::const_iterator ite3 = m.end();
+		ft::map<int, char>::iterator ite2 = m.begin();
+		ft::map<int, char>::iterator ite3 = m.end();
 
-		// for (; ite2 != ite3; ++ite2) {
-		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
+		for (; ite2 != m.end(); ++ite2) {
+			if (ite2 == ite3) {
+
+			}
+			std::cout << ite2->first << " " << ite2->second << std::endl;
+		}
+
+		// for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
+		// 	m.erase(ite);
 		// }
-
-		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
-			m.erase(ite);
-		}
-		std::cout << std::boolalpha << m.empty() << std::endl;
-		std::cout << "size: " << m.size() << std::endl;
-		for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
-			std::cout << ite->first << " " << ite->second << std::endl;
-		}
+		// std::cout << std::boolalpha << m.empty() << std::endl;
+		// std::cout << "size: " << m.size() << std::endl;
+		// for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
+		// 	std::cout << ite->first << " " << ite->second << std::endl;
+		// }
 
 
 		
@@ -87,9 +94,13 @@ int main() {
 
 		std::cout << "--------------------------------" << std::endl;
 
-		//  const ft::rb_tree<int, ft::pair<const int, char>, std::less<int> > tree(m._tree);
+		// ft::rb_tree<int, ft::pair<const int, char>, std::less<int> > tree(m._tree);
 
 		// ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::const_iterator it = tree.begin();
+
+		// for (; it != tree.end(); it++) {
+		// 	std::cout << it->pair.first << std::endl;
+		// }
 
 		// std::cout << it->pair.first << std::endl;
 
