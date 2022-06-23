@@ -3,11 +3,19 @@
 #include <iostream>
 #include <vector>
 #include "map.hpp"
+#include <stack>
 // #include "binary_tree.hpp"
 // #include <pair>
 
+template<class _Tp>
+	struct sup
+	{
+		bool operator()(const _Tp& __x, const _Tp& __y) const
+      	{ return __x > __y; }
+	};
+	
 
-void basic_map(ft::map<int, char>& map) {
+void basic_map(ft::map<int, char, sup<int> >& map) {
 	try {
 		map.insert(ft::make_pair(8, 'a'));
 		map.insert(ft::make_pair(10, 'b'));
@@ -37,8 +45,24 @@ void basic_map(ft::map<int, char>& map) {
 int main() {
 
 	{
-		std::map<int, char> m;
+		std::stack
+		std::map<int, char, sup<int> > m;
 
+		m.insert(std::make_pair(8, 'a'));
+		m.insert(std::make_pair(10, 'b'));
+		m.insert(std::make_pair(3, 'c'));
+		m.insert(std::make_pair(1, 'd'));
+		m.insert(std::make_pair(6, 'e'));
+		m.insert(std::make_pair(4, 'f'));
+		m.insert(std::make_pair(7, 'g'));
+		m.insert(std::make_pair(14, 'h'));
+		m.insert(std::make_pair(13, 'i'));
+
+		// std::map<int, char>::iterator it = m.find(4);
+
+		for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+			std::cout << it->first << std::endl;
+		}
 		
 
 	}
@@ -50,7 +74,7 @@ int main() {
 
 	{
 
-		ft::map<int, char> m;
+		ft::map<int, char, sup<int> > m;
 
 
 		basic_map(m);
@@ -58,9 +82,10 @@ int main() {
 		// ft::map<int, char>::iterator h = m.find(10);
 		// std::cout << h->first << std::endl;
 		// m.erase(m.begin(), m.end());
-		ft::map<int, char>::iterator it = m.find(4);
-		ft::map<int, char>::iterator ite = m.find(13);
-		m.erase(it, ite);
+		// ft::map<int, char>::iterator it = m.find(4);
+		// ft::map<int, char>::iterator ite = m.find(13);
+		// // std::cout << *it << std::endl;
+		// m.erase(it, ite);
 
 		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
 			std::cout << it->first << std::endl;

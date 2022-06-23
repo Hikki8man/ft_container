@@ -20,7 +20,18 @@ namespace ft {
 			typedef _Alloc                         allocator_type;
 
 			
-		private:
+		public:
+			class value_compare {
+				friend class map<_Key, _T, _Compare, _Alloc>;
+				protected:
+				_Compare comp;
+
+				value_compare(_Compare _c) : comp(_c) {}
+
+				public:
+				bool operator()(const value_type& _l, const value_type& _r) const
+				{ return comp(_l.first, _r.first); }
+      		};
 
 		protected:
 			typedef rb_tree<key_type, value_type, key_compare> _Red_type;
@@ -123,6 +134,9 @@ namespace ft {
 				return _tree.key_comp();
 			}
 
+			value_compare value_comp() const {
+				return value_comp(_comp);
+			}
 
 
 
