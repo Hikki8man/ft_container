@@ -4,6 +4,7 @@
 #include <vector>
 #include "map.hpp"
 #include <stack>
+#include "stack.hpp"
 // #include "binary_tree.hpp"
 // #include <pair>
 
@@ -45,8 +46,8 @@ void basic_map(ft::map<int, char, sup<int> >& map) {
 int main() {
 
 	{
-		std::stack
 		std::map<int, char, sup<int> > m;
+		std::stack
 
 		m.insert(std::make_pair(8, 'a'));
 		m.insert(std::make_pair(10, 'b'));
@@ -75,6 +76,13 @@ int main() {
 	{
 
 		ft::map<int, char, sup<int> > m;
+
+		ft::stack<int> s;
+		s.push(2);
+		ft::stack<int> s1;
+		s1.push(1);
+
+		std::cout << (s < s1) << std::endl;
 
 
 		basic_map(m);

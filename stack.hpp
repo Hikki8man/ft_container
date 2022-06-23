@@ -1,6 +1,5 @@
 #ifndef FT_STACK_HPP
 #define FT_STACK_HPP
-#include <deque>
 #include "vector.hpp"
 
 namespace ft {
@@ -49,6 +48,12 @@ namespace ft {
 			const value_type& top() const {
 				return c.back();
 			}
+
+			template<class _T, class _C>
+			friend bool  operator==(const stack<_T, _C>& _l, const stack<_T, _C>& _r);
+
+			template<class _T, class _C>
+			friend bool  operator<(const stack<_T, _C>& _l, const stack<_T, _C>& _r);
 	};
 	// Operator Overloads
 	template < class T, class Container >
@@ -65,15 +70,15 @@ namespace ft {
 		}
 	template < class T, class Container >
 		bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-			return lhs.c <= rhs.c;
+			return !(rhs < lhs);
 		}
 	template < class T, class Container >
 		bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-			return lhs.c > rhs.c;
+			return rhs < lhs;
 		}
 	template < class T, class Container >
 		bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-			return lhs.c >= rhs.c;
+			return !(lhs < rhs);
 		}
 }
 
