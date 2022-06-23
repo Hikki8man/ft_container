@@ -553,7 +553,7 @@ template< class _Pair >
 				// if no child
 				if (curr->left == NULL && curr->right == NULL) {
 					if (curr->parent == NULL) {
-						_delete_node(curr);//does root is null?
+						_delete_node(curr);
 						--_size;
 						_root = NULL;
 						_sentinel.left = &_sentinel;
@@ -616,39 +616,78 @@ template< class _Pair >
 						}
 					}
 				}
-				else {// if two children
+				// else {// if two children
+				// 	pointer succ = curr->right->min();
+				// 	value_type tmp(succ->pair.first, succ->pair.second);
+				// 	erase(iterator(succ, &_sentinel));
+				// 	pointer newnode = _new_node(tmp);
+				// 	newnode->left = curr->left;
+				// 	if (newnode->left != NULL) {
+				// 		newnode->left->parent = newnode;
+				// 	}
+				// 	newnode->right = curr->right;
+				// 	if (newnode->right != NULL) {
+				// 		newnode->right->parent = newnode;
+				// 	}
+				// 	newnode->parent = curr->parent;
+				// 	if (curr->parent == NULL) {
+				// 		_root = newnode;
+				// 		_sentinel.left = _root;
+				// 	}
+				// 	else {
+				// 		if (curr->parent->left == curr) {
+				// 			curr->parent->left = newnode;
+				// 		}
+				// 		else {
+				// 			curr->parent->right = newnode;
+				// 		}
+				// 	}
+				// 	_delete_node(curr);
+				// }
+				// else { // Case 4: node has right and left childs
+				// 	// std::cout << key << ": case 4" << std::endl;
+				// 	pointer successor = curr->right->min();
+				// 	pointer tmp = curr->right;
+
+
+				// 	if (successor->parent->left && successor->parent->left == successor)
+				// 		successor->parent->left = NULL;
+				// 	else if (successor->parent->right && successor->parent->right == successor)
+				// 		successor->parent->right = NULL;
+
+				// 	successor->parent = curr->parent;
+				// 	if (curr->parent->right && curr->parent->right == curr)
+				// 		curr->parent->right = successor;
+				// 	else if (curr->parent->left && curr->parent->left == curr)
+				// 		curr->parent->left = successor;
+				// 	if (successor != tmp) {
+				// 		successor->right = tmp;
+				// 		tmp->parent = successor;
+				// 	}
+				// 	successor->left = curr->left;
+				// 	curr->left->parent = successor;
+
+				// 	if (_root == curr) {
+				// 		_root = successor;
+				// 		_sentinel.left = _root;
+				// 	}
+				// 	_delete_node(curr);
+				// }
+				else {
 					pointer succ = curr->right->min();
-					value_type tmp(succ->pair.first, succ->pair.second);
-					erase(iterator(succ, &_sentinel));
-					pointer newnode = _new_node(tmp);
-					newnode->left = curr->left;
-					if (newnode->left != NULL) {
-						newnode->left->parent = newnode;
-					}
-					newnode->right = curr->right;
-					if (newnode->right != NULL) {
-						newnode->right->parent = newnode;
-					}
-					newnode->parent = curr->parent;
-					if (curr->parent == NULL) {
-						_root = newnode;
-						_sentinel.left = _root;
-					}
-					else {
-						if (curr->parent->left == curr) {
-							curr->parent->left = newnode;
-						}
-						else {
-							curr->parent->right = newnode;
-						}
-					}
-					_delete_node(curr);
 				}
 			}
 
 			void erase(iterator first, iterator last) {
-				while (first != last) {
-					erase(first++);
+				if (first == begin() && last == end())
+					clear();
+				else {
+					iterator tmp(first);
+					while (first != last) {
+						tmp = ++first;
+						erase(first->first);
+						first = tmp;
+					}
 				}
 			}
 
@@ -707,16 +746,11 @@ template< class _Pair >
 
 			// Bi Iterator
 			iterator begin() {
-				pointer beg = _root->min();
-				if (beg == NULL) {
-					std::cout << "fe" << std::endl;
-				}
-				return iterator(beg != NULL ? beg : &_sentinel, &_sentinel);
+				return iterator(_root != NULL ? _root->min() : &_sentinel, &_sentinel);
 			}
 
 			const_iterator begin() const {
-				pointer cbeg = _root->min();
-				return const_iterator(cbeg != NULL ? cbeg : &_sentinel, &_sentinel);
+				return const_iterator(_root != NULL ? _root->min(): &_sentinel, &_sentinel);
 			}
 
 			iterator end() {

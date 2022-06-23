@@ -7,49 +7,37 @@
 // #include <pair>
 
 
+void basic_map(ft::map<int, char>& map) {
+	try {
+		map.insert(ft::make_pair(8, 'a'));
+		map.insert(ft::make_pair(10, 'b'));
+		map.insert(ft::make_pair(3, 'c'));
+		map.insert(ft::make_pair(1, 'd'));
+		map.insert(ft::make_pair(6, 'e'));
+		map.insert(ft::make_pair(4, 'f'));
+		map.insert(ft::make_pair(7, 'g'));
+		map.insert(ft::make_pair(14, 'h'));
+		map.insert(ft::make_pair(13, 'i'));
+	}
+	catch(...) {}
+
+	/*
+				8
+		       / \
+	          3   10
+			 / \	 \
+			1   6	  14
+		   	   / \	  /
+		      4   7  13
+
+	*/
+}
+
 
 int main() {
 
 	{
 		std::map<int, char> m;
-
-		std::map<int, char> p;
-
-		if (m < p) {
-			
-		}
-
-		m.insert(std::make_pair(15, 'a'));
-		m.insert(std::make_pair(20, 'b'));
-		m.insert(std::make_pair(10, 'c'));
-		m.insert(std::make_pair(8, 'd'));
-		m.insert(std::make_pair(12, 'e'));
-
-		// m.insert(std::make_pair(18, 'f'));
-		m.insert(std::make_pair(25, 'g'));
-		m.insert(std::make_pair(16, 'h'));
-
-		std::map<int, char>::const_iterator it = m.begin();
-
-
-		for (; it != m.end(); it++) {
-			// it->second = 'a';
-			std::cout << it->first << " " << it->second << " |" << std::endl;
-		}
-		// for (; ite2 != m.end(); ++ite2) {
-		// 	std::cout << ite2->first << " " << ite2->second << std::endl;
-		// }
-		// for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
-		// 	m.erase(ite);
-		// }
-		// for (std::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
-		// 	std::cout << ite->first << " " << ite->second << std::endl;
-		// }
-		// std::cout << std::boolalpha << m.empty() << std::endl;
-
-		// std::map<int, char>::iterator it = m.end();
-
-		// m.erase(it);
 
 	}
 
@@ -63,61 +51,14 @@ int main() {
 		ft::map<int, char> m;
 
 
-		m.insert(ft::make_pair(15, 'a'));
-		m.insert(ft::make_pair(20, 'b'));
-		m.insert(ft::make_pair(10, 'c'));
-		m.insert(ft::make_pair(8, 'd'));
-		m.insert(ft::make_pair(12, 'e'));
-		m.insert(ft::make_pair(25, 'g'));
-		m.insert(ft::make_pair(16, 'h'));
+		basic_map(m);
 
+		ft::map<int, char>::iterator it = m.end();
+		--it;
 
-
-		// std::cout << "size: " << m.size() << std::endl;
-		// ite = m._tree.find(16);
-
-		// std::cout << ite->parent->pair.first << std::endl;
-		// for (auto ite = m.begin(); ite != m.end(); ++ite) {
-		// 	std::cout << ite->first << " " << ite->second << std::endl;
-		// }
-
-		ft::map<int, char>::const_iterator it = m.begin();
-
-			// std::cout << ite2->first << std::endl;
-
-
-		for (; it != m.end(); it++) {
-			// it->second = 'a';
-			std::cout << it->first << " " << it->second << " |" << std::endl;
-		}
-		// std::cout << it->first << std::endl;
-
-		// for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ite = m.begin()) {
-		// 	m.erase(ite);
-		// }
-		// std::cout << std::boolalpha << m.empty() << std::endl;
-		// std::cout << "size: " << m.size() << std::endl;
-		// for (ft::map<int, char>::iterator ite = m.begin(); ite != m.end(); ++ite) {
-		// 	std::cout << ite->first << " " << ite->second << std::endl;
-		// }
-
-
-		
-
+		m.erase(m.begin(),it);
 
 		std::cout << "--------------------------------" << std::endl;
-
-		// ft::rb_tree<int, ft::pair<const int, char>, std::less<int> > tree(m._tree);
-
-		// ft::rb_tree<int, ft::pair<const int, char>, std::less<int> >::const_iterator it = tree.begin();
-
-		// for (; it != tree.end(); it++) {
-		// 	std::cout << it->pair.first << std::endl;
-		// }
-
-		// std::cout << it->pair.first << std::endl;
-
-		// ft::map<int, char>::const_iterator ite2 = m.find(15);
 
 
 	}
