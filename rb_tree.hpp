@@ -395,12 +395,12 @@ template< class _Pair >
 					}
 				}
 				++_size;
-				if (to_ret->parent == NULL) {
-					to_ret->is_black = true;
-				}
-				else if (to_ret->parent->parent) {
-					insertFix(to_ret);
-				}
+				// if (to_ret->parent == NULL) {
+				// 	to_ret->is_black = true;
+				// }
+				// else if (to_ret->parent->parent) {
+				// 	insertFix(to_ret);
+				// }
 
 				return ft::make_pair(iterator(to_ret, &_sentinel), true);
 			}
@@ -551,7 +551,17 @@ template< class _Pair >
 				pointer curr = pos.base();
 
 				// if no child
+				std::cout << curr->pair.first << std::endl;
+				if (curr->left)
+					std::cout << "left: " << curr->left->pair.first << std::endl;
+				else
+					std::cout << "no left" << std::endl;
+				if (curr->right)
+					std::cout << "right: " << curr->right->pair.first << std::endl;
+				else
+					std::cout << "no right" << std::endl;
 				if (curr->left == NULL && curr->right == NULL) {
+					std::cout << "no child" << std::endl;
 					if (curr->parent == NULL) {
 						_delete_node(curr);
 						--_size;
@@ -570,6 +580,7 @@ template< class _Pair >
 					}
 				} // if one child
 				else if (curr->left == NULL || curr->right == NULL) {
+					std::cout << "one child" << std::endl;
 					if (curr->left == NULL) {
 						if (curr->parent == NULL) {
 							_root = curr->right;
@@ -616,6 +627,41 @@ template< class _Pair >
 						}
 					}
 				}
+				else { // Case 4: node has right and left childs
+					std::cout << "two childs" << std::endl;
+					pointer successor = curr->right->min();
+					pointer tmp = curr->right;
+
+
+					if (successor->parent->left && successor->parent->left == successor)
+						successor->parent->left = NULL;
+					else if (successor->parent->right && successor->parent->right == successor)
+						successor->parent->right = NULL;
+
+					//if successor has a right child
+					if (successor->right) {
+						successor->right->parent = successor->parent;
+						successor->parent->left = successor->right;
+					}
+					successor->parent = curr->parent;
+					if (curr->parent->right && curr->parent->right == curr)
+						curr->parent->right = successor;
+					else if (curr->parent->left && curr->parent->left == curr)
+						curr->parent->left = successor;
+					if (successor != tmp) {
+						successor->right = tmp;
+						tmp->parent = successor;
+					}
+					successor->left = curr->left;
+					curr->left->parent = successor;
+
+					if (_root == curr) {
+						_root = successor;
+						_sentinel.left = _root;
+					}
+					_delete_node(curr);
+					--_size;
+				}
 				// else {// if two children
 				// 	pointer succ = curr->right->min();
 				// 	value_type tmp(succ->pair.first, succ->pair.second);
@@ -644,49 +690,18 @@ template< class _Pair >
 				// 	}
 				// 	_delete_node(curr);
 				// }
-				// else { // Case 4: node has right and left childs
-				// 	// std::cout << key << ": case 4" << std::endl;
-				// 	pointer successor = curr->right->min();
-				// 	pointer tmp = curr->right;
-
-
-				// 	if (successor->parent->left && successor->parent->left == successor)
-				// 		successor->parent->left = NULL;
-				// 	else if (successor->parent->right && successor->parent->right == successor)
-				// 		successor->parent->right = NULL;
-
-				// 	successor->parent = curr->parent;
-				// 	if (curr->parent->right && curr->parent->right == curr)
-				// 		curr->parent->right = successor;
-				// 	else if (curr->parent->left && curr->parent->left == curr)
-				// 		curr->parent->left = successor;
-				// 	if (successor != tmp) {
-				// 		successor->right = tmp;
-				// 		tmp->parent = successor;
-				// 	}
-				// 	successor->left = curr->left;
-				// 	curr->left->parent = successor;
-
-				// 	if (_root == curr) {
-				// 		_root = successor;
-				// 		_sentinel.left = _root;
-				// 	}
-				// 	_delete_node(curr);
-				// }
-				else {
-					pointer succ = curr->right->min();
-				}
 			}
 
 			void erase(iterator first, iterator last) {
 				if (first == begin() && last == end())
 					clear();
 				else {
-					iterator tmp(first);
+					// iterator tmp(first);
 					while (first != last) {
-						tmp = ++first;
-						erase(first->first);
-						first = tmp;
+						// tmp = ++first;
+						erase(first++);
+
+						// first = tmp;
 					}
 				}
 			}

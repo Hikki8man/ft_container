@@ -53,10 +53,15 @@ int main() {
 
 		basic_map(m);
 
-		ft::map<int, char>::iterator it = m.end();
-		--it;
+		ft::map<int, char>::iterator h = m.find(10);
+		// std::cout << h->first << std::endl;
+		m.erase(10);
+		
+		// std::cout << "h: " << h->first << " left: " << h.base()->left->pair.first << " right: " << h.base()->right->pair.first << " par: " << h.base()->parent->pair.first << std::endl;
+		// ft::map<int, char>::iterator it = m.end();
+		// --it;
 
-		m.erase(m.begin(),it);
+		// m.erase(m.begin(),it);
 
 		std::cout << "--------------------------------" << std::endl;
 
