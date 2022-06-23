@@ -873,7 +873,7 @@ template< class _Pair >
 				}
 
 				friend bool
-				operator<(const rb_tree& _l, const rb_tree& _r) {
+				operator<(const rb_tree& _l, const rb_tree& _r) {// add compare ?
 					return ft::lexicographical_compare(_l.begin(), _l.end(), _r.begin(), _r.end());
 				}
 
