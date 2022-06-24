@@ -362,9 +362,8 @@ template< class _Pair >
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				pointer curr = _root;
 				pointer to_ret = NULL;
-				iterator it = find(val.first);
-				if (it != end()) { return ft::make_pair(it, false); }
-				else if (_root == NULL) {
+
+				if (_root == NULL) {
 					_root = _new_node(val);
 					curr = _root;
 					_sentinel.left = _root;
@@ -372,6 +371,9 @@ template< class _Pair >
 				}
 				else {
 					while (curr != NULL) {
+						if (!_comp(curr->pair.first, val.first) && !_comp(val.first, curr->pair.first)) {
+							return ft::make_pair(iterator(curr, &_sentinel), false);
+						}
 						if (_comp(val.first, curr->pair.first)) {
 							if (curr->left == NULL) {
 								curr->left = _new_node(val);
@@ -395,12 +397,12 @@ template< class _Pair >
 					}
 				}
 				++_size;
-				if (to_ret->parent == NULL) {
-					to_ret->is_black = true;
-				}
-				else if (to_ret->parent->parent) {
+				// if (to_ret->parent == NULL) {
+				// 	to_ret->is_black = true;
+				// }
+				// else if (to_ret->parent->parent) {
 					insertFix(to_ret);
-				}
+				// }
 
 				return ft::make_pair(iterator(to_ret, &_sentinel), true);
 			}
@@ -410,18 +412,19 @@ template< class _Pair >
 				pointer to_ret = NULL;
 				if (_hint == &_sentinel || _hint == NULL || _hint->parent == NULL) {
 					return insert(val).first;
+				}
+				else if (!_comp(_hint->pair.first, val.first) && !_comp(val.first, _hint->pair.first)) {
+					return hint;
 				} // if _hint is left child of its parent and val to insert is greater than parent value then recall insert with parent
 				else if (_hint->parent->left == _hint && !_comp(val.first, _hint->parent->pair.first)) {
-					std::cout << "insert left" << std::endl;
-					to_ret = insert(iterator(_hint->parent, &_sentinel), val).base();
+					return insert(iterator(_hint->parent, &_sentinel), val);
 				} // if _hint is right child of its parent and val to insert is less than parent value then recall insert with parent
 				else if (_hint->parent->right == _hint && _comp(val.first, _hint->parent->pair.first)) {
-					std::cout << "insert right" << std::endl;
-					to_ret = insert(iterator(_hint->parent, &_sentinel), val).base();
+					return insert(iterator(_hint->parent, &_sentinel), val);
 				}
 				else {
 					while (_hint != NULL) {
-						if (_hint->pair.first == val.first) {
+						if (!_comp(_hint->pair.first, val.first) && !_comp(val.first, _hint->pair.first)) {
 							return iterator(_hint, &_sentinel);
 						}
 						else if (_comp(val.first, _hint->pair.first)) {
@@ -550,24 +553,7 @@ template< class _Pair >
 			void erase(iterator pos) {
 				pointer curr = pos.base();
 
-				// if no child
-				// std::cout << curr->pair.first << std::endl;
-				// if (curr->left)
-				// 	std::cout << "left: " << curr->left->pair.first << std::endl;
-				// else
-				// 	std::cout << "no left" << std::endl;
-				// if (curr->right)
-				// 	std::cout << "right: " << curr->right->pair.first << std::endl;
-				// else
-				// 	std::cout << "no right" << std::endl;
-				// if (curr->parent)
-				// 	std::cout << "parent: " << curr->parent->pair.first << std::endl;
-				// else
-				// 	std::cout << "no parent" << std::endl;
-
-
 				if (curr->left == NULL && curr->right == NULL) {
-					// std::cout << "no child" << std::endl;
 					if (curr->parent == NULL) {
 						_delete_node(curr);
 						--_size;
@@ -586,7 +572,6 @@ template< class _Pair >
 					}
 				} // if one child
 				else if (curr->left == NULL || curr->right == NULL) {
-					// std::cout << "one child" << std::endl;
 					if (curr->left == NULL) {
 						if (curr->parent == NULL) {
 							_root = curr->right;
@@ -635,7 +620,6 @@ template< class _Pair >
 				}
 				else {
 					pointer succ = curr->right;
-					// std::cout << "two childs" << std::endl;
 					// if right subtree doesnt have left branch
 					if (succ->left == NULL) {
 						succ->left = curr->left;
@@ -667,9 +651,7 @@ template< class _Pair >
 						succ->right = curr->right;
 						succ->right->parent = succ;
 						succ->parent = curr->parent;
-						// std::cout << "succ parent: " << succ->parent->pair.first << std::endl;
-						// std::cout << "succ left: " << succ->left->pair.first << std::endl;
-						// std::cout << "succ right: " << succ->right->pair.first << std::endl;
+
 						if (curr->parent == NULL) {
 							_root = succ;
 							_sentinel.left = _root;
@@ -690,12 +672,8 @@ template< class _Pair >
 				if (first == begin() && last == end())
 					clear();
 				else {
-					// iterator tmp(first);
 					while (first != last) {
-						// tmp = ++first;
 						erase(first++);
-
-						// first = tmp;
 					}
 				}
 			}
@@ -723,7 +701,7 @@ template< class _Pair >
 				pointer node = _root;
 
 				while (node != NULL) {
-					if (k == node->pair.first) {
+					if (!_comp(node->pair.first, k) && !_comp(k, node->pair.first)) {
 						return iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
@@ -740,7 +718,7 @@ template< class _Pair >
 				pointer node = _root;
 
 				while (node != NULL) {
-					if (k == node->pair.first) {
+					if (!_comp(node->pair.first, k) && !_comp(k, node->pair.first)) {
 						return const_iterator(node, &_sentinel);
 					}
 					else if (_comp(k, node->pair.first)) {
