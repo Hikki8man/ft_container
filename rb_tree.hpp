@@ -361,97 +361,56 @@ template< class _Pair >
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				pointer curr = _root;
-				pointer to_ret = NULL;
+				bool bol = true;
 
 				if (_root == NULL) {
 					_root = _new_node(val);
 					curr = _root;
 					_sentinel.left = _root;
-					to_ret = _root;
+					++_size;
 				}
 				else {
-					while (curr != NULL) {
-						if (!_comp(curr->pair.first, val.first) && !_comp(val.first, curr->pair.first)) {
-							return ft::make_pair(iterator(curr, &_sentinel), false);
-						}
-						if (_comp(val.first, curr->pair.first)) {
-							if (curr->left == NULL) {
-								curr->left = _new_node(val);
-								curr->left->parent = curr;
-								to_ret = curr->left;
-								break;
-							}
-							else
-								curr = curr->left;
-						}
-						else {
-							if (curr->right == NULL) {
-								curr->right =_new_node(val);
-								curr->right->parent = curr;
-								to_ret = curr->right;
-								break;
-							}
-							else
-								curr = curr->right;
-						}
-					}
+					size_t size_before = _size;
+					curr = _insert_from_pos(_root, val);
+					if (size_before == _size) {
+						bol = false;
+					} 
 				}
-				++_size;
-				if (to_ret->parent == NULL) {
-					to_ret->is_black = true;
-				}
-				else if (to_ret->parent->parent) {
-					insertFix(to_ret);
-				}
-				return ft::make_pair(iterator(to_ret, &_sentinel), true);
+				// if (to_ret->parent == NULL) {
+				// 	to_ret->is_black = true;
+				// }
+				// else if (to_ret->parent->parent) {
+				// 	insertFix(to_ret);
+				// }
+				return ft::make_pair(iterator(curr, &_sentinel), bol);
 			}
 
 			iterator insert(iterator hint, const value_type& val) {
 				pointer _hint = hint.base();
 				pointer to_ret = NULL;
-				if (_hint == &_sentinel || _hint == NULL || _hint->parent == NULL) {
+		
+				if (hint == begin() || _hint == &_sentinel || _hint == NULL || _hint->parent == NULL)
 					return insert(val).first;
-				}
-				else if (!_comp(_hint->pair.first, val.first) && !_comp(val.first, _hint->pair.first)) {
+				else if (!_comp(_hint->pair.first, val.first) && !_comp(val.first, _hint->pair.first))
 					return hint;
-				} // if _hint is left child of its parent and val to insert is greater than parent value then recall insert with parent
-				else if (_hint->parent->left == _hint && !_comp(val.first, _hint->parent->pair.first)) {
-					return insert(iterator(_hint->parent, &_sentinel), val);
-				} // if _hint is right child of its parent and val to insert is less than parent value then recall insert with parent
-				else if (_hint->parent->right == _hint && _comp(val.first, _hint->parent->pair.first)) {
-					return insert(iterator(_hint->parent, &_sentinel), val);
-				}
-				else {
-					while (_hint != NULL) {
-						std::cout << "hint: " << _hint->pair.first << std::endl;
-						if (!_comp(_hint->pair.first, val.first) && !_comp(val.first, _hint->pair.first)) {
-							return iterator(_hint, &_sentinel);
-						}
-						else if (_comp(val.first, _hint->pair.first)) {
-							if (_hint->left == NULL) {
-								_hint->left = _new_node(val);
-								_hint->left->parent = _hint;
-								to_ret = _hint->left;
-								++_size;
-								break;
-							}
-							else
-								_hint = _hint->left;
-						}
-						else {
-							if (_hint->right == NULL) {
-								_hint->right = _new_node(val);
-								_hint->right->parent = _hint;
-								to_ret = _hint->right;
-								++_size;
-								break;
-							}
-							else
-								_hint = _hint->right;
-						}
+	
+				if (_hint->parent->left == _hint) {
+					iterator before = hint;
+					--before;
+					// if hint is left child && val to insert is >= hint parent value || val to insert is <= to node before
+					if (!_comp(val.first, _hint->parent->pair.first) || !_comp(before.base()->pair.first, val.first)) {
+						return insert(val).first;
 					}
 				}
-				return iterator(to_ret, &_sentinel);
+				else if (_hint->parent->right == _hint) {
+					iterator after = hint;
+					++after;
+					// if hint is right child && val to insert is <= hint parent value || val to insert is >= to next node value
+					if (!_comp(_hint->parent->pair.first, val.first) || !_comp(val.first, after.base()->pair.first)) {
+						return insert(val).first;
+					}
+				}
+				return iterator(_insert_from_pos(_hint, val), &_sentinel);
 			}
 
 			template<class InputIterator>
@@ -553,10 +512,9 @@ template< class _Pair >
 			void erase(iterator pos) {
 				pointer curr = pos.base();
 
+				// if no childs
 				if (curr->left == NULL && curr->right == NULL) {
 					if (curr->parent == NULL) {
-						_delete_node(curr);
-						--_size;
 						_root = NULL;
 						_sentinel.left = &_sentinel;
 					}
@@ -564,11 +522,8 @@ template< class _Pair >
 						if (curr->parent->left == curr) {
 							curr->parent->left = NULL;
 						}
-						else {
+						else
 							curr->parent->right = NULL;
-						}
-						_delete_node(curr);
-						--_size;
 					}
 				} // if one child
 				else if (curr->left == NULL || curr->right == NULL) {
@@ -577,21 +532,15 @@ template< class _Pair >
 							_root = curr->right;
 							_root->parent = NULL;
 							_sentinel.left = _root;
-							_delete_node(curr);
-							--_size;
 						}
 						else {
 							if (curr->parent->left == curr) {
 								curr->parent->left = curr->right;
 								curr->right->parent = curr->parent;
-								_delete_node(curr);
-								--_size;
 							}
 							else {
 								curr->parent->right = curr->right;
 								curr->right->parent = curr->parent;
-								_delete_node(curr);
-								--_size;
 							}
 						}
 					}
@@ -600,24 +549,19 @@ template< class _Pair >
 							_root = curr->left;
 							_root->parent = NULL;
 							_sentinel.left = _root;
-							_delete_node(curr);
-							--_size;
 						}
 						else {
 							if (curr->parent->left == curr) {
 								curr->parent->left = curr->left;
 								curr->left->parent = curr->parent;
-								_delete_node(curr);
 							}
 							else {
 								curr->parent->right = curr->left;
 								curr->left->parent = curr->parent;
-								_delete_node(curr);
-								--_size;
 							}
 						}
 					}
-				}
+				} // if two childs
 				else {
 					pointer succ = curr->right;
 					// if right subtree doesnt have left branch
@@ -663,9 +607,9 @@ template< class _Pair >
 								curr->parent->right = succ;
 						}
 					}
-					_delete_node(curr);
-					--_size;
 				}
+				_delete_node(curr);
+				--_size;
 			}
 
 			void erase(iterator first, iterator last) {
@@ -802,6 +746,35 @@ template< class _Pair >
 					pointer _x = _alloc.allocate(1);
 					_alloc.construct(_x, val);
 					return _x;
+				}
+
+				pointer _insert_from_pos(pointer pos, const value_type& val) {
+					pointer y = NULL;
+					pointer p = pos;
+
+					while (p != NULL) {
+						if (!_comp(val.first, p->pair.first) && !_comp(p->pair.first, val.first))
+							return p;
+
+						y = p;
+						if (_comp(val.first, p->pair.first))
+							p = p->left;
+						else
+							p = p->right;
+					}
+					if (y == NULL)
+						return _root;
+					++_size;
+					if (_comp(val.first, y->pair.first)) {
+						y->left = _new_node(val);
+						y->left->parent = y;
+						return y->left;
+					}
+					else {
+						y->right = _new_node(val);
+						y->right->parent = y;
+						return y->right;
+					}
 				}
 
 				void _delete_node(pointer x) {

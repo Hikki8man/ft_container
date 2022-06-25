@@ -67,7 +67,7 @@ int main() {
 			std::cout << it->first << " ";
 		}
 		std::cout << std::endl;
-		m.insert(m.find(14), std::make_pair(0, 'd'));
+		m.insert(m.find(10), std::make_pair(0, 'd'));
 		// m.insert(m.find(3), std::make_pair(13, 'd'));
 		// m.insert(m.find(3), std::make_pair(13, 'd'));
 		// std::map<int, char>::iterator it = m.find(4);
@@ -101,7 +101,7 @@ int main() {
 		}
 		std::cout << std::endl;
 		m.print();
-		m.insert(m.find(4), ft::make_pair(0, 'd'));
+		m.insert(m.find(100), ft::make_pair(16, 'd'));
 		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
 			std::cout << it->first << " ";
 		}
@@ -109,12 +109,12 @@ int main() {
 		m.print();
 
 
-		m.insert(m.find(7), ft::make_pair(8, 'd'));
-		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-			std::cout << it->first << " ";
-		}
-		std::cout << std::endl;
-		m.print();
+		// m.insert(m.find(7), ft::make_pair(8, 'd'));
+		// for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+		// 	std::cout << it->first << " ";
+		// }
+		// std::cout << std::endl;
+		// m.print();
 
 		// ft::map<int, char> m2;
 		// for (int i = 0; i <= 100; ++i) {
