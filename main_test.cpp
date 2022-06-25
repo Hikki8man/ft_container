@@ -100,22 +100,27 @@ int main() {
 			std::cout << it->first << " ";
 		}
 		std::cout << std::endl;
-		m.insert(m.find(14), ft::make_pair(0, 'd'));
-		// m.insert(m.find(3), ft::make_pair(13, 'd'));
-		// m.insert(m.find(3), ft::make_pair(13, 'd'));
-
-		// ft::map<int, char>::iterator h = m.find(10);
-		// std::cout << h->first << std::endl;
-		// m.erase(m.begin(), m.end());
-		// ft::map<int, char>::iterator it = m.find(4);
-		// ft::map<int, char>::iterator ite = m.find(13);
-		// // std::cout << *it << std::endl;
-		// m.erase(it, ite);
-
+		m.print();
+		m.insert(m.find(4), ft::make_pair(0, 'd'));
 		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
 			std::cout << it->first << " ";
 		}
 		std::cout << std::endl;
+		m.print();
+
+
+		m.insert(m.find(7), ft::make_pair(8, 'd'));
+		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+			std::cout << it->first << " ";
+		}
+		std::cout << std::endl;
+		m.print();
+
+		// ft::map<int, char> m2;
+		// for (int i = 0; i <= 100; ++i) {
+		// 	m2.insert(ft::make_pair(i, 'a'));
+		// }
+		// m2.print();
 		
 		// std::cout << "h: " << h->first << " left: " << h.base()->left->pair.first << " right: " << h.base()->right->pair.first << " par: " << h.base()->parent->pair.first << std::endl;
 		// ft::map<int, char>::iterator it = m.end();

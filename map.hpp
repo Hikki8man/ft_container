@@ -243,6 +243,10 @@ namespace ft {
 			friend bool
 			operator<(const map<_K1, _T1, _C1, _A1>&,
 		  			const map<_K1, _T1, _C1, _A1>&);
+
+			void print() {
+				_tree.print();
+			}
 	};
 
 	// Map compare operators=================================================================================================
