@@ -28,40 +28,6 @@ namespace ft {
 			return *this;
 		}
 
-		node_ptr next() {
-			if (this->right != NULL) {
-				node_ptr tmp = this->right;
-				while (tmp->left != NULL) {
-					tmp = tmp->left;
-				}
-				return tmp;
-			}
-			node_ptr tmp = this->parent;
-			node_ptr tmp2 = this;
-			while (tmp != NULL && tmp->right == tmp2) {
-				tmp2 = tmp;
-				tmp = tmp->parent;
-			}
-			return tmp;
-		}
-
-		node_ptr prev() {
-			if (this->left != NULL) {
-				node_ptr tmp = this->left;
-				while (tmp->right != NULL) {
-					tmp = tmp->right;
-				}
-				return tmp;
-			}
-			node_ptr tmp = this->parent;
-			node_ptr tmp2 = this;
-			while (tmp != NULL && tmp->left == tmp2) {
-				tmp2 = tmp;
-				tmp = tmp->parent;
-			}
-			return tmp;
-		}
-
 		node_ptr min() {
 			node_ptr tmp = this;
 			while (tmp && tmp->left != NULL) {
@@ -101,7 +67,7 @@ template< class _Pair >
 				typedef tree_node<_Pair>* _Node_ptr;
 
 				_Node_ptr _node;
-				_Node_ptr _sentinel;
+				const _Node_ptr _sentinel;
 
 				rb_tree_iterator() : _node(), _sentinel() {}
 
@@ -109,7 +75,6 @@ template< class _Pair >
 
 				rb_tree_iterator& operator=(const _Self &_x) {
 					_node = _x._node;
-					_sentinel = _x._sentinel;
 					return *this;
 				}
 
@@ -200,7 +165,7 @@ template< class _Pair >
 				typedef const tree_node<_Pair>* _Node_ptr;
 			
 				_Node_ptr _node;
-				_Node_ptr _sentinel;
+				const _Node_ptr _sentinel;
 
 				rb_tree_const_iterator() : _node(), _sentinel() {}
 
@@ -210,7 +175,6 @@ template< class _Pair >
 
 				rb_tree_const_iterator& operator=(const _Self &_x) {
 					_node = _x._node;
-					_sentinel = _x._sentinel;
 					return *this;
 				}
 
@@ -370,7 +334,7 @@ template< class _Pair >
 					++_size;
 				}
 				else {
-					size_t size_before = _size;
+					size_type size_before = _size;
 					curr = _insert_from_pos(_root, val);
 					if (size_before == _size) {
 						bol = false;

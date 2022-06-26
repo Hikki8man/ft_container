@@ -45,40 +45,43 @@ void basic_map(ft::map<int, char>& map) {
 
 int main() {
 
-	// {
-	// 	std::map<int, char> m;
+	{
+		std::map<int, char> m;
 
-	// 	m.insert(std::make_pair(8, 'a'));
-	// 	m.insert(std::make_pair(10, 'b'));
-	// 	m.insert(std::make_pair(3, 'c'));
-	// 	m.insert(std::make_pair(1, 'd'));
-	// 	m.insert(std::make_pair(6, 'e'));
-	// 	m.insert(std::make_pair(4, 'f'));
-	// 	m.insert(std::make_pair(7, 'g'));
-	// 	m.insert(std::make_pair(14, 'h'));
-	// 	m.insert(std::make_pair(13, 'i'));
+		m
 
-	// 	// m.insert(m.end(), std::make_pair(11, 'd'));
-	// 	// m.insert(m.find(14), std::make_pair(0, 'd'));
-	// 	m.insert(m.begin(), std::make_pair(15, 'a'));
-	// 	// m.insert(m.end(), std::make_pair(100, 'a'));
-	// 	// m.insert(m.end(), std::make_pair(2, 'a'));
-	// 	for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-	// 		std::cout << it->first << " ";
-	// 	}
-	// 	std::cout << std::endl;
-	// 	// m.insert(m.find(10), std::make_pair(0, 'd'));
-	// 	// m.insert(m.find(3), std::make_pair(13, 'd'));
-	// 	// m.insert(m.find(3), std::make_pair(13, 'd'));
-	// 	// std::map<int, char>::iterator it = m.find(4);
+		m.insert(std::make_pair(8, 'a'));
+		m.insert(std::make_pair(10, 'b'));
+		m.insert(std::make_pair(3, 'c'));
+		m.insert(std::make_pair(1, 'd'));
+		m.insert(std::make_pair(6, 'e'));
+		m.insert(std::make_pair(4, 'f'));
+		m.insert(std::make_pair(7, 'g'));
+		m.insert(std::make_pair(14, 'h'));
+		m.insert(std::make_pair(13, 'i'));
 
-	// 	// for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-	// 	// 	std::cout << it->first << " ";
-	// 	// }
-	// 	// std::cout << std::endl;
+		// m.insert(m.end(), std::make_pair(11, 'd'));
+		// m.insert(m.find(14), std::make_pair(0, 'd'));
+		m.insert(m.begin(), std::make_pair(15, 'a'));
+		// m.insert(m.end(), std::make_pair(100, 'a'));
+		// m.insert(m.end(), std::make_pair(2, 'a'));
+		for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+			std::cout << it->first << " ";
+		}
+
+		std::cout << std::endl;
+		// m.insert(m.find(10), std::make_pair(0, 'd'));
+		// m.insert(m.find(3), std::make_pair(13, 'd'));
+		// m.insert(m.find(3), std::make_pair(13, 'd'));
+		// std::map<int, char>::iterator it = m.find(4);
+
+		// for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+		// 	std::cout << it->first << " ";
+		// }
+		// std::cout << std::endl;
 		
 
-	// }
+	}
 
 
 	std::cout << "--------------------------------" << std::endl;
