@@ -1,235 +1,116 @@
-#include "vector.hpp"
-#include "iterator_traits.hpp"
 #include <iostream>
-#include <vector>
-#include <stack>
+#include <string>
+#include <deque>
+#if STD //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+#else
+	#include "map/map.hpp"
+	#include "stack/stack.hpp"
+	#include "vector/vector.hpp"
+#endif
 
+#include <stdlib.h>
 
-class leakstest {
-	public:
-		std::string name;
-		leakstest() {
-			// std::cout << "constructor" << std::endl;
-		}
-		leakstest(const std::string& name) : name(name) {
-			// std::cout << "constructor" << std::endl;
-		}
-		leakstest(const leakstest& other) {
-			this->name = other.name;
-			// std::cout << "copy constructor of " << name << std::endl;
-		}
-		leakstest &operator=(const leakstest &other) {
-			this->name = other.name;
-			std::cout << "assignment of " << name << std::endl;
-			return *this;
-		}
-		~leakstest() {
-			std::cout << "leakstest destructor of " << name << std::endl;
-		}
+#define MAX_RAM 4294967296
+#define BUFFER_SIZE 4096
+struct Buffer
+{
+	int idx;
+	char buff[BUFFER_SIZE];
 };
 
-std::ostream& operator<<(std::ostream& os, const leakstest& l) {
-	os << l.name;
-	return os;
-}
 
-int main(void) {
+#define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-
+template<typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
 	{
-		// std::vector<leakstest> v;
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
 
-		// leakstest a("a");
-		// leakstest b("b");
-		// leakstest c("c");
-		// leakstest d("d");
-		// leakstest e("e");
-		// leakstest f("f");
-		// leakstest g("g");
-		// leakstest h("h");
+	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-		// // leakstest a2("a2");
-		// // leakstest b2("b2");
-		// // leakstest c2("c2");
-		// // leakstest d2("d2");
-		// // leakstest e2("e2");
-		// // leakstest f2("f2");
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
-		// std::vector<leakstest> v2;
-		
- 
-		// std::cout << "~~~~~~~~~~" << std::endl;
+int main(int argc, char** argv) {
+	if (argc != 2)
+	{
+		std::cerr << "Usage: ./test seed" << std::endl;
+		std::cerr << "Provide a seed please" << std::endl;
+		std::cerr << "Count value:" << COUNT << std::endl;
+		return 1;
+	}
+	const int seed = atoi(argv[1]);
+	srand(seed);
 
-		// v.reserve(100);
+	ft::vector<std::string> vector_str;
+	ft::vector<int> vector_int;
+	ft::stack<int> stack_int;
+	ft::vector<Buffer> vector_buffer;
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::map<int, int> map_int;
 
-		// v.push_back(a);
-		// v.push_back(b);
-		// v.push_back(c);
-		// v.push_back(d);
-		// v.push_back(e);
-
-		// v2.push_back(f);
-		// v2.push_back(g);
-		// v2.push_back(h);
-		// // v.push_back(f);
-		// // v.push_back(g);
-		// // v.push_back(h);
-		
-
-		// std::cout << "~~~~~~~~~~" << std::endl;
-
-		// v.insert(v.begin() + 1, 1, f);
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.end(), v2.begin() + 1, v2.end());
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.begin(), v2.begin(), v2.end());
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.begin() + 5, v2.begin() + 1, v2.end());
-		// // v.insert(v.begin() + 5, v2.begin() + 1, v2.end());
-
-		// std::cout << "capacity: " << v.capacity() << std::endl;
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-
-		// std::cout << "~~~~~~~~~~" << std::endl;
-	
+	for (int i = 0; i < COUNT; i++)
+	{
+		vector_buffer.push_back(Buffer());
 	}
 
+	for (int i = 0; i < COUNT; i++)
 	{
-		std::vector<leakstest> v;
-		std::vector<leakstest> v2;
-		std::vector<leakstest>::reverse_iterator it;
-		v.swap(v2);
-		v.reserve(100);
-		leakstest a("a");
-		leakstest b("b");
-		leakstest c("c");
-		leakstest d("d");
-		leakstest e("e");
-		leakstest f("f");
-		leakstest g("g");
-		leakstest h("h");
-		v.push_back(a);
-		v.push_back(b);
-		v.push_back(c);
-		v.push_back(d);
-		v.push_back(e);
+		const int idx = rand() % COUNT;
+		vector_buffer[idx].idx = 5;
+	}
+	ft::vector<Buffer>().swap(vector_buffer);
 
-		std::cout << "~~~~~~~~~~" << std::endl;
-		v.erase(v.begin());
-		std::cout << "~~~~~~~~~~" << std::endl;
-		for (int i = 0; i < v.size(); i++) {
-			std::cout << v[i] << " ";
+	try
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			const int idx = rand() % COUNT;
+			vector_buffer.at(idx);
+			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
 		}
-		std::cout << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		//NORMAL ! :P
+	}
+	
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
 	}
 
-	std::cout << "---------------------------------------------" << std::endl;
+	int sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
 	{
-		// ft::vector<leakstest> v;
-
-		// leakstest a("a");
-		// leakstest b("b");
-		// leakstest c("c");
-		// leakstest d("d");
-		// leakstest e("e");
-		// leakstest f("f");
-		// leakstest g("g");
-		// leakstest h("h");
-
-		// // leakstest a2("a2");
-		// // leakstest b2("b2");
-		// // leakstest c2("c2");
-		// // leakstest d2("d2");
-		// // leakstest e2("e2");
-		// // leakstest f2("f2");
-
-		// ft::vector<leakstest> v2;
-		
- 
-		// std::cout << "~~~~~~~~~~" << std::endl;
-
-		// v.reserve(100);
-
-		// v.push_back(a);
-		// v.push_back(b);
-		// v.push_back(c);
-		// v.push_back(d);
-		// v.push_back(e);
-
-		// v2.push_back(f);
-		// v2.push_back(g);
-		// v2.push_back(h);
-		// // v.push_back(f);
-		// // v.push_back(g);
-		// // v.push_back(h);
-		
-
-		// std::cout << "~~~~~~~~~~" << std::endl;
-
-		// v.insert(v.begin() + 1, 1, f);
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.end(), v2.begin() + 1, v2.end());
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.begin(), v2.begin(), v2.end());
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-		// v.insert(v.begin() + 5, v2.begin() + 1, v2.end());
-		// // v.insert(v.begin() + 5, v2.begin() + 1, v2.end());
-
-		// std::cout << "capacity: " << v.capacity() << std::endl;
-		// for (auto it = v.begin(); it != v.end(); ++it) {
-		// 	std::cout << *it;
-		// }
-		// std::cout << std::endl;
-
-		// std::cout << "~~~~~~~~~~" << std::endl;
-
+		ft::map<int, int> copy = map_int;
 	}
-
+	MutantStack<char> iterable_stack;
+	for (char letter = 'a'; letter <= 'z'; letter++)
+		iterable_stack.push(letter);
+	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
 	{
-		ft::vector<leakstest> v;
-
-		v.reserve(100);
-		leakstest a("a");
-		leakstest b("b");
-		leakstest c("c");
-		leakstest d("d");
-		leakstest e("e");
-		leakstest f("f");
-		leakstest g("g");
-		leakstest h("h");
-		v.push_back(a);
-		v.push_back(b);
-		v.push_back(c);
-		v.push_back(d);
-		v.push_back(e);
-
-		for (ft::vector<leakstest>::const_iterator it)
-		std::cout << std::endl;
+		std::cout << *it;
 	}
-	std::cout << "---------------------------------------------" << std::endl;
-
-	return 0;
-
+	std::cout << std::endl;
+	return (0);
 }
