@@ -52,6 +52,11 @@ int main(int argc, char** argv) {
 		std::cerr << "Count value:" << COUNT << std::endl;
 		return 1;
 	}
+	clock_t start_test;
+	clock_t time_test;
+	srand(0);
+	start_test = clock();
+
 	const int seed = atoi(argv[1]);
 	srand(seed);
 
@@ -97,6 +102,7 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < 10000; i++)
 	{
 		int access = rand();
+		std::cout << i << " access: " << access << std::endl;
 		sum += map_int[access];
 	}
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
@@ -112,5 +118,10 @@ int main(int argc, char** argv) {
 		std::cout << *it;
 	}
 	std::cout << std::endl;
+
+	time_test = clock() - start_test;
+	float time_f;
+	time_f = ((float)time_test)/CLOCKS_PER_SEC;
+  	std::cout << "Time: " << time_f << std::endl;
 	return (0);
 }

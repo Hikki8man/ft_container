@@ -17,7 +17,7 @@ INC		=	vector/vector.hpp \
 
 OBJ		=	$(SRC:.cpp=.o)
 
-CFLAGS	= 	-std=c++98 -Wall -Werror -Wextra
+CFLAGS	= 	-std=c++98 -Wall -Werror -Wextra -g -fsanitize=address
 
 CC		=	c++
 

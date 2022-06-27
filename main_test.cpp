@@ -38,7 +38,6 @@ void basic_map(ft::map<int, char>& map) {
 			1   6	  14
 		   	   / \	  /
 		      4   7  13
-
 	*/
 }
 
@@ -47,8 +46,6 @@ int main() {
 
 	{
 		std::map<int, char> m;
-
-		m
 
 		m.insert(std::make_pair(8, 'a'));
 		m.insert(std::make_pair(10, 'b'));
@@ -62,14 +59,14 @@ int main() {
 
 		// m.insert(m.end(), std::make_pair(11, 'd'));
 		// m.insert(m.find(14), std::make_pair(0, 'd'));
-		m.insert(m.begin(), std::make_pair(15, 'a'));
-		// m.insert(m.end(), std::make_pair(100, 'a'));
-		// m.insert(m.end(), std::make_pair(2, 'a'));
-		for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-			std::cout << it->first << " ";
-		}
-
-		std::cout << std::endl;
+		// m.insert(m.begin(), std::make_pair(15, 'a'));
+		// // m.insert(m.end(), std::make_pair(100, 'a'));
+		// // m.insert(m.end(), std::make_pair(2, 'a'));
+		// for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
+		// 	std::cout << it->first << " ";
+		// }
+		std::cout << "lower bound: " << m.lower_bound(11)->first << std::endl;
+		// std::cout << std::endl;
 		// m.insert(m.find(10), std::make_pair(0, 'd'));
 		// m.insert(m.find(3), std::make_pair(13, 'd'));
 		// m.insert(m.find(3), std::make_pair(13, 'd'));
@@ -89,30 +86,15 @@ int main() {
 	std::cout << "--------------------------------" << std::endl;
 
 	{
-
+		typedef ft::map<int, char>::iterator iterator;
 		ft::map<int, char> m;
 
-		basic_map(m);
-
-		m.insert(m.end(), ft::make_pair(11, 'd'));
-		m.insert(m.find(14), ft::make_pair(0, 'd'));
-		m.insert(m.begin(), ft::make_pair(9, 'a'));
-		m.insert(m.end(), ft::make_pair(100, 'a'));
-		m.insert(m.end(), ft::make_pair(2, 'a'));
-		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-			std::cout << it->first << " ";
+		iterator it;
+		it = m.insert(m.begin(), ft::make_pair(15, 'a'));
+		m.clear();
+		for (it = m.begin(); it != m.end(); it++) {
+			std::cout << it->first << std::endl;
 		}
-		std::cout << std::endl;
-		m.print();
-		m.insert(m.begin(), ft::make_pair(0, 'd'));
-		for (ft::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-			std::cout << it->first << " ";
-		}
-		std::cout << std::endl;
-		m.print();
-		std::cout << "size: " << m.size() << std::endl;
-
-		std::cout << "--------------------------------" << std::endl;
 
 
 	}

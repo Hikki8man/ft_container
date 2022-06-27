@@ -113,14 +113,13 @@ namespace ft {
 
 			void resize (size_type n, value_type val = value_type()) {//redo
 				if (n > _capacity) {
-					reserve(_adjust_capacity(n));//pas bon sur windows
-					// reserve(n);
+					reserve(_adjust_capacity(n)); //sur ubuntu: reserve(n);
 				}
 				if (n < _size) {
 					for (size_type i = n; i < _size; ++i)
 						_alloc.destroy(&_data[i]);
 					_size = n;
-				}//what if n == _size | test with data null
+				}
 				else if (n > _size) {
 					for (size_type i = _size; i < n; ++i) {
 						_alloc.construct(&_data[i], val);
@@ -144,7 +143,6 @@ namespace ft {
 					pointer newData = _alloc.allocate(n);
 					for (size_type i = 0; i < _size; ++i) {
 						_alloc.construct(newData + i, _data[i]);
-						// _alloc.destroy(_data + i);
 					}
 					_destroy_array();
 					if (_capacity)

@@ -10,17 +10,15 @@
 
 namespace ft {
 
-	//Node===================================================================================================================
-	template<class Pair>
-	struct tree_node {
+	//TREE NODE BASE=========================================================================================================
+	struct tree_node_base {
 
-		typedef tree_node<Pair>* node_ptr;
+		typedef tree_node_base* node_ptr;
 
-		tree_node(const Pair &p = Pair()) : pair(p), is_black(false), parent(NULL), left(NULL), right(NULL) {}
-		tree_node(const tree_node & src) : pair(src.pair), is_black(src.is_black), parent(src.parent), left(src.left), right(src.right) {}
-		~tree_node() {}
-		tree_node &operator=(const tree_node &other) {
-			pair = other.pair;
+		tree_node_base() : is_black(false), parent(NULL), left(NULL), right(NULL) {}
+		tree_node_base(const tree_node_base & src) : is_black(src.is_black), parent(src.parent), left(src.left), right(src.right) {}
+		~tree_node_base() {}
+		tree_node_base &operator=(const tree_node_base &other) {
 			parent = other.parent;
 			left = other.left;
 			right = other.right;
@@ -44,12 +42,26 @@ namespace ft {
 			return tmp;
 		}
 
-		Pair pair;
 		node_ptr parent;
 		node_ptr left;
 		node_ptr right;
 		bool is_black;
 	};
+
+	// TREE NODE=============================================================================================================
+	template <class _Pair>
+	class tree_node : public tree_node_base {
+		public:
+			tree_node(const _Pair& val = _Pair()) : tree_node_base(), pair(val) {}
+			tree_node(const tree_node & src) : tree_node_base(src), pair(src.pair) {}
+			tree_node &operator=(const tree_node &other) {
+				tree_node_base::operator=(other);
+				pair = other.pair;
+				return *this;
+			}
+			_Pair pair;
+	};
+
 
 // TREE ITERATOR=============================================================================================================
 template< class _Pair >
@@ -64,25 +76,24 @@ template< class _Pair >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_iterator<_Pair> _Self;
+				typedef tree_node_base* _Base_ptr;
 				typedef tree_node<_Pair>* _Node_ptr;
 
-				_Node_ptr _node;
-				const _Node_ptr _sentinel;
+				_Base_ptr _node;
+				const _Base_ptr _sentinel;
 
 				rb_tree_iterator() : _node(), _sentinel() {}
 
-				rb_tree_iterator(_Node_ptr _x, _Node_ptr _s) : _node(_x), _sentinel(_s) {}
+				rb_tree_iterator(_Base_ptr _x, _Base_ptr _s) : _node(_x), _sentinel(_s) {}
 
 				rb_tree_iterator& operator=(const _Self &_x) {
 					_node = _x._node;
 					return *this;
 				}
 
-				_Node_ptr base() const { return _node; }
+				reference operator*() const { return static_cast<_Node_ptr>(_node)->pair; }
 
-				reference operator*() const { return _node->pair; }
-
-				pointer operator->() const { return &_node->pair; }
+				pointer operator->() const { return &static_cast<_Node_ptr>(_node)->pair; }
 
 				_Self& operator++() {
 					if (_node) {
@@ -93,7 +104,7 @@ template< class _Pair >
 							}
 						}
 						else {
-							_Node_ptr _y = _node->parent;
+							_Base_ptr _y = _node->parent;
 							while (_y != NULL && _node == _y->right) {
 								_node = _y;
 								_y = _y->parent;
@@ -124,7 +135,7 @@ template< class _Pair >
 						}
 					}
 					else {
-						_Node_ptr _y = _node->parent;
+						_Base_ptr _y = _node->parent;
 						while (_y != NULL && _node == _y->left) {
 							_node = _y;
 							_y = _y->parent;
@@ -162,14 +173,15 @@ template< class _Pair >
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 
 				typedef rb_tree_const_iterator<_Pair> _Self;
+				typedef const tree_node_base* _Base_ptr;
 				typedef const tree_node<_Pair>* _Node_ptr;
 			
-				_Node_ptr _node;
-				const _Node_ptr _sentinel;
+				_Base_ptr _node;
+				_Base_ptr _sentinel;
 
 				rb_tree_const_iterator() : _node(), _sentinel() {}
 
-				rb_tree_const_iterator(_Node_ptr _x, _Node_ptr _s) : _node(_x), _sentinel(_s) {}
+				rb_tree_const_iterator(_Base_ptr _x, _Base_ptr _s) : _node(_x), _sentinel(_s) {}
 
 				rb_tree_const_iterator(const iterator &_x) : _node(_x._node), _sentinel(_x._sentinel) {}
 
@@ -178,11 +190,9 @@ template< class _Pair >
 					return *this;
 				}
 
-				_Node_ptr base() const { return _node; }
+				reference operator*() const { return static_cast<_Node_ptr>(_node)->pair; }
 
-				reference operator*() const { return _node->pair; }
-
-				pointer operator->() const { return &_node->pair; }
+				pointer operator->() const { return &static_cast<_Node_ptr>(_node)->pair; }
 
 				_Self& operator++() {
 					if (_node) {
@@ -193,7 +203,7 @@ template< class _Pair >
 							}
 						}
 						else {
-							_Node_ptr _y = _node->parent;
+							_Base_ptr _y = _node->parent;
 							while (_y != NULL && _node == _y->right) {
 								_node = _y;
 								_y = _y->parent;
@@ -224,7 +234,7 @@ template< class _Pair >
 						}
 					}
 					else {
-						_Node_ptr _y = _node->parent;
+						_Base_ptr _y = _node->parent;
 						while (_y != NULL && _node == _y->left) {
 							_node = _y;
 							_y = _y->parent;
@@ -274,8 +284,11 @@ template< class _Pair >
 
 
 		protected:
-			pointer _root;
-			tree_node<value_type> _sentinel;
+			typedef ft::tree_node_base* _Base_ptr;
+			typedef const ft::tree_node_base* _Const_base_ptr;
+
+			_Base_ptr _root;
+			ft::tree_node_base _sentinel;
 			_Alloc _alloc;
 			key_compare _comp;
 			size_type _size;
@@ -324,7 +337,7 @@ template< class _Pair >
 			// INSERT========================================================================================================
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
-				pointer curr = _root;
+				_Base_ptr curr = _root;
 				bool bol = true;
 
 				if (_root == NULL) {
@@ -351,26 +364,26 @@ template< class _Pair >
 
 			iterator insert (iterator position, const value_type& val)
 			{
-				pointer to_ret = NULL;
+				_Base_ptr to_ret = NULL;
 				if (begin() == end())
 					return insert(val).first;
 				if (position == end()) {
-					position--;
+					--position;
 				}
 				iterator tmp = position;
 				if (_comp(val.first, position->first)) {
-					tmp--;
+					--tmp;
 					while (tmp._node && _comp(val.first, tmp->first)) {
-						tmp--;
-						position--;
+						--tmp;
+						--position;
 					}
 					to_ret = _insert_from_pos(position._node, val);
 				}
 				else {
-					tmp++;
+					++tmp;
 					while (tmp != end() && !_comp(val.first, tmp->first)) {
-						tmp++;
-						position++;
+						++tmp;
+						++position;
 					}
 					to_ret =  _insert_from_pos(position._node, val);
 				}
@@ -389,8 +402,8 @@ template< class _Pair >
 				}
 			}
 
-			void left_rotate(pointer x) {
-				pointer y = x->right;
+			void left_rotate(_Base_ptr x) {
+				_Base_ptr y = x->right;
 				x->right = y->left;
 				if (y->left != NULL) {
 					y->left->parent = x;
@@ -409,8 +422,8 @@ template< class _Pair >
 				x->parent = y;
 			}
 
-			void right_rotate(pointer x) {
-				pointer y = x->left;
+			void right_rotate(_Base_ptr x) {
+				_Base_ptr y = x->left;
 				x->left = y->right;
 				if (y->right != NULL) {
 					y->right->parent = x;
@@ -429,8 +442,8 @@ template< class _Pair >
 				x->parent = y;
 			}
 
-			void insertFix(pointer k) {
-				pointer u;
+			void insertFix(_Base_ptr k) {
+				_Base_ptr u;
 				while (k->parent != NULL && k->parent->is_black == false) {
 					if (k->parent == k->parent->parent->left) {
 						u = k->parent->parent->right;
@@ -479,7 +492,7 @@ template< class _Pair >
 			// Erase=========================================================================================================
 
 			void erase(iterator pos) {
-				pointer curr = pos.base();
+				_Base_ptr curr = pos._node;
 
 				// if no childs
 				if (curr->left == NULL && curr->right == NULL) {
@@ -532,7 +545,7 @@ template< class _Pair >
 					}
 				} // if two childs
 				else {
-					pointer succ = curr->right;
+					_Base_ptr succ = curr->right;
 					// if right subtree doesnt have left branch
 					if (succ->left == NULL) {
 						succ->left = curr->left;
@@ -577,7 +590,7 @@ template< class _Pair >
 						}
 					}
 				}
-				_delete_node(curr);
+				_delete_node(static_cast<pointer>(curr));
 				--_size;
 			}
 
@@ -611,13 +624,13 @@ template< class _Pair >
 			// Find==========================================================================================================
 
 			iterator find(const key_type& k) {
-				pointer node = _root;
+				_Base_ptr node = _root;
 
 				while (node != NULL) {
-					if (!_comp(node->pair.first, k) && !_comp(k, node->pair.first)) {
+					if (!_comp(static_cast<pointer>(node)->pair.first, k) && !_comp(k, static_cast<pointer>(node)->pair.first)) {
 						return iterator(node, &_sentinel);
 					}
-					else if (_comp(k, node->pair.first)) {
+					else if (_comp(k, static_cast<pointer>(node)->pair.first)) {
 						node = node->left;
 					}
 					else {
@@ -628,13 +641,13 @@ template< class _Pair >
 			}
 
 			const_iterator find(const key_type& k) const {
-				pointer node = _root;
+				_Base_ptr node = _root;
 
 				while (node != NULL) {
-					if (!_comp(node->pair.first, k) && !_comp(k, node->pair.first)) {
+					if (!_comp(static_cast<pointer>(node)->pair.first, k) && !_comp(k, static_cast<pointer>(node)->pair.first)) {
 						return const_iterator(node, &_sentinel);
 					}
-					else if (_comp(k, node->pair.first)) {
+					else if (_comp(k, static_cast<pointer>(node)->pair.first)) {
 						node = node->left;
 					}
 					else {
@@ -672,28 +685,20 @@ template< class _Pair >
 
 			// Lower Bound===================================================================================================
 			iterator lower_bound(const key_type& k) {
-				iterator it = begin();
-				for (; it != end() && _comp(it->first, k); ++it);
-				return it;
+				return _lower_bound(k);
 			}
 
 			const_iterator lower_bound(const key_type& k) const {
-				const_iterator it = begin();
-				for (; it != end() && _comp(it->first, k); ++it);
-				return it;
+				return const_iterator(_lower_bound(k));
 			}
 			// Upper Bound===================================================================================================
 
 			iterator upper_bound(const key_type& k) {
-				iterator it = begin();
-				for (; it != end() && !_comp(k, it->first); it++);
-				return it;
+				return _upper_bound(k);
 			}
 
 			const_iterator upper_bound(const key_type& k) const {
-				const_iterator it = begin();
-				for (; it != end() && !_comp(k, it->first); it++);
-				return it;
+				return const_iterator(_upper_bound(k));
 			}
 
 			// Capacity
@@ -711,22 +716,68 @@ template< class _Pair >
 			}
 
 			private:
-				pointer _new_node(const value_type& val) {
+
+				_Base_ptr _new_node(const value_type& val) {
 					pointer _x = _alloc.allocate(1);
 					_alloc.construct(_x, val);
 					return _x;
 				}
 
-				pointer _insert_from_pos(pointer pos, const value_type& val) {
-					pointer y = NULL;
-					pointer p = pos;
+				iterator _lower_bound(const key_type& k) {
+					_Base_ptr node = _root;
+					_Base_ptr previous = NULL;
+
+					while (node != NULL) {
+						previous = node;
+						if (!_comp(static_cast<pointer>(node)->pair.first, k) && !_comp(k, static_cast<pointer>(node)->pair.first)) {
+							return iterator(node, &_sentinel);
+						}
+						else if (_comp(k, static_cast<pointer>(node)->pair.first)) {
+							node = node->left;
+						}
+						else {
+							node = node->right;
+						}
+					}
+					if (previous && !_comp(static_cast<pointer>(previous)->pair.first, k))
+						return iterator(previous, &_sentinel);
+					iterator it = iterator(previous, &_sentinel);
+					return ++it;
+				}
+
+				iterator _upper_bound(const key_type& k) {
+					_Base_ptr node = _root;
+					_Base_ptr previous = NULL;
+
+					while (node != NULL) {
+						previous = node;
+						if (!_comp(static_cast<pointer>(node)->pair.first, k) && !_comp(k, static_cast<pointer>(node)->pair.first)) {
+							iterator ret = iterator(node, &_sentinel);
+							return ++ret;
+						}
+						else if (_comp(k, static_cast<pointer>(node)->pair.first)) {
+							node = node->left;
+						}
+						else {
+							node = node->right;
+						}
+					}
+					if (previous && !_comp(static_cast<pointer>(previous)->pair.first, k))
+						return iterator(previous, &_sentinel);
+					iterator it = iterator(previous, &_sentinel);
+					return ++it;
+				}
+
+				_Base_ptr _insert_from_pos(_Base_ptr pos, const value_type& val) {
+					_Base_ptr y = NULL;
+					_Base_ptr p = pos;
 
 					while (p != NULL) {
-						if (!_comp(val.first, p->pair.first) && !_comp(p->pair.first, val.first))
+						if (!_comp(val.first, static_cast<pointer>(p)->pair.first) && !_comp(static_cast<pointer>(p)->pair.first, val.first))
 							return p;
 
 						y = p;
-						if (_comp(val.first, p->pair.first))
+						if (_comp(val.first, static_cast<pointer>(p)->pair.first))
 							p = p->left;
 						else
 							p = p->right;
@@ -734,7 +785,7 @@ template< class _Pair >
 					if (y == NULL)
 						return _root;
 					++_size;
-					if (_comp(val.first, y->pair.first)) {
+					if (_comp(val.first, static_cast<pointer>(y)->pair.first)) {
 						y->left = _new_node(val);
 						y->left->parent = y;
 						return y->left;
@@ -754,20 +805,20 @@ template< class _Pair >
 					}
 				}
 
-				void _delete_tree(pointer x) {
+				void _delete_tree(_Base_ptr x) {
 					if (x != NULL) {
 						_delete_tree(x->left);
 						_delete_tree(x->right);
-						_delete_node(x);
+						_delete_node(static_cast<pointer>(x));
 						_sentinel.left = &_sentinel;
 					}
 				}
 
-				pointer _copy_tree(pointer x) {
+				_Base_ptr _copy_tree(_Base_ptr x) {
 					if (x == NULL) {
 						return NULL;
 					}
-					pointer y = _new_node(x->pair);
+					_Base_ptr y = _new_node(static_cast<pointer>(x)->pair);
 					y->is_black = x->is_black;
 					y->left = _copy_tree(x->left);
 					if (y->left != NULL) {
@@ -809,7 +860,6 @@ template< class _Pair >
 				{ return !(_l < _r); }
 
 
-				//=============
 		//Sert juste pour la fonctions qui print l'arbre
 		// public:
 		// 	struct Trunk
@@ -839,7 +889,7 @@ template< class _Pair >
 		// 		std::string prev_str = "    ";
 		// 		Trunk *trunk = new Trunk(prev, prev_str);
 			
-		// 		printTree(root->right, trunk, true);
+		// 		printTree(static_cast<pointer>(root->right), trunk, true);
 			
 		// 		if (!prev)
 		// 			trunk->str = "———";
@@ -864,12 +914,12 @@ template< class _Pair >
 		// 		}
 		// 		trunk->str = "    |";
 			
-		// 		printTree(root->left, trunk, false);
+		// 		printTree(static_cast<pointer>(root->left), trunk, false);
 		// 	}
 
 		// 	void print()
 		// 	{
-		// 		printTree(_root, NULL, false);
+		// 		printTree(static_cast<pointer>(_root), NULL, false);
 		// 	}
 	};
 }

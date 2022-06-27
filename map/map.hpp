@@ -137,8 +137,6 @@ namespace ft {
 				return value_comp(_comp);
 			}
 
-
-
 			// Iterator======================================================================================================
 
 			iterator begin() {
@@ -168,11 +166,12 @@ namespace ft {
 			// Element access================================================================================================
 
 			mapped_type& operator[](const key_type& key) {
-				iterator it = lower_bound(key);
+				// iterator it = lower_bound(key);
 
-				if (it == end() || key_comp()(key, it->first))
-					it = insert(it, value_type(key, mapped_type()));
-				return it->second;
+				// if (it == end() || key_comp()(key, it->first))
+					// it = insert(it, value_type(key, mapped_type()));
+				// return it->second;
+				return insert(ft::make_pair(key, mapped_type())).first->second;
 			}
 
 			mapped_type& at(const key_type& key) {
@@ -243,9 +242,10 @@ namespace ft {
 			operator<(const map<_K1, _T1, _C1, _A1>&,
 		  			const map<_K1, _T1, _C1, _A1>&);
 
-			void print() {
-				_tree.print();
-			}
+			// to print
+			// void print() {
+			// 	_tree.print();
+			// }
 	};
 
 	// Map compare operators=================================================================================================
