@@ -77,6 +77,7 @@ namespace ft {
 				vector(InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
 					_size = last - first;
 					_capacity = _size;
+					_alloc = alloc;
 					_data = _alloc.allocate(_capacity);
 					for (size_type i = 0; i < _size; i++)
 						_alloc.construct(&_data[i], *(first + i));
@@ -207,10 +208,10 @@ namespace ft {
 			template<class InputIterator>
 				void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
 					clear();
-					difference_type n = last - first;
+					size_type n = last - first;
 					if (n > _capacity)
 						reserve(n);
-					for (difference_type i = 0; i < n; ++i) {
+					for (size_type i = 0; i < n; ++i) {
 						_alloc.construct(_data + i, *first);
 						++first;
 						++_size;
@@ -241,7 +242,7 @@ namespace ft {
 				}
 				else if (_size + 1 > _capacity) {
 					pointer newData = _alloc.allocate(_adjust_capacity(_size + 1));
-					difference_type offset = pos - begin();
+					size_type offset = pos - begin();
 
 					_alloc.construct(newData + offset, val);
 					for (size_type i = 0; i <= _size; ++i) {
@@ -258,7 +259,7 @@ namespace ft {
 					return begin() + offset;
 				}
 				else {
-					difference_type offset = pos - begin();
+					size_type offset = pos - begin();
 					_alloc.construct(_data + _size, *(_data + _size - 1));
 					for (size_type i = _size - 1; i > offset; --i) {
 						_data[i] = _data[i - 1];
@@ -271,7 +272,7 @@ namespace ft {
 			}
 			void insert(iterator pos, size_type count, const value_type& val) {
 				if (_size + count > _capacity) {
-					difference_type posIndex = pos - begin();
+					size_type posIndex = pos - begin();
 					pointer newData = _alloc.allocate(_adjust_capacity(_size + count));
 					size_type newCapacity = _adjust_capacity(_size + count);
 					for (size_type i = 0; i < count; ++i) {
@@ -309,9 +310,9 @@ namespace ft {
 
 			template<class InputIterator>
 				void insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * = NULL) {
-					difference_type count = last - first;
+					size_type count = last - first;
 					if (_size + count > _capacity) {
-						difference_type posIndex = pos - begin();
+						size_type posIndex = pos - begin();
 						pointer newData = _alloc.allocate(_adjust_capacity(_size + count));
 						size_type newCapacity = _adjust_capacity(_size + count);
 						for (size_type i = 0; i < count; ++i) {

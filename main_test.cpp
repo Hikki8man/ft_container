@@ -48,35 +48,12 @@ int main() {
 		std::map<int, char> m;
 
 		m.insert(std::make_pair(8, 'a'));
-		m.insert(std::make_pair(10, 'b'));
-		m.insert(std::make_pair(3, 'c'));
-		m.insert(std::make_pair(1, 'd'));
-		m.insert(std::make_pair(6, 'e'));
-		m.insert(std::make_pair(4, 'f'));
-		m.insert(std::make_pair(7, 'g'));
-		m.insert(std::make_pair(14, 'h'));
-		m.insert(std::make_pair(13, 'i'));
 
-		// m.insert(m.end(), std::make_pair(11, 'd'));
-		// m.insert(m.find(14), std::make_pair(0, 'd'));
-		// m.insert(m.begin(), std::make_pair(15, 'a'));
-		// // m.insert(m.end(), std::make_pair(100, 'a'));
-		// // m.insert(m.end(), std::make_pair(2, 'a'));
-		// for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-		// 	std::cout << it->first << " ";
-		// }
-		std::cout << "lower bound: " << m.lower_bound(11)->first << std::endl;
-		// std::cout << std::endl;
-		// m.insert(m.find(10), std::make_pair(0, 'd'));
-		// m.insert(m.find(3), std::make_pair(13, 'd'));
-		// m.insert(m.find(3), std::make_pair(13, 'd'));
-		// std::map<int, char>::iterator it = m.find(4);
+		std::cout << m.find(8)->second << std::endl;
 
-		// for (std::map<int, char>::iterator it = m.begin(); it != m.end(); ++it) {
-		// 	std::cout << it->first << " ";
-		// }
-		// std::cout << std::endl;
-		
+		m.insert(std::make_pair(8, 'b'));
+
+		std::cout << m.find(8)->second << std::endl;
 
 	}
 
@@ -89,13 +66,24 @@ int main() {
 		typedef ft::map<int, char>::iterator iterator;
 		ft::map<int, char> m;
 
-		iterator it;
-		it = m.insert(m.begin(), ft::make_pair(15, 'a'));
-		m.clear();
-		for (it = m.begin(); it != m.end(); it++) {
-			std::cout << it->first << std::endl;
-		}
+		basic_map(m);
 
+		m.insert(ft::make_pair(8, 'a'));
+
+		m.insert(ft::make_pair(8, 'b'));
+
+		m.insert(m.find(8),ft::make_pair(1, 'c'));
+		m.insert(m.find(8),ft::make_pair(3, 'c'));
+		m.insert(m.find(8),ft::make_pair(4, 'c'));
+		m.insert(m.find(8),ft::make_pair(6, 'c'));
+		m.insert(m.find(8),ft::make_pair(7, 'c'));
+		m.insert(m.find(8),ft::make_pair(10, 'c'));
+		m.insert(m.find(8),ft::make_pair(14, 'c'));
+		m.insert(m.find(8),ft::make_pair(13, 'c'));
+		m.insert(m.find(8),ft::make_pair(8, 'c'));
+
+		for (iterator it = m.begin(); it != m.end(); ++it)
+			std::cout << it->first << " " << it->second << std::endl;
 
 	}
 

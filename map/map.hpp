@@ -34,11 +34,11 @@ namespace ft {
 
 		protected:
 			typedef rb_tree<key_type, value_type, key_compare> _Red_type;
+			_Red_type _tree;
 			key_compare _comp;
 			allocator_type _alloc;
 
 		public:
-			_Red_type _tree;
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::reference reference;
@@ -52,17 +52,16 @@ namespace ft {
 			typedef typename _Red_type::size_type size_type;
 			typedef typename _Red_type::difference_type difference_type;
 
-			//what todo with thooose
-			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _comp(comp), _alloc(alloc), _tree() {}
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _tree(), _comp(comp), _alloc(alloc) {}
 
 			template<class InputIterator>
 			map(InputIterator first, InputIterator last,
 			 const key_compare& comp = key_compare(),
-			 const allocator_type& alloc = allocator_type()) : _comp(comp), _alloc(alloc), _tree() {
+			 const allocator_type& alloc = allocator_type()) : _tree(), _comp(comp), _alloc(alloc) {
 					insert(first, last);
 			 }
 
-			map(const map& m) : _alloc(m.get_allocator()), _comp(key_comp()), _tree(m._tree) {}
+			map(const map& m) : _tree(m._tree), _comp(key_comp()), _alloc(m.get_allocator()) {}
 
 			map &operator=(const map& m) {
 				if(this != &m) {
@@ -243,9 +242,9 @@ namespace ft {
 		  			const map<_K1, _T1, _C1, _A1>&);
 
 			// to print
-			// void print() {
-			// 	_tree.print();
-			// }
+			void print() {
+				_tree.print();
+			}
 	};
 
 	// Map compare operators=================================================================================================

@@ -15,8 +15,8 @@ namespace ft {
 
 		typedef tree_node_base* node_ptr;
 
-		tree_node_base() : is_black(false), parent(NULL), left(NULL), right(NULL) {}
-		tree_node_base(const tree_node_base & src) : is_black(src.is_black), parent(src.parent), left(src.left), right(src.right) {}
+		tree_node_base() : parent(NULL), left(NULL), right(NULL), is_black(false) {}
+		tree_node_base(const tree_node_base & src) : parent(src.parent), left(src.left), right(src.right), is_black(src.is_black) {}
 		~tree_node_base() {}
 		tree_node_base &operator=(const tree_node_base &other) {
 			parent = other.parent;
@@ -294,7 +294,7 @@ template< class _Pair >
 			size_type _size;
 
 		public:
-			rb_tree() : _root(NULL), _size(0), _sentinel() {
+			rb_tree() : _root(NULL), _sentinel(), _size(0) {
 				_sentinel.left = &_sentinel;
 			}
 
@@ -365,6 +365,10 @@ template< class _Pair >
 			iterator insert (iterator position, const value_type& val)
 			{
 				_Base_ptr to_ret = NULL;
+
+				iterator exist = find(val.first);
+				if (exist != end()) 
+					return exist;
 				if (begin() == end())
 					return insert(val).first;
 				if (position == end()) {
@@ -727,6 +731,9 @@ template< class _Pair >
 					_Base_ptr node = _root;
 					_Base_ptr previous = NULL;
 
+					if (_root == NULL)
+						return end();
+
 					while (node != NULL) {
 						previous = node;
 						if (!_comp(static_cast<pointer>(node)->pair.first, k) && !_comp(k, static_cast<pointer>(node)->pair.first)) {
@@ -748,6 +755,9 @@ template< class _Pair >
 				iterator _upper_bound(const key_type& k) {
 					_Base_ptr node = _root;
 					_Base_ptr previous = NULL;
+
+					if (_root == NULL)
+						return end();
 
 					while (node != NULL) {
 						previous = node;
@@ -861,66 +871,66 @@ template< class _Pair >
 
 
 		//Sert juste pour la fonctions qui print l'arbre
-		// public:
-		// 	struct Trunk
-		// 	{
-		// 		Trunk *prev;
-		// 		std::string str;
+		public:
+			struct Trunk
+			{
+				Trunk *prev;
+				std::string str;
 			
-		// 		Trunk(Trunk *prev, std::string str)
-		// 		{
-		// 			this->prev = prev;
-		// 			this->str = str;
-		// 		}
-		// 	};
+				Trunk(Trunk *prev, std::string str)
+				{
+					this->prev = prev;
+					this->str = str;
+				}
+			};
 
-		// 	void showTrunks(Trunk *p)
-		// 	{
-		// 		if (p == nullptr)
-		// 			return;
-		// 		showTrunks(p->prev);
-		// 		std::cout << p->str;
-		// 	}
+			void showTrunks(Trunk *p)
+			{
+				if (p == nullptr)
+					return;
+				showTrunks(p->prev);
+				std::cout << p->str;
+			}
 
-		// 	void printTree(pointer root, Trunk *prev, bool isLeft)
-		// 	{
-		// 		if (root == nullptr)
-		// 			return;
-		// 		std::string prev_str = "    ";
-		// 		Trunk *trunk = new Trunk(prev, prev_str);
+			void printTree(pointer root, Trunk *prev, bool isLeft)
+			{
+				if (root == nullptr)
+					return;
+				std::string prev_str = "    ";
+				Trunk *trunk = new Trunk(prev, prev_str);
 			
-		// 		printTree(static_cast<pointer>(root->right), trunk, true);
+				printTree(static_cast<pointer>(root->right), trunk, true);
 			
-		// 		if (!prev)
-		// 			trunk->str = "———";
-		// 		else if (isLeft)
-		// 		{
-		// 			trunk->str = "┌———";
-		// 			prev_str = "    |";
-		// 		}
-		// 		else {
-		// 			trunk->str = "└──";
-		// 			prev->str = prev_str;
-		// 		}
+				if (!prev)
+					trunk->str = "———";
+				else if (isLeft)
+				{
+					trunk->str = "┌———";
+					prev_str = "    |";
+				}
+				else {
+					trunk->str = "└──";
+					prev->str = prev_str;
+				}
 			
-		// 		showTrunks(trunk);
-		// 		if (root->is_black == false)
-		// 			std::cout << "\033[31m" << root->pair.first << "\033[0m" << std::endl;
-		// 		else
-		// 			std::cout << root->pair.first << std::endl;
+				showTrunks(trunk);
+				if (root->is_black == false)
+					std::cout << "\033[31m" << root->pair.first << "\033[0m" << std::endl;
+				else
+					std::cout << root->pair.first << std::endl;
 					
-		// 		if (prev) {
-		// 			prev->str = prev_str;
-		// 		}
-		// 		trunk->str = "    |";
+				if (prev) {
+					prev->str = prev_str;
+				}
+				trunk->str = "    |";
 			
-		// 		printTree(static_cast<pointer>(root->left), trunk, false);
-		// 	}
+				printTree(static_cast<pointer>(root->left), trunk, false);
+			}
 
-		// 	void print()
-		// 	{
-		// 		printTree(static_cast<pointer>(_root), NULL, false);
-		// 	}
+			void print()
+			{
+				printTree(static_cast<pointer>(_root), NULL, false);
+			}
 	};
 }
 
