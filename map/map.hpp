@@ -120,9 +120,7 @@ namespace ft {
 			}
 
 			void swap(map& m) {
-				_Red_type tmp = _tree;
-				_tree = m._tree;
-				m._tree = tmp;
+				_tree.swap(m._tree);
 			}
 
 
@@ -158,8 +156,16 @@ namespace ft {
 				return reverse_iterator(end());
 			}
 
+			const_reverse_iterator rbegin() const {
+				return const_reverse_iterator(begin());
+			}
+
 			reverse_iterator rend() {
 				return reverse_iterator(begin());
+			}
+
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(rend());
 			}
 
 			// Element access================================================================================================

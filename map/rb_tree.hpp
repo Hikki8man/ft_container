@@ -705,7 +705,7 @@ template< class _Pair >
 				return const_iterator(_upper_bound(k));
 			}
 
-			// Capacity
+			// Capacity======================================================================================================
 			
 			size_type size() const {
 				return _size;
@@ -718,6 +718,14 @@ template< class _Pair >
 			size_type max_size() const {
 				return _alloc.max_size();
 			}
+
+			// Swap=========================================================================================================
+			void swap(rb_tree& r) {
+				std::swap(_root, r._root);
+				std::swap(_sentinel, r._sentinel);
+				std::swap(_size, r._size);
+			}
+
 
 			private:
 
