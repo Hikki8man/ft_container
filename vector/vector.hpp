@@ -49,7 +49,7 @@ namespace ft {
 		public:
 			explicit vector() : _data(NULL), _size(0), _capacity(0) {};
 
-			explicit vector(size_type size, const value_type & value = value_type()) {//test with size max
+			explicit vector(size_type size, const value_type & value = value_type()) {
 				_size = size;
 				_capacity = size;
 				_data = _alloc.allocate(_capacity);
@@ -112,7 +112,7 @@ namespace ft {
 				return _alloc.max_size();
 			}
 
-			void resize (size_type n, value_type val = value_type()) {//redo
+			void resize (size_type n, value_type val = value_type()) {
 				if (n > _capacity) {
 					reserve(_adjust_capacity(n)); //sur ubuntu: reserve(n);
 				}
@@ -186,6 +186,10 @@ namespace ft {
 			const_reference back() const {
 				return _data[_size - 1];
 			}
+
+			pointer data() { return _data; }
+
+			const_pointer data() const { return _data; }
 
 			/* --- Modifiers --- */
 

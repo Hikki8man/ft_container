@@ -871,66 +871,66 @@ template< class _Pair >
 
 
 		//Sert juste pour la fonctions qui print l'arbre
-		public:
-			struct Trunk
-			{
-				Trunk *prev;
-				std::string str;
+		// public:
+		// 	struct Trunk
+		// 	{
+		// 		Trunk *prev;
+		// 		std::string str;
 			
-				Trunk(Trunk *prev, std::string str)
-				{
-					this->prev = prev;
-					this->str = str;
-				}
-			};
+		// 		Trunk(Trunk *prev, std::string str)
+		// 		{
+		// 			this->prev = prev;
+		// 			this->str = str;
+		// 		}
+		// 	};
 
-			void showTrunks(Trunk *p)
-			{
-				if (p == nullptr)
-					return;
-				showTrunks(p->prev);
-				std::cout << p->str;
-			}
+		// 	void showTrunks(Trunk *p)
+		// 	{
+		// 		if (p == nullptr)
+		// 			return;
+		// 		showTrunks(p->prev);
+		// 		std::cout << p->str;
+		// 	}
 
-			void printTree(pointer root, Trunk *prev, bool isLeft)
-			{
-				if (root == nullptr)
-					return;
-				std::string prev_str = "    ";
-				Trunk *trunk = new Trunk(prev, prev_str);
+		// 	void printTree(pointer root, Trunk *prev, bool isLeft)
+		// 	{
+		// 		if (root == nullptr)
+		// 			return;
+		// 		std::string prev_str = "    ";
+		// 		Trunk *trunk = new Trunk(prev, prev_str);
 			
-				printTree(static_cast<pointer>(root->right), trunk, true);
+		// 		printTree(static_cast<pointer>(root->right), trunk, true);
 			
-				if (!prev)
-					trunk->str = "———";
-				else if (isLeft)
-				{
-					trunk->str = "┌———";
-					prev_str = "    |";
-				}
-				else {
-					trunk->str = "└──";
-					prev->str = prev_str;
-				}
+		// 		if (!prev)
+		// 			trunk->str = "———";
+		// 		else if (isLeft)
+		// 		{
+		// 			trunk->str = "┌———";
+		// 			prev_str = "    |";
+		// 		}
+		// 		else {
+		// 			trunk->str = "└──";
+		// 			prev->str = prev_str;
+		// 		}
 			
-				showTrunks(trunk);
-				if (root->is_black == false)
-					std::cout << "\033[31m" << root->pair.first << "\033[0m" << std::endl;
-				else
-					std::cout << root->pair.first << std::endl;
+		// 		showTrunks(trunk);
+		// 		if (root->is_black == false)
+		// 			std::cout << "\033[31m" << root->pair.first << "\033[0m" << std::endl;
+		// 		else
+		// 			std::cout << root->pair.first << std::endl;
 					
-				if (prev) {
-					prev->str = prev_str;
-				}
-				trunk->str = "    |";
+		// 		if (prev) {
+		// 			prev->str = prev_str;
+		// 		}
+		// 		trunk->str = "    |";
 			
-				printTree(static_cast<pointer>(root->left), trunk, false);
-			}
+		// 		printTree(static_cast<pointer>(root->left), trunk, false);
+		// 	}
 
-			void print()
-			{
-				printTree(static_cast<pointer>(_root), NULL, false);
-			}
+		// 	void print()
+		// 	{
+		// 		printTree(static_cast<pointer>(_root), NULL, false);
+		// 	}
 	};
 }
 
